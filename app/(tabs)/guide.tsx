@@ -98,8 +98,8 @@ export default function GuideScreen() {
                 size={16}
                 color={
                   activeSection === section.id
-                    ? Colors.primary.greenDark
-                    : Colors.primary.gold
+                    ? "#FFFFFF"
+                    : Colors.primary.green
                 }
               />
               <Text
@@ -142,7 +142,7 @@ export default function GuideScreen() {
                 <View
                   style={[
                     styles.dangerBadge,
-                    { backgroundColor: getDangerColor(item.dangerLevel) + "20" },
+                    { backgroundColor: getDangerColor(item.dangerLevel) + "15" },
                   ]}
                 >
                   <View
@@ -184,7 +184,7 @@ export default function GuideScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary.green,
+    backgroundColor: Colors.bg.primary,
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -219,21 +219,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: Colors.primary.goldDim,
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: Colors.card.border,
   },
   filterChipActive: {
-    backgroundColor: Colors.primary.gold,
-    borderColor: Colors.primary.gold,
+    backgroundColor: Colors.primary.green,
+    borderColor: Colors.primary.green,
   },
   filterText: {
     fontFamily: "Cairo_600SemiBold",
     fontSize: 13,
-    color: Colors.primary.gold,
+    color: Colors.primary.green,
   },
   filterTextActive: {
-    color: Colors.primary.greenDark,
+    color: "#FFFFFF",
   },
   guideCard: {
     backgroundColor: Colors.card.background,

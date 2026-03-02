@@ -54,7 +54,9 @@ export default function SettingsScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.logoSection}>
-          <Image source={logo} style={styles.logo} contentFit="contain" />
+          <View style={styles.logoCircle}>
+            <Image source={logo} style={styles.logo} contentFit="contain" />
+          </View>
           <Text style={styles.appName}>سِهيل</Text>
           <Text style={styles.tagline}>إذا طلع سِهيل لا تأمن السيل</Text>
           <Text style={styles.version}>النسخة 1.0.0</Text>
@@ -69,14 +71,14 @@ export default function SettingsScreen() {
                 setWeatherAlerts(val);
                 saveSettings("weatherAlerts", val);
               }}
-              trackColor={{ false: "#333", true: Colors.primary.gold }}
+              trackColor={{ false: "#DDD", true: Colors.primary.green }}
               thumbColor="#fff"
             />
             <View style={styles.settingTextContainer}>
               <Text style={styles.settingTitle}>تنبيهات الطقس</Text>
               <Text style={styles.settingDesc}>عرض تنبيهات النباهة في الرئيسية</Text>
             </View>
-            <Ionicons name="cloudy-outline" size={22} color={Colors.primary.gold} />
+            <Ionicons name="cloudy-outline" size={22} color={Colors.primary.green} />
           </View>
 
           <View style={styles.settingRow}>
@@ -86,7 +88,7 @@ export default function SettingsScreen() {
                 setDailyTips(val);
                 saveSettings("dailyTips", val);
               }}
-              trackColor={{ false: "#333", true: Colors.primary.gold }}
+              trackColor={{ false: "#DDD", true: Colors.primary.green }}
               thumbColor="#fff"
             />
             <View style={styles.settingTextContainer}>
@@ -119,7 +121,7 @@ export default function SettingsScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary.green,
+    backgroundColor: Colors.bg.primary,
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -130,15 +132,23 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     paddingVertical: 20,
   },
-  logo: {
-    width: 72,
-    height: 72,
+  logoCircle: {
+    width: 80,
+    height: 80,
+    borderRadius: 40,
+    backgroundColor: Colors.primary.green,
+    alignItems: "center",
+    justifyContent: "center",
     marginBottom: 12,
+  },
+  logo: {
+    width: 56,
+    height: 56,
   },
   appName: {
     fontFamily: "Cairo_700Bold",
     fontSize: 28,
-    color: Colors.primary.gold,
+    color: Colors.primary.green,
   },
   tagline: {
     fontFamily: "Cairo_400Regular",

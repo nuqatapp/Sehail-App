@@ -97,8 +97,8 @@ export default function PrepGearScreen() {
                 size={16}
                 color={
                   activeTripType === tripType.id
-                    ? Colors.primary.greenDark
-                    : Colors.primary.gold
+                    ? "#FFFFFF"
+                    : Colors.primary.green
                 }
               />
               <Text
@@ -116,7 +116,7 @@ export default function PrepGearScreen() {
         <View style={styles.progressCard}>
           <View style={styles.progressHeader}>
             <Pressable onPress={resetChecklist} style={styles.resetButton}>
-              <Ionicons name="refresh-outline" size={18} color={Colors.text.secondary} />
+              <Ionicons name="refresh-outline" size={18} color={Colors.text.tertiary} />
             </Pressable>
             <Text style={styles.progressLabel}>
               {checkedCount} من {totalCount}
@@ -170,7 +170,7 @@ export default function PrepGearScreen() {
                 ]}
               >
                 {checkedItems[item.id] && (
-                  <Ionicons name="checkmark" size={14} color={Colors.primary.greenDark} />
+                  <Ionicons name="checkmark" size={14} color="#FFFFFF" />
                 )}
               </View>
             </Pressable>
@@ -184,7 +184,7 @@ export default function PrepGearScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary.green,
+    backgroundColor: Colors.bg.primary,
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -205,21 +205,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 22,
-    backgroundColor: Colors.primary.goldDim,
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: Colors.card.border,
   },
   tripTypeChipActive: {
-    backgroundColor: Colors.primary.gold,
-    borderColor: Colors.primary.gold,
+    backgroundColor: Colors.primary.green,
+    borderColor: Colors.primary.green,
   },
   tripTypeText: {
     fontFamily: "Cairo_600SemiBold",
     fontSize: 14,
-    color: Colors.primary.gold,
+    color: Colors.primary.green,
   },
   tripTypeTextActive: {
-    color: Colors.primary.greenDark,
+    color: "#FFFFFF",
   },
   progressCard: {
     backgroundColor: Colors.card.background,
@@ -248,13 +248,13 @@ const styles = StyleSheet.create({
   },
   progressBarBg: {
     height: 6,
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: "rgba(0, 0, 0, 0.06)",
     borderRadius: 3,
     overflow: "hidden",
   },
   progressBarFill: {
     height: "100%",
-    backgroundColor: Colors.primary.gold,
+    backgroundColor: Colors.primary.green,
     borderRadius: 3,
   },
   readyText: {
@@ -276,8 +276,8 @@ const styles = StyleSheet.create({
     borderColor: Colors.card.border,
   },
   checkItemChecked: {
-    backgroundColor: "rgba(39, 174, 96, 0.08)",
-    borderColor: "rgba(39, 174, 96, 0.2)",
+    backgroundColor: "rgba(39, 174, 96, 0.04)",
+    borderColor: "rgba(39, 174, 96, 0.15)",
   },
   checkItemContent: {
     flex: 1,
@@ -296,7 +296,7 @@ const styles = StyleSheet.create({
     textDecorationLine: "line-through",
   },
   criticalBadge: {
-    backgroundColor: "rgba(231, 76, 60, 0.15)",
+    backgroundColor: "rgba(231, 76, 60, 0.08)",
     paddingHorizontal: 8,
     paddingVertical: 2,
     borderRadius: 6,
@@ -317,7 +317,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   checkboxChecked: {
-    backgroundColor: Colors.primary.gold,
-    borderColor: Colors.primary.gold,
+    backgroundColor: Colors.primary.green,
+    borderColor: Colors.primary.green,
   },
 });

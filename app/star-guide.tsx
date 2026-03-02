@@ -4,7 +4,6 @@ import {
   Text,
   View,
   ScrollView,
-  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -35,7 +34,7 @@ export default function StarGuideScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Animated.View entering={FadeInDown.duration(500)} style={styles.introCard}>
-          <Ionicons name="compass-outline" size={28} color={Colors.primary.gold} />
+          <Ionicons name="compass-outline" size={24} color={Colors.primary.green} />
           <Text style={styles.introText}>
             معرفة النجوم مهارة ثقافية تساعدك في تحديد الاتجاهات. هذا دليل تعليمي
             وليس نظام ملاحة دقيق.
@@ -53,7 +52,7 @@ export default function StarGuideScreen() {
                   <Ionicons
                     name={getDirectionIcon(star.direction) as any}
                     size={14}
-                    color={Colors.primary.gold}
+                    color={Colors.primary.green}
                   />
                   <Text style={styles.directionText}>{star.direction}</Text>
                 </View>
@@ -87,14 +86,14 @@ export default function StarGuideScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary.green,
+    backgroundColor: Colors.bg.primary,
   },
   scrollContent: {
     paddingHorizontal: 20,
     paddingTop: 16,
   },
   introCard: {
-    backgroundColor: Colors.primary.goldDim,
+    backgroundColor: Colors.card.background,
     borderRadius: 16,
     padding: 16,
     marginBottom: 20,
@@ -103,7 +102,9 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 12,
     borderWidth: 1,
-    borderColor: "rgba(212, 175, 55, 0.15)",
+    borderColor: Colors.card.border,
+    borderLeftWidth: 3,
+    borderLeftColor: Colors.primary.green,
   },
   introText: {
     fontFamily: "Cairo_400Regular",
@@ -146,7 +147,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 4,
-    backgroundColor: Colors.primary.goldDim,
+    backgroundColor: "rgba(0, 108, 53, 0.08)",
     paddingHorizontal: 10,
     paddingVertical: 5,
     borderRadius: 10,
@@ -154,7 +155,7 @@ const styles = StyleSheet.create({
   directionText: {
     fontFamily: "Cairo_600SemiBold",
     fontSize: 12,
-    color: Colors.primary.gold,
+    color: Colors.primary.green,
   },
   starDescription: {
     fontFamily: "Cairo_400Regular",
@@ -173,9 +174,11 @@ const styles = StyleSheet.create({
     alignItems: "flex-start",
     justifyContent: "flex-end",
     gap: 8,
-    backgroundColor: Colors.primary.goldDim,
+    backgroundColor: "rgba(212, 175, 55, 0.06)",
     padding: 12,
     borderRadius: 12,
+    borderWidth: 1,
+    borderColor: "rgba(212, 175, 55, 0.1)",
   },
   starInfoText: {
     fontFamily: "Cairo_400Regular",

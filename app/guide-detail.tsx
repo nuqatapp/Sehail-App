@@ -81,7 +81,7 @@ export default function GuideDetailScreen() {
           <View
             style={[
               styles.dangerBanner,
-              { backgroundColor: dangerColor + "15", borderColor: dangerColor + "30" },
+              { backgroundColor: dangerColor + "10", borderColor: dangerColor + "25" },
             ]}
           >
             <Ionicons
@@ -99,7 +99,7 @@ export default function GuideDetailScreen() {
 
         <Animated.View entering={FadeInDown.delay(100).duration(500)} style={styles.section}>
           <View style={styles.sectionHeader}>
-            <Ionicons name="information-circle-outline" size={18} color={Colors.primary.gold} />
+            <Ionicons name="information-circle-outline" size={18} color={Colors.primary.green} />
             <Text style={styles.sectionTitle}>وش هي</Text>
           </View>
           <Text style={styles.sectionText}>{description}</Text>
@@ -108,7 +108,7 @@ export default function GuideDetailScreen() {
         <Animated.View entering={FadeInDown.delay(200).duration(500)} style={styles.actionSection}>
           <View style={styles.sectionHeader}>
             <Ionicons name="hand-right-outline" size={18} color={Colors.primary.gold} />
-            <Text style={styles.sectionTitle}>وش تسوي</Text>
+            <Text style={styles.sectionTitleGold}>وش تسوي</Text>
           </View>
           <Text style={styles.sectionText}>{action}</Text>
         </Animated.View>
@@ -125,7 +125,7 @@ export default function GuideDetailScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary.green,
+    backgroundColor: Colors.bg.primary,
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -166,12 +166,14 @@ const styles = StyleSheet.create({
     borderColor: Colors.card.border,
   },
   actionSection: {
-    backgroundColor: Colors.primary.goldDim,
+    backgroundColor: Colors.card.background,
     borderRadius: 16,
     padding: 18,
     marginBottom: 14,
     borderWidth: 1,
-    borderColor: "rgba(212, 175, 55, 0.15)",
+    borderColor: Colors.card.border,
+    borderLeftWidth: 3,
+    borderLeftColor: Colors.primary.gold,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -181,6 +183,11 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   sectionTitle: {
+    fontFamily: "Cairo_700Bold",
+    fontSize: 16,
+    color: Colors.primary.green,
+  },
+  sectionTitleGold: {
     fontFamily: "Cairo_700Bold",
     fontSize: 16,
     color: Colors.primary.gold,

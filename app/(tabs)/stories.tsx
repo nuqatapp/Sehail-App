@@ -125,7 +125,7 @@ export default function StoriesScreen() {
                   <View
                     style={[
                       styles.categoryBadge,
-                      { backgroundColor: getCategoryColor(story.category) + "20" },
+                      { backgroundColor: getCategoryColor(story.category) + "15" },
                     ]}
                   >
                     <Ionicons
@@ -178,7 +178,7 @@ export default function StoriesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary.green,
+    backgroundColor: Colors.bg.primary,
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -210,21 +210,21 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 8,
     borderRadius: 20,
-    backgroundColor: Colors.primary.goldDim,
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: Colors.card.border,
   },
   filterChipActive: {
-    backgroundColor: Colors.primary.gold,
-    borderColor: Colors.primary.gold,
+    backgroundColor: Colors.primary.green,
+    borderColor: Colors.primary.green,
   },
   filterText: {
     fontFamily: "Cairo_600SemiBold",
     fontSize: 13,
-    color: Colors.primary.gold,
+    color: Colors.primary.green,
   },
   filterTextActive: {
-    color: Colors.primary.greenDark,
+    color: "#FFFFFF",
   },
   storyCard: {
     backgroundColor: Colors.card.background,
@@ -280,11 +280,11 @@ const styles = StyleSheet.create({
     marginBottom: 14,
   },
   takeawayContainer: {
-    backgroundColor: Colors.primary.goldDim,
+    backgroundColor: "rgba(212, 175, 55, 0.06)",
     borderRadius: 12,
     padding: 14,
     borderWidth: 1,
-    borderColor: "rgba(212, 175, 55, 0.15)",
+    borderColor: "rgba(212, 175, 55, 0.12)",
   },
   takeawayHeader: {
     flexDirection: "row",

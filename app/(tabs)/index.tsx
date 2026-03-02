@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React from "react";
 import {
   StyleSheet,
   Text,
@@ -6,16 +6,12 @@ import {
   ScrollView,
   Pressable,
   Platform,
-  I18nManager,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
-import Animated, {
-  FadeInDown,
-  FadeInUp,
-} from "react-native-reanimated";
+import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
 import LogoHeader from "@/components/LogoHeader";
@@ -69,7 +65,7 @@ function SectionCard({ title, subtitle, icon, onPress, delay }: SectionCardProps
         }}
       >
         <View style={styles.sectionIconContainer}>
-          <Ionicons name={icon as any} size={28} color={Colors.primary.gold} />
+          <Ionicons name={icon as any} size={26} color={Colors.primary.green} />
         </View>
         <Text style={styles.sectionTitle}>{title}</Text>
         <Text style={styles.sectionSubtitle}>{subtitle}</Text>
@@ -106,7 +102,7 @@ export default function HomeScreen() {
               onPress={() => router.push("/settings")}
               style={styles.settingsButton}
             >
-              <Ionicons name="settings-outline" size={22} color={Colors.text.secondary} />
+              <Ionicons name="settings-outline" size={22} color={Colors.text.tertiary} />
             </Pressable>
           </View>
           <Text style={styles.welcomeText}>
@@ -118,7 +114,7 @@ export default function HomeScreen() {
         <Animated.View entering={FadeInDown.delay(100).duration(500)} style={styles.weatherCard}>
           <View style={styles.weatherHeader}>
             <View style={styles.weatherIconContainer}>
-              <Ionicons name={weatherAlert.icon as any} size={20} color={Colors.primary.gold} />
+              <Ionicons name={weatherAlert.icon as any} size={18} color={Colors.primary.green} />
             </View>
             <Text style={styles.weatherLabel}>النباهة</Text>
           </View>
@@ -127,7 +123,7 @@ export default function HomeScreen() {
 
         <Animated.View entering={FadeInDown.delay(200).duration(500)} style={styles.tipCard}>
           <View style={styles.tipHeader}>
-            <Ionicons name="sparkles" size={18} color={Colors.primary.gold} />
+            <Ionicons name="sparkles" size={16} color={Colors.primary.gold} />
             <Text style={styles.tipLabel}>نصيحة سِهيل اليوم</Text>
           </View>
           <Text style={styles.tipText}>{dailyTip}</Text>
@@ -179,9 +175,9 @@ export default function HomeScreen() {
               router.push("/(tabs)/emergency");
             }}
           >
-            <Ionicons name="shield-checkmark" size={22} color={Colors.status.danger} />
+            <Ionicons name="shield-checkmark" size={20} color={Colors.status.danger} />
             <Text style={styles.emergencyBannerText}>فزعة - أرقام الطوارئ ومشاركة الموقع</Text>
-            <Ionicons name="chevron-forward" size={18} color={Colors.text.tertiary} />
+            <Ionicons name="chevron-forward" size={16} color={Colors.text.tertiary} />
           </Pressable>
         </Animated.View>
       </ScrollView>
@@ -192,19 +188,19 @@ export default function HomeScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary.green,
+    backgroundColor: Colors.bg.primary,
   },
   scrollContent: {
     paddingHorizontal: 20,
   },
   header: {
-    marginBottom: 20,
+    marginBottom: 16,
   },
   headerTop: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 12,
+    marginBottom: 8,
   },
   settingsButton: {
     width: 40,
@@ -245,7 +241,7 @@ const styles = StyleSheet.create({
     width: 32,
     height: 32,
     borderRadius: 8,
-    backgroundColor: Colors.primary.goldDim,
+    backgroundColor: "rgba(0, 108, 53, 0.08)",
     alignItems: "center",
     justifyContent: "center",
     marginLeft: 8,
@@ -253,7 +249,7 @@ const styles = StyleSheet.create({
   weatherLabel: {
     fontFamily: "Cairo_600SemiBold",
     fontSize: 14,
-    color: Colors.primary.gold,
+    color: Colors.primary.green,
   },
   weatherMessage: {
     fontFamily: "Cairo_400Regular",
@@ -264,12 +260,14 @@ const styles = StyleSheet.create({
     lineHeight: 24,
   },
   tipCard: {
-    backgroundColor: Colors.primary.goldDim,
+    backgroundColor: Colors.card.background,
     borderRadius: 16,
     padding: 16,
     marginBottom: 20,
     borderWidth: 1,
-    borderColor: "rgba(212, 175, 55, 0.2)",
+    borderColor: Colors.card.border,
+    borderLeftWidth: 3,
+    borderLeftColor: Colors.primary.gold,
   },
   tipHeader: {
     flexDirection: "row",
@@ -318,7 +316,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 12,
-    backgroundColor: Colors.primary.goldDim,
+    backgroundColor: "rgba(0, 108, 53, 0.08)",
     alignItems: "center",
     justifyContent: "center",
     marginBottom: 10,
@@ -337,7 +335,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   emergencyBanner: {
-    backgroundColor: "rgba(231, 76, 60, 0.1)",
+    backgroundColor: Colors.card.background,
     borderRadius: 14,
     padding: 14,
     flexDirection: "row",
@@ -345,7 +343,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 10,
     borderWidth: 1,
-    borderColor: "rgba(231, 76, 60, 0.2)",
+    borderColor: "rgba(231, 76, 60, 0.15)",
   },
   emergencyBannerText: {
     fontFamily: "Cairo_600SemiBold",

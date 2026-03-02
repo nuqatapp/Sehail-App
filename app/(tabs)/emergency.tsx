@@ -128,7 +128,7 @@ export default function EmergencyScreen() {
               shareLocation();
             }}
           >
-            <Ionicons name="location" size={24} color={Colors.text.primary} />
+            <Ionicons name="location" size={24} color="#FFFFFF" />
             <View style={styles.shareLocationTextContainer}>
               <Text style={styles.shareLocationTitle}>شارك موقعي</Text>
               <Text style={styles.shareLocationDesc}>
@@ -159,7 +159,7 @@ export default function EmergencyScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary.green,
+    backgroundColor: Colors.bg.primary,
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -223,7 +223,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     gap: 6,
-    backgroundColor: "rgba(39, 174, 96, 0.12)",
+    backgroundColor: "rgba(39, 174, 96, 0.08)",
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 12,
@@ -251,7 +251,7 @@ const styles = StyleSheet.create({
   shareLocationTitle: {
     fontFamily: "Cairo_700Bold",
     fontSize: 17,
-    color: Colors.text.primary,
+    color: "#FFFFFF",
     textAlign: "right",
     writingDirection: "rtl",
   },
