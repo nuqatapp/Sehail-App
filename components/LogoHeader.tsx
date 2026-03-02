@@ -15,7 +15,7 @@ export default function LogoHeader() {
           <View style={styles.accentLine} />
         </View>
         <View style={styles.logoWrap}>
-          <Image source={logo} style={styles.logo} contentFit="contain" />
+          <Image source={logo} style={styles.logo} contentFit="cover" />
         </View>
       </View>
     </Animated.View>
@@ -35,14 +35,12 @@ const styles = StyleSheet.create({
   logoWrap: {
     width: 52,
     height: 52,
-    borderRadius: 16,
-    backgroundColor: Colors.primary.green,
-    alignItems: "center",
-    justifyContent: "center",
+    borderRadius: 14,
+    overflow: "hidden",
   },
   logo: {
-    width: 38,
-    height: 38,
+    width: 52,
+    height: 52,
   },
   textGroup: {
     alignItems: "flex-end",
