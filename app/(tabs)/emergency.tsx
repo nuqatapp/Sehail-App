@@ -146,7 +146,7 @@ export default function EmergencyScreen() {
               color={Colors.text.tertiary}
             />
             <Text style={styles.disclaimerBoxText}>
-              سِهيل تطبيق تعليمي واستعدادي. في حالة الطوارئ الحقيقية اتصل
+              سهيل تطبيق تعليمي واستعدادي. في حالة الطوارئ الحقيقية اتصل
               بالجهات الرسمية مباشرة.
             </Text>
           </View>

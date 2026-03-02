@@ -11,7 +11,7 @@ export default function LogoHeader() {
     <Animated.View entering={FadeInDown.duration(400)} style={styles.container}>
       <View style={styles.row}>
         <View style={styles.textGroup}>
-          <Text style={styles.appName}>سِهيل</Text>
+          <Text style={styles.appName}>سهيل</Text>
           <View style={styles.accentLine} />
         </View>
         <Image source={logo} style={styles.logo} contentFit="contain" />

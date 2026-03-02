@@ -126,7 +126,7 @@ export default function HomeScreen() {
         <Animated.View entering={FadeInDown.delay(200).duration(500)} style={styles.tipCard}>
           <View style={styles.tipHeader}>
             <Ionicons name="sparkles" size={16} color={Colors.primary.gold} />
-            <Text style={styles.tipLabel}>نصيحة سِهيل اليوم</Text>
+            <Text style={styles.tipLabel}>نصيحة سهيل اليوم</Text>
           </View>
           <Text style={styles.tipText}>{dailyTip}</Text>
         </Animated.View>
@@ -154,7 +154,7 @@ export default function HomeScreen() {
             delay={400}
           />
           <SectionCard
-            title="سوالف سِهيل"
+            title="سوالف سهيل"
             subtitle="قصص وتكتيكات"
             icon="flame-outline"
             onPress={() => router.push("/(tabs)/stories")}

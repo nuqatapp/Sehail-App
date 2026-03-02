@@ -79,7 +79,7 @@ export default function AppSplash({ onFinish }: AppSplashProps) {
           <Image source={logo} style={styles.logo} contentFit="contain" />
         </Animated.View>
 
-        <Animated.Text style={[styles.appName, nameStyle]}>سِهيل</Animated.Text>
+        <Animated.Text style={[styles.appName, nameStyle]}>سهيل</Animated.Text>
 
         <View style={styles.taglineContainer}>
           <Animated.Text style={[styles.tagline, line1Style]}>

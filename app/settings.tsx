@@ -57,8 +57,8 @@ export default function SettingsScreen() {
           <View style={styles.logoCircle}>
             <Image source={logo} style={styles.logo} contentFit="contain" />
           </View>
-          <Text style={styles.appName}>سِهيل</Text>
-          <Text style={styles.tagline}>إذا طلع سِهيل لا تأمن السيل</Text>
+          <Text style={styles.appName}>سهيل</Text>
+          <Text style={styles.tagline}>إذا طلع سهيل لا تأمن السيل</Text>
           <Text style={styles.version}>النسخة 1.0.0</Text>
         </View>
 
@@ -93,7 +93,7 @@ export default function SettingsScreen() {
             />
             <View style={styles.settingTextContainer}>
               <Text style={styles.settingTitle}>نصيحة اليوم</Text>
-              <Text style={styles.settingDesc}>عرض نصيحة سِهيل اليومية</Text>
+              <Text style={styles.settingDesc}>عرض نصيحة سهيل اليومية</Text>
             </View>
             <Ionicons name="sparkles-outline" size={22} color={Colors.primary.gold} />
           </View>
@@ -103,7 +103,7 @@ export default function SettingsScreen() {
           <Text style={styles.sectionLabel}>عن التطبيق</Text>
           <View style={styles.aboutCard}>
             <Text style={styles.aboutText}>
-              سِهيل تطبيق سعودي للمهتمين بالطلعات البرية والهايكنج والكشتات.
+              سهيل تطبيق سعودي للمهتمين بالطلعات البرية والهايكنج والكشتات.
               يقدم معرفة وتجهيز وليس إنقاذ مباشر. محتواه مبني على مصادر رسمية
               سعودية.
             </Text>
