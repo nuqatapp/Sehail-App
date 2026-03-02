@@ -8,9 +8,15 @@ const logo = require("@/assets/images/sehail-logo.png");
 
 export default function LogoHeader() {
   return (
-    <Animated.View entering={FadeInDown.duration(500)} style={styles.container}>
-      <View style={styles.logoCircle}>
-        <Image source={logo} style={styles.logo} contentFit="contain" />
+    <Animated.View entering={FadeInDown.duration(400)} style={styles.container}>
+      <View style={styles.row}>
+        <View style={styles.textGroup}>
+          <Text style={styles.appName}>سِهيل</Text>
+          <View style={styles.accentLine} />
+        </View>
+        <View style={styles.logoWrap}>
+          <Image source={logo} style={styles.logo} contentFit="contain" />
+        </View>
       </View>
     </Animated.View>
   );
@@ -18,27 +24,40 @@ export default function LogoHeader() {
 
 const styles = StyleSheet.create({
   container: {
-    alignItems: "center",
-    paddingVertical: 16,
-    backgroundColor: Colors.primary.green,
-    marginHorizontal: -14,
-    paddingHorizontal: 14,
-    paddingBottom: 28,
-    borderBottomLeftRadius: 28,
-    borderBottomRightRadius: 28,
     marginBottom: 20,
-    marginTop: -16,
   },
-  logoCircle: {
-    width: 72,
-    height: 72,
-    borderRadius: 36,
-    backgroundColor: 'rgba(255, 255, 255, 0.15)',
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: 12,
+  },
+  logoWrap: {
+    width: 52,
+    height: 52,
+    borderRadius: 16,
+    backgroundColor: Colors.primary.green,
     alignItems: "center",
     justifyContent: "center",
   },
   logo: {
-    width: 56,
-    height: 56,
+    width: 38,
+    height: 38,
+  },
+  textGroup: {
+    alignItems: "flex-end",
+  },
+  appName: {
+    fontFamily: "Cairo_700Bold",
+    fontSize: 22,
+    color: Colors.primary.green,
+    lineHeight: 30,
+  },
+  accentLine: {
+    width: 24,
+    height: 3,
+    borderRadius: 2,
+    backgroundColor: Colors.primary.gold,
+    marginTop: 2,
   },
 });

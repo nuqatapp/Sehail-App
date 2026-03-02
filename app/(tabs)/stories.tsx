@@ -70,7 +70,7 @@ export default function StoriesScreen() {
       >
         <LogoHeader />
 
-        <Animated.View entering={FadeInDown.duration(500)}>
+        <Animated.View entering={FadeInDown.delay(100).duration(400)}>
           <Text style={styles.screenTitle}>{stories.title}</Text>
           <Text style={styles.screenSubtitle}>{stories.subtitle}</Text>
         </Animated.View>

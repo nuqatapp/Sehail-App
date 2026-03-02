@@ -70,7 +70,7 @@ export default function GuideScreen() {
       >
         <LogoHeader />
 
-        <Animated.View entering={FadeInDown.duration(500)}>
+        <Animated.View entering={FadeInDown.delay(100).duration(400)}>
           <Text style={styles.screenTitle}>{fieldGuide.title}</Text>
           <Text style={styles.screenSubtitle}>{fieldGuide.subtitle}</Text>
         </Animated.View>

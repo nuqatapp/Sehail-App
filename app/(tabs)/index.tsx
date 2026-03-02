@@ -98,21 +98,18 @@ export default function HomeScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
-        <LogoHeader />
+        <View style={styles.headerRow}>
+          <Pressable
+            onPress={() => router.push("/settings")}
+            style={styles.settingsButton}
+          >
+            <Ionicons name="settings-outline" size={22} color={Colors.text.tertiary} />
+          </Pressable>
+          <LogoHeader />
+        </View>
 
-        <Animated.View entering={FadeInDown.duration(600)} style={styles.header}>
-          <View style={styles.headerTop}>
-            <View />
-            <Pressable
-              onPress={() => router.push("/settings")}
-              style={styles.settingsButton}
-            >
-              <Ionicons name="settings-outline" size={22} color={Colors.text.tertiary} />
-            </Pressable>
-          </View>
-          <Text style={styles.welcomeText}>
-            هلا، معك سِهيل، دليلك في البر
-          </Text>
+        <Animated.View entering={FadeInDown.delay(100).duration(400)} style={styles.header}>
+          <Text style={styles.welcomeText}>دليلك في البر</Text>
           <Text style={styles.welcomeSubtext}>جاهزة للرحلة؟</Text>
         </Animated.View>
 
@@ -194,25 +191,28 @@ const styles = StyleSheet.create({
   scrollContent: {
     paddingHorizontal: 14,
   },
-  header: {
-    marginBottom: 16,
-  },
-  headerTop: {
+  headerRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    marginBottom: 8,
+  },
+  header: {
+    marginBottom: 16,
   },
   settingsButton: {
     width: 40,
     height: 40,
+    borderRadius: 12,
+    backgroundColor: Colors.card.background,
+    borderWidth: 1,
+    borderColor: Colors.card.border,
     alignItems: "center",
     justifyContent: "center",
   },
   welcomeText: {
-    fontFamily: "Cairo_700Bold",
-    fontSize: 22,
-    color: Colors.text.primary,
+    fontFamily: "Cairo_600SemiBold",
+    fontSize: 17,
+    color: Colors.text.secondary,
     textAlign: "right",
     writingDirection: "rtl",
   },

@@ -74,7 +74,7 @@ export default function EmergencyScreen() {
       >
         <LogoHeader />
 
-        <Animated.View entering={FadeInDown.duration(500)}>
+        <Animated.View entering={FadeInDown.delay(100).duration(400)}>
           <Text style={styles.screenTitle}>{emergency.title}</Text>
           <Text style={styles.screenSubtitle}>{emergency.subtitle}</Text>
         </Animated.View>
