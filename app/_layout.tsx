@@ -1,4 +1,3 @@
-// template
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
@@ -7,28 +6,85 @@ import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
 import { queryClient } from "@/lib/query-client";
+import { useFonts, Cairo_400Regular, Cairo_600SemiBold, Cairo_700Bold } from "@expo-google-fonts/cairo";
+import { StatusBar } from "expo-status-bar";
+import Colors from "@/constants/colors";
 
-// Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
 function RootLayoutNav() {
   return (
-    <Stack screenOptions={{ headerBackTitle: "Back" }}>
+    <Stack screenOptions={{ headerBackTitle: "رجوع", headerShown: false }}>
       <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen
+        name="prep-gear"
+        options={{
+          headerShown: true,
+          headerTitle: "زهبة الركيب",
+          headerStyle: { backgroundColor: Colors.primary.navy },
+          headerTintColor: Colors.primary.gold,
+          headerTitleStyle: { fontFamily: "Cairo_700Bold" },
+          presentation: "card",
+        }}
+      />
+      <Stack.Screen
+        name="star-guide"
+        options={{
+          headerShown: true,
+          headerTitle: "دليل النجوم",
+          headerStyle: { backgroundColor: Colors.primary.navy },
+          headerTintColor: Colors.primary.gold,
+          headerTitleStyle: { fontFamily: "Cairo_700Bold" },
+          presentation: "card",
+        }}
+      />
+      <Stack.Screen
+        name="guide-detail"
+        options={{
+          headerShown: true,
+          headerTitle: "التفاصيل",
+          headerStyle: { backgroundColor: Colors.primary.navy },
+          headerTintColor: Colors.primary.gold,
+          headerTitleStyle: { fontFamily: "Cairo_700Bold" },
+          presentation: "card",
+        }}
+      />
+      <Stack.Screen
+        name="settings"
+        options={{
+          headerShown: true,
+          headerTitle: "الإعدادات",
+          headerStyle: { backgroundColor: Colors.primary.navy },
+          headerTintColor: Colors.primary.gold,
+          headerTitleStyle: { fontFamily: "Cairo_700Bold" },
+          presentation: "card",
+        }}
+      />
     </Stack>
   );
 }
 
 export default function RootLayout() {
+  const [fontsLoaded, fontError] = useFonts({
+    Cairo_400Regular,
+    Cairo_600SemiBold,
+    Cairo_700Bold,
+  });
+
   useEffect(() => {
-    SplashScreen.hideAsync();
-  }, []);
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync();
+    }
+  }, [fontsLoaded, fontError]);
+
+  if (!fontsLoaded && !fontError) return null;
 
   return (
     <ErrorBoundary>
       <QueryClientProvider client={queryClient}>
-        <GestureHandlerRootView>
+        <GestureHandlerRootView style={{ flex: 1 }}>
           <KeyboardProvider>
+            <StatusBar style="light" />
             <RootLayoutNav />
           </KeyboardProvider>
         </GestureHandlerRootView>
