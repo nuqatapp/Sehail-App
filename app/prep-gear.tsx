@@ -97,7 +97,7 @@ export default function PrepGearScreen() {
                 size={16}
                 color={
                   activeTripType === tripType.id
-                    ? Colors.primary.navy
+                    ? Colors.primary.greenDark
                     : Colors.primary.gold
                 }
               />
@@ -170,7 +170,7 @@ export default function PrepGearScreen() {
                 ]}
               >
                 {checkedItems[item.id] && (
-                  <Ionicons name="checkmark" size={14} color={Colors.primary.navy} />
+                  <Ionicons name="checkmark" size={14} color={Colors.primary.greenDark} />
                 )}
               </View>
             </Pressable>
@@ -184,7 +184,7 @@ export default function PrepGearScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary.navy,
+    backgroundColor: Colors.primary.green,
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -219,7 +219,7 @@ const styles = StyleSheet.create({
     color: Colors.primary.gold,
   },
   tripTypeTextActive: {
-    color: Colors.primary.navy,
+    color: Colors.primary.greenDark,
   },
   progressCard: {
     backgroundColor: Colors.card.background,

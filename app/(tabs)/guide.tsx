@@ -95,7 +95,7 @@ export default function GuideScreen() {
                 size={16}
                 color={
                   activeSection === section.id
-                    ? Colors.primary.navy
+                    ? Colors.primary.greenDark
                     : Colors.primary.gold
                 }
               />
@@ -181,7 +181,7 @@ export default function GuideScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary.navy,
+    backgroundColor: Colors.primary.green,
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -230,7 +230,7 @@ const styles = StyleSheet.create({
     color: Colors.primary.gold,
   },
   filterTextActive: {
-    color: Colors.primary.navy,
+    color: Colors.primary.greenDark,
   },
   guideCard: {
     backgroundColor: Colors.card.background,

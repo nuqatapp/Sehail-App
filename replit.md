@@ -32,12 +32,13 @@ app/
 data/
   wisdom.json           - Content brain (all app content)
 constants/
-  colors.ts             - Theme colors (navy + gold)
+  colors.ts             - Theme colors (Saudi green + gold)
 ```
 
 ## Brand Colors
-- Navy (primary bg): #0A1628
-- Navy Light (cards): #152238
+- Saudi Green (primary bg): #006C35
+- Green Dark (cards/tab bar): #004D26
+- Green Deep (accents): #003D1E
 - Gold (accent): #D4AF37
 - Text: White / rgba variants
 

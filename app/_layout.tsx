@@ -2,6 +2,7 @@ import { QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import React, { useEffect } from "react";
+import { I18nManager } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
 import { ErrorBoundary } from "@/components/ErrorBoundary";
@@ -9,6 +10,9 @@ import { queryClient } from "@/lib/query-client";
 import { useFonts, Cairo_400Regular, Cairo_600SemiBold, Cairo_700Bold } from "@expo-google-fonts/cairo";
 import { StatusBar } from "expo-status-bar";
 import Colors from "@/constants/colors";
+
+I18nManager.allowRTL(true);
+I18nManager.forceRTL(true);
 
 SplashScreen.preventAutoHideAsync();
 
@@ -21,7 +25,7 @@ function RootLayoutNav() {
         options={{
           headerShown: true,
           headerTitle: "زهبة الركيب",
-          headerStyle: { backgroundColor: Colors.primary.navy },
+          headerStyle: { backgroundColor: Colors.primary.green },
           headerTintColor: Colors.primary.gold,
           headerTitleStyle: { fontFamily: "Cairo_700Bold" },
           presentation: "card",
@@ -32,7 +36,7 @@ function RootLayoutNav() {
         options={{
           headerShown: true,
           headerTitle: "دليل النجوم",
-          headerStyle: { backgroundColor: Colors.primary.navy },
+          headerStyle: { backgroundColor: Colors.primary.green },
           headerTintColor: Colors.primary.gold,
           headerTitleStyle: { fontFamily: "Cairo_700Bold" },
           presentation: "card",
@@ -43,7 +47,7 @@ function RootLayoutNav() {
         options={{
           headerShown: true,
           headerTitle: "التفاصيل",
-          headerStyle: { backgroundColor: Colors.primary.navy },
+          headerStyle: { backgroundColor: Colors.primary.green },
           headerTintColor: Colors.primary.gold,
           headerTitleStyle: { fontFamily: "Cairo_700Bold" },
           presentation: "card",
@@ -54,7 +58,7 @@ function RootLayoutNav() {
         options={{
           headerShown: true,
           headerTitle: "الإعدادات",
-          headerStyle: { backgroundColor: Colors.primary.navy },
+          headerStyle: { backgroundColor: Colors.primary.green },
           headerTintColor: Colors.primary.gold,
           headerTitleStyle: { fontFamily: "Cairo_700Bold" },
           presentation: "card",

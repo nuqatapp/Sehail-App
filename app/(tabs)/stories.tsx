@@ -175,7 +175,7 @@ export default function StoriesScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary.navy,
+    backgroundColor: Colors.primary.green,
   },
   scrollContent: {
     paddingHorizontal: 20,
@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     color: Colors.primary.gold,
   },
   filterTextActive: {
-    color: Colors.primary.navy,
+    color: Colors.primary.greenDark,
   },
   storyCard: {
     backgroundColor: Colors.card.background,

@@ -11,7 +11,7 @@
     "splash": {
       "image": "./assets/images/splash-icon.png",
       "resizeMode": "contain",
-      "backgroundColor": "#0A1628"
+      "backgroundColor": "#006C35"
     },
     "ios": {
       "supportsTablet": false,
@@ -20,7 +20,7 @@
     "android": {
       "package": "com.sehail.app",
       "adaptiveIcon": {
-        "backgroundColor": "#0A1628",
+        "backgroundColor": "#006C35",
         "foregroundImage": "./assets/images/icon.png"
       }
     },

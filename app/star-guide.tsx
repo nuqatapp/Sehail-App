@@ -87,7 +87,7 @@ export default function StarGuideScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: Colors.primary.navy,
+    backgroundColor: Colors.primary.green,
   },
   scrollContent: {
     paddingHorizontal: 20,
