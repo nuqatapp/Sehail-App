@@ -14,9 +14,7 @@ export default function LogoHeader() {
           <Text style={styles.appName}>سِهيل</Text>
           <View style={styles.accentLine} />
         </View>
-        <View style={styles.logoWrap}>
-          <Image source={logo} style={styles.logo} contentFit="cover" />
-        </View>
+        <Image source={logo} style={styles.logo} contentFit="contain" />
       </View>
     </Animated.View>
   );
@@ -32,15 +30,10 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 12,
   },
-  logoWrap: {
-    width: 52,
-    height: 52,
-    borderRadius: 14,
-    overflow: "hidden",
-  },
   logo: {
-    width: 52,
-    height: 52,
+    width: 50,
+    height: 66,
+    borderRadius: 10,
   },
   textGroup: {
     alignItems: "flex-end",

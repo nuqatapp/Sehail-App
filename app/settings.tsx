@@ -133,15 +133,16 @@ const styles = StyleSheet.create({
     paddingVertical: 20,
   },
   logoCircle: {
-    width: 80,
-    height: 80,
-    borderRadius: 20,
+    width: 72,
+    height: 96,
+    borderRadius: 18,
     overflow: "hidden" as const,
+    backgroundColor: Colors.primary.green,
     marginBottom: 12,
   },
   logo: {
-    width: 80,
-    height: 80,
+    width: 72,
+    height: 96,
   },
   appName: {
     fontFamily: "Cairo_700Bold",
