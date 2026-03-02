@@ -1,7 +1,7 @@
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
-import React, { useEffect } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import { I18nManager } from "react-native";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import { KeyboardProvider } from "react-native-keyboard-controller";
@@ -10,6 +10,7 @@ import { queryClient } from "@/lib/query-client";
 import { useFonts, Cairo_400Regular, Cairo_600SemiBold, Cairo_700Bold } from "@expo-google-fonts/cairo";
 import { StatusBar } from "expo-status-bar";
 import Colors from "@/constants/colors";
+import AppSplash from "@/components/AppSplash";
 
 I18nManager.allowRTL(true);
 I18nManager.forceRTL(true);
@@ -75,11 +76,17 @@ export default function RootLayout() {
     Cairo_700Bold,
   });
 
+  const [showSplash, setShowSplash] = useState(true);
+
   useEffect(() => {
     if (fontsLoaded || fontError) {
       SplashScreen.hideAsync();
     }
   }, [fontsLoaded, fontError]);
+
+  const handleSplashFinish = useCallback(() => {
+    setShowSplash(false);
+  }, []);
 
   if (!fontsLoaded && !fontError) return null;
 
@@ -88,8 +95,9 @@ export default function RootLayout() {
       <QueryClientProvider client={queryClient}>
         <GestureHandlerRootView style={{ flex: 1 }}>
           <KeyboardProvider>
-            <StatusBar style="light" />
+            <StatusBar style="dark" />
             <RootLayoutNav />
+            {showSplash && <AppSplash onFinish={handleSplashFinish} />}
           </KeyboardProvider>
         </GestureHandlerRootView>
       </QueryClientProvider>
