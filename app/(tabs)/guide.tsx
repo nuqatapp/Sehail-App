@@ -14,6 +14,7 @@ import * as Haptics from "expo-haptics";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
+import LogoHeader from "@/components/LogoHeader";
 
 const fieldGuide = wisdomData.categories.fieldGuide;
 
@@ -67,6 +68,8 @@ export default function GuideScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
+        <LogoHeader />
+
         <Animated.View entering={FadeInDown.duration(500)}>
           <Text style={styles.screenTitle}>{fieldGuide.title}</Text>
           <Text style={styles.screenSubtitle}>{fieldGuide.subtitle}</Text>

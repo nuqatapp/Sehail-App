@@ -17,6 +17,7 @@ import * as Location from "expo-location";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
+import LogoHeader from "@/components/LogoHeader";
 
 const emergency = wisdomData.categories.emergency;
 
@@ -71,6 +72,8 @@ export default function EmergencyScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
+        <LogoHeader />
+
         <Animated.View entering={FadeInDown.duration(500)}>
           <Text style={styles.screenTitle}>{emergency.title}</Text>
           <Text style={styles.screenSubtitle}>{emergency.subtitle}</Text>

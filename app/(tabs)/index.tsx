@@ -11,7 +11,6 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Image } from "expo-image";
 import * as Haptics from "expo-haptics";
 import Animated, {
   FadeInDown,
@@ -19,8 +18,7 @@ import Animated, {
 } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
-
-const logo = require("@/assets/images/sehail-logo.png");
+import LogoHeader from "@/components/LogoHeader";
 
 function getWeatherAlert(): { message: string; icon: string } {
   const hour = new Date().getHours();
@@ -99,11 +97,11 @@ export default function HomeScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
+        <LogoHeader />
+
         <Animated.View entering={FadeInDown.duration(600)} style={styles.header}>
           <View style={styles.headerTop}>
-            <View style={styles.logoContainer}>
-              <Image source={logo} style={styles.logo} contentFit="contain" />
-            </View>
+            <View />
             <Pressable
               onPress={() => router.push("/settings")}
               style={styles.settingsButton}
@@ -207,14 +205,6 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     alignItems: "center",
     marginBottom: 12,
-  },
-  logoContainer: {
-    width: 48,
-    height: 48,
-  },
-  logo: {
-    width: 48,
-    height: 48,
   },
   settingsButton: {
     width: 40,

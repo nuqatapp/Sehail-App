@@ -13,6 +13,7 @@ import * as Haptics from "expo-haptics";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
+import LogoHeader from "@/components/LogoHeader";
 
 const stories = wisdomData.categories.stories;
 
@@ -67,6 +68,8 @@ export default function StoriesScreen() {
         ]}
         showsVerticalScrollIndicator={false}
       >
+        <LogoHeader />
+
         <Animated.View entering={FadeInDown.duration(500)}>
           <Text style={styles.screenTitle}>{stories.title}</Text>
           <Text style={styles.screenSubtitle}>{stories.subtitle}</Text>
