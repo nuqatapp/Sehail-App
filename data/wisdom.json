@@ -286,6 +286,7 @@
       "subtitle": "أرقام الطوارئ",
       "icon": "shield-outline",
       "contacts": [
+        { "id": "em0", "name": "الطوارئ من الجوال", "number": "112", "description": "يعمل بدون شريحة أو قفل الجوال" },
         { "id": "em1", "name": "الطوارئ الموحد", "number": "911", "description": "رقم الطوارئ الموحد في السعودية" },
         { "id": "em2", "name": "الدفاع المدني", "number": "998", "description": "للحوادث والكوارث الطبيعية" },
         { "id": "em3", "name": "الإسعاف", "number": "997", "description": "للحالات الطبية الطارئة" },
