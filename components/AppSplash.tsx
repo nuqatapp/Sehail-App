@@ -22,6 +22,10 @@ export default function AppSplash({ onFinish }: AppSplashProps) {
   const logoOpacity = useSharedValue(0);
   const nameOpacity = useSharedValue(0);
   const nameTranslateY = useSharedValue(12);
+  const line1Opacity = useSharedValue(0);
+  const line1TranslateY = useSharedValue(10);
+  const line2Opacity = useSharedValue(0);
+  const line2TranslateY = useSharedValue(10);
   const screenOpacity = useSharedValue(1);
 
   useEffect(() => {
@@ -31,7 +35,13 @@ export default function AppSplash({ onFinish }: AppSplashProps) {
     nameOpacity.value = withDelay(400, withTiming(1, { duration: 500 }));
     nameTranslateY.value = withDelay(400, withTiming(0, { duration: 500, easing: Easing.out(Easing.cubic) }));
 
-    screenOpacity.value = withDelay(1800, withTiming(0, { duration: 400 }, () => {
+    line1Opacity.value = withDelay(800, withTiming(1, { duration: 500 }));
+    line1TranslateY.value = withDelay(800, withTiming(0, { duration: 500, easing: Easing.out(Easing.cubic) }));
+
+    line2Opacity.value = withDelay(1100, withTiming(1, { duration: 500 }));
+    line2TranslateY.value = withDelay(1100, withTiming(0, { duration: 500, easing: Easing.out(Easing.cubic) }));
+
+    screenOpacity.value = withDelay(2800, withTiming(0, { duration: 400 }, () => {
       runOnJS(onFinish)();
     }));
   }, []);
@@ -46,6 +56,16 @@ export default function AppSplash({ onFinish }: AppSplashProps) {
     transform: [{ translateY: nameTranslateY.value }],
   }));
 
+  const line1Style = useAnimatedStyle(() => ({
+    opacity: line1Opacity.value,
+    transform: [{ translateY: line1TranslateY.value }],
+  }));
+
+  const line2Style = useAnimatedStyle(() => ({
+    opacity: line2Opacity.value,
+    transform: [{ translateY: line2TranslateY.value }],
+  }));
+
   const screenStyle = useAnimatedStyle(() => ({
     opacity: screenOpacity.value,
   }));
@@ -57,6 +77,14 @@ export default function AppSplash({ onFinish }: AppSplashProps) {
           <Image source={logo} style={styles.logo} contentFit="contain" />
         </Animated.View>
         <Animated.Text style={[styles.appName, nameStyle]}>سهيل</Animated.Text>
+        <View style={styles.taglineContainer}>
+          <Animated.Text style={[styles.tagline, line1Style]}>
+            دليلك في البر
+          </Animated.Text>
+          <Animated.Text style={[styles.taglineSub, line2Style]}>
+            جاهزة للرحلة؟
+          </Animated.Text>
+        </View>
       </View>
     </Animated.View>
   );
@@ -85,5 +113,20 @@ const styles = StyleSheet.create({
     fontFamily: "Cairo_700Bold",
     fontSize: 32,
     color: Colors.primary.green,
+    marginBottom: 16,
+  },
+  taglineContainer: {
+    alignItems: "center",
+    gap: 4,
+  },
+  tagline: {
+    fontFamily: "Cairo_600SemiBold",
+    fontSize: 18,
+    color: Colors.text.secondary,
+  },
+  taglineSub: {
+    fontFamily: "Cairo_400Regular",
+    fontSize: 16,
+    color: Colors.text.tertiary,
   },
 });
