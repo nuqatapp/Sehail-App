@@ -12,6 +12,7 @@ import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
 import Animated, { FadeInDown } from "react-native-reanimated";
+import { Image } from "expo-image";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
 import LogoHeader from "@/components/LogoHeader";
@@ -108,12 +109,17 @@ export default function HomeScreen() {
           <LogoHeader />
         </View>
 
-        <Animated.View entering={FadeInDown.delay(100).duration(400)} style={styles.header}>
-          <Text style={styles.welcomeText}>دليلك في البر</Text>
-          <Text style={styles.welcomeSubtext}>جاهزة للرحلة؟</Text>
+        <Animated.View entering={FadeInDown.delay(100).duration(500)} style={styles.adBanner}>
+          <Pressable style={({ pressed }) => [pressed && { opacity: 0.9 }]}>
+            <Image
+              source={require("@/assets/images/ad-banner.png")}
+              style={styles.adImage}
+              contentFit="cover"
+            />
+          </Pressable>
         </Animated.View>
 
-        <Animated.View entering={FadeInDown.delay(100).duration(500)} style={styles.weatherCard}>
+        <Animated.View entering={FadeInDown.delay(200).duration(500)} style={styles.weatherCard}>
           <View style={styles.weatherHeader}>
             <View style={styles.weatherIconContainer}>
               <Ionicons name={weatherAlert.icon as any} size={18} color={Colors.primary.green} />
@@ -195,9 +201,19 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-  },
-  header: {
     marginBottom: 16,
+  },
+  adBanner: {
+    marginBottom: 16,
+    borderRadius: 16,
+    overflow: "hidden",
+    borderWidth: 1,
+    borderColor: Colors.card.border,
+  },
+  adImage: {
+    width: "100%",
+    height: 180,
+    borderRadius: 16,
   },
   settingsButton: {
     width: 40,
@@ -208,21 +224,6 @@ const styles = StyleSheet.create({
     borderColor: Colors.card.border,
     alignItems: "center",
     justifyContent: "center",
-  },
-  welcomeText: {
-    fontFamily: "Cairo_600SemiBold",
-    fontSize: 17,
-    color: Colors.text.secondary,
-    textAlign: "right",
-    writingDirection: "rtl",
-  },
-  welcomeSubtext: {
-    fontFamily: "Cairo_400Regular",
-    fontSize: 16,
-    color: Colors.text.secondary,
-    textAlign: "right",
-    writingDirection: "rtl",
-    marginTop: 2,
   },
   weatherCard: {
     backgroundColor: Colors.card.background,
