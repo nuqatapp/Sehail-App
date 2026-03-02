@@ -1,0 +1,42 @@
+App Description
+
+Sehail is a precision outdoor navigation app built around clarity, direction, and cultural grounding. It is designed for users who move with purpose, whether exploring open terrain, navigating urban environments, or tracking orientation in unfamiliar landscapes.
+
+Core Concept
+
+The identity is anchored in a four pointed guiding star with an elongated southern axis, integrating the letter S to reinforce directional focus. The symbol reflects guidance, stability, and intentional movement. The interface design follows the same philosophy, minimal, controlled, and highly legible.
+
+Brand Color System
+
+Primary Background
+Saudi Flag Green
+HEX #006C35
+RGB 0, 108, 53
+
+This solid green defines the app environment. It communicates authority, national identity, and trust. It is used across splash screens, onboarding flows, and primary UI backgrounds.
+
+Primary Accent
+Warm Gold
+Recommended flat tone: #D4AF37
+
+Gold represents guidance and premium positioning. It is used for the main logo, directional indicators, active navigation markers, and high priority UI elements. It must remain flat, without gradients or metallic effects.
+
+Neutral System
+
+White
+#FFFFFF
+Used for primary typography on green backgrounds, map labels, and clean interface overlays.
+
+Black
+#000000
+Reserved for monochrome logo usage, system text on white layouts, and formal documentation.
+
+Design Language
+
+The interface avoids visual noise. No gradients, no shadows, no decorative effects. All elements are flat, sharp, and symmetrical. Typography remains modern and highly legible to ensure quick cognitive processing during movement.
+
+Experience Positioning
+
+Sehail is not a generic mapping tool. It positions itself as a directional authority rooted in Saudi identity while maintaining a globally minimal aesthetic. The Saudi Flag Green foundation ensures immediate cultural alignment. The gold star reinforces guidance and premium reliability. White and black maintain institutional flexibility across digital and print environments.
+
+The result is a navigation product that signals precision, heritage, and controlled modernity.
