@@ -64,11 +64,16 @@ function SectionCard({ title, subtitle, icon, onPress, delay }: SectionCardProps
           onPress();
         }}
       >
-        <View style={styles.sectionIconContainer}>
-          <Ionicons name={icon as any} size={26} color={Colors.primary.green} />
+        <View style={styles.sectionCardInner}>
+          <View style={styles.sectionTextContainer}>
+            <Text style={styles.sectionTitle}>{title}</Text>
+            <Text style={styles.sectionSubtitle}>{subtitle}</Text>
+          </View>
+          <View style={styles.sectionIconContainer}>
+            <Ionicons name={icon as any} size={24} color={Colors.primary.green} />
+          </View>
         </View>
-        <Text style={styles.sectionTitle}>{title}</Text>
-        <Text style={styles.sectionSubtitle}>{subtitle}</Text>
+        <Ionicons name="chevron-back" size={16} color={Colors.text.tertiary} style={styles.sectionChevron} />
       </Pressable>
     </Animated.View>
   );
@@ -130,38 +135,34 @@ export default function HomeScreen() {
         </Animated.View>
 
         <View style={styles.sectionGrid}>
-          <View style={styles.sectionRow}>
-            <SectionCard
-              title="زهبة الركيب"
-              subtitle="قوائم التجهيز"
-              icon="briefcase-outline"
-              onPress={() => router.push("/prep-gear")}
-              delay={300}
-            />
-            <SectionCard
-              title="دليل النجوم"
-              subtitle="ملاحة بالنجوم"
-              icon="star-outline"
-              onPress={() => router.push("/star-guide")}
-              delay={350}
-            />
-          </View>
-          <View style={styles.sectionRow}>
-            <SectionCard
-              title="بصيرة البر"
-              subtitle="دليل ميداني"
-              icon="eye-outline"
-              onPress={() => router.push("/(tabs)/guide")}
-              delay={400}
-            />
-            <SectionCard
-              title="سوالف سِهيل"
-              subtitle="قصص وتكتيكات"
-              icon="flame-outline"
-              onPress={() => router.push("/(tabs)/stories")}
-              delay={450}
-            />
-          </View>
+          <SectionCard
+            title="زهبة الركيب"
+            subtitle="قوائم التجهيز"
+            icon="briefcase-outline"
+            onPress={() => router.push("/prep-gear")}
+            delay={300}
+          />
+          <SectionCard
+            title="دليل النجوم"
+            subtitle="ملاحة بالنجوم"
+            icon="star-outline"
+            onPress={() => router.push("/star-guide")}
+            delay={350}
+          />
+          <SectionCard
+            title="بصيرة البر"
+            subtitle="دليل ميداني"
+            icon="eye-outline"
+            onPress={() => router.push("/(tabs)/guide")}
+            delay={400}
+          />
+          <SectionCard
+            title="سوالف سِهيل"
+            subtitle="قصص وتكتيكات"
+            icon="flame-outline"
+            onPress={() => router.push("/(tabs)/stories")}
+            delay={450}
+          />
         </View>
 
         <Animated.View entering={FadeInDown.delay(500).duration(500)}>
@@ -191,7 +192,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bg.primary,
   },
   scrollContent: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 14,
   },
   header: {
     marginBottom: 16,
@@ -291,48 +292,57 @@ const styles = StyleSheet.create({
   },
   sectionGrid: {
     marginBottom: 16,
-    gap: 12,
-  },
-  sectionRow: {
-    flexDirection: "row",
-    gap: 12,
+    gap: 10,
   },
   sectionCard: {
-    flex: 1,
     backgroundColor: Colors.card.background,
     borderRadius: 16,
     padding: 16,
-    alignItems: "center",
     borderWidth: 1,
     borderColor: Colors.card.border,
-    minHeight: 120,
-    justifyContent: "center",
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
   },
   sectionCardPressed: {
     opacity: 0.7,
-    transform: [{ scale: 0.97 }],
+    transform: [{ scale: 0.98 }],
+  },
+  sectionCardInner: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: 14,
+  },
+  sectionTextContainer: {
+    alignItems: "flex-end",
   },
   sectionIconContainer: {
     width: 48,
     height: 48,
-    borderRadius: 12,
+    borderRadius: 14,
     backgroundColor: "rgba(0, 108, 53, 0.08)",
     alignItems: "center",
     justifyContent: "center",
-    marginBottom: 10,
   },
   sectionTitle: {
     fontFamily: "Cairo_700Bold",
-    fontSize: 15,
+    fontSize: 16,
     color: Colors.text.primary,
-    textAlign: "center",
+    textAlign: "right",
+    writingDirection: "rtl" as const,
   },
   sectionSubtitle: {
     fontFamily: "Cairo_400Regular",
-    fontSize: 12,
+    fontSize: 13,
     color: Colors.text.secondary,
-    textAlign: "center",
+    textAlign: "right",
+    writingDirection: "rtl" as const,
     marginTop: 2,
+  },
+  sectionChevron: {
+    marginLeft: 4,
   },
   emergencyBanner: {
     backgroundColor: Colors.card.background,

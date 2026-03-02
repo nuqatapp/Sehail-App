@@ -89,7 +89,7 @@ const styles = StyleSheet.create({
     backgroundColor: Colors.bg.primary,
   },
   scrollContent: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 14,
     paddingTop: 16,
   },
   introCard: {
