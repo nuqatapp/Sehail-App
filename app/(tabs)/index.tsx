@@ -139,7 +139,7 @@ export default function HomeScreen() {
 
         <View style={styles.sectionGrid}>
           <SectionCard
-            title="زهبة الركيب"
+            title="إحتياجات الرحلة"
             subtitle="قوائم التجهيز"
             icon="briefcase-outline"
             onPress={() => router.push("/prep-gear")}
@@ -153,7 +153,7 @@ export default function HomeScreen() {
             delay={350}
           />
           <SectionCard
-            title="بصيرة البر"
+            title="معلومات تهمك⚠️"
             subtitle="دليل ميداني"
             icon="eye-outline"
             onPress={() => router.push("/(tabs)/guide")}

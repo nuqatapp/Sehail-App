@@ -25,7 +25,7 @@ function RootLayoutNav() {
         name="prep-gear"
         options={{
           headerShown: true,
-          headerTitle: "زهبة الركيب",
+          headerTitle: "إحتياجات الرحلة",
           headerStyle: { backgroundColor: Colors.primary.green },
           headerTintColor: Colors.primary.gold,
           headerTitleStyle: { fontFamily: "Cairo_700Bold" },

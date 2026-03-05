@@ -2,7 +2,7 @@
   "categories": {
     "prepGear": {
       "id": "prepGear",
-      "title": "زهبة الركيب",
+      "title": "إحتياجات الرحلة",
       "subtitle": "قوائم التجهيز",
       "icon": "briefcase-outline",
       "tripTypes": [
@@ -63,7 +63,7 @@
     },
     "fieldGuide": {
       "id": "fieldGuide",
-      "title": "بصيرة البر",
+      "title": "معلومات تهمك⚠️",
       "subtitle": "دليل ميداني",
       "icon": "eye-outline",
       "sections": [
