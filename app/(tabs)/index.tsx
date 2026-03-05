@@ -124,7 +124,6 @@ export default function HomeScreen() {
             <View style={styles.weatherIconContainer}>
               <Ionicons name={weatherAlert.icon as any} size={18} color={Colors.primary.green} />
             </View>
-            <Text style={styles.weatherLabel}>النباهة</Text>
           </View>
           <Text style={styles.weatherMessage}>{weatherAlert.message}</Text>
         </Animated.View>
