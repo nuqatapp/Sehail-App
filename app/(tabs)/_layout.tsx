@@ -16,7 +16,7 @@ function NativeTabLayout() {
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="guide">
         <Icon sf={{ default: "exclamationmark.triangle", selected: "exclamationmark.triangle.fill" }} />
-        <Label>بصيرة</Label>
+        <Label>معلومات</Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="stories">
         <Icon sf={{ default: "flame", selected: "flame.fill" }} />
@@ -72,7 +72,7 @@ function ClassicTabLayout() {
       <Tabs.Screen
         name="guide"
         options={{
-          title: "بصيرة",
+          title: "معلومات",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="warning" size={size} color={color} />
           ),
