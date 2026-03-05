@@ -119,15 +119,6 @@ export default function HomeScreen() {
           </Pressable>
         </Animated.View>
 
-        <Animated.View entering={FadeInDown.delay(200).duration(500)} style={styles.weatherCard}>
-          <View style={styles.weatherHeader}>
-            <View style={styles.weatherIconContainer}>
-              <Ionicons name={weatherAlert.icon as any} size={18} color={Colors.primary.green} />
-            </View>
-          </View>
-          <Text style={styles.weatherMessage}>{weatherAlert.message}</Text>
-        </Animated.View>
-
         <Animated.View entering={FadeInDown.delay(200).duration(500)} style={styles.tipCard}>
           <View style={styles.tipHeader}>
             <Ionicons name="sparkles" size={16} color={Colors.primary.gold} />
