@@ -145,7 +145,7 @@ export default function HomeScreen() {
           <SectionCard
             title="معلومات تهمك⚠️"
             subtitle="دليل ميداني"
-            icon="eye-outline"
+            icon="warning-outline"
             onPress={() => router.push("/(tabs)/guide")}
             delay={400}
           />

@@ -15,7 +15,7 @@ function NativeTabLayout() {
         <Label>المجلس</Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="guide">
-        <Icon sf={{ default: "eye", selected: "eye.fill" }} />
+        <Icon sf={{ default: "exclamationmark.triangle", selected: "exclamationmark.triangle.fill" }} />
         <Label>بصيرة</Label>
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="stories">
@@ -74,7 +74,7 @@ function ClassicTabLayout() {
         options={{
           title: "بصيرة",
           tabBarIcon: ({ color, size }) => (
-            <Ionicons name="eye" size={size} color={color} />
+            <Ionicons name="warning" size={size} color={color} />
           ),
         }}
       />
