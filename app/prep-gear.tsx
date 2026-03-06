@@ -92,15 +92,6 @@ export default function PrepGearScreen() {
                 setActiveTripType(tripType.id);
               }}
             >
-              <Ionicons
-                name={tripType.icon as any}
-                size={16}
-                color={
-                  activeTripType === tripType.id
-                    ? "#FFFFFF"
-                    : Colors.primary.green
-                }
-              />
               <Text
                 style={[
                   styles.tripTypeText,
@@ -109,8 +100,6 @@ export default function PrepGearScreen() {
               >
                 {tripType.name}
               </Text>
-              {tripType.environment === "sea" && <Text style={{ fontSize: 12, opacity: 0.6 }}>🌊</Text>}
-              {tripType.environment === "land" && <Text style={{ fontSize: 12, opacity: 0.6 }}>🏜️</Text>}
             </Pressable>
           ))}
         </ScrollView>
