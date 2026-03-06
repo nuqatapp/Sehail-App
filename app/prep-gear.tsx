@@ -92,6 +92,15 @@ export default function PrepGearScreen() {
                 setActiveTripType(tripType.id);
               }}
             >
+              <Ionicons
+                name={tripType.icon as any}
+                size={16}
+                color={
+                  activeTripType === tripType.id
+                    ? "#FFFFFF"
+                    : Colors.text.secondary
+                }
+              />
               <Text
                 style={[
                   styles.tripTypeText,
