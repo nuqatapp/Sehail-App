@@ -115,7 +115,7 @@ export default function GuideScreen() {
         </ScrollView>
 
         {currentSection?.items.map((item: any, index: number) => {
-          const envBadge = item.environment === "land" ? "🏜️" : item.environment === "sea" ? "🌊" : null;
+          const envIcon = item.environment === "land" ? "sunny-outline" : item.environment === "sea" ? "water-outline" : null;
           return (
           <Animated.View
             key={item.id}
@@ -140,7 +140,7 @@ export default function GuideScreen() {
                 });
               }}
             >
-              {envBadge && <Text style={styles.envBadge}>{envBadge}</Text>}
+              {envIcon && <View style={styles.envBadge}><Ionicons name={envIcon as any} size={14} color={Colors.text.tertiary} /></View>}
               <View style={styles.cardHeader}>
                 <View
                   style={[
@@ -252,8 +252,6 @@ const styles = StyleSheet.create({
     position: "absolute" as const,
     top: 8,
     left: 8,
-    fontSize: 14,
-    opacity: 0.6,
     zIndex: 1,
   },
   cardHeader: {

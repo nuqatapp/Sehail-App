@@ -266,7 +266,7 @@ export default function EmergencyScreen() {
             <View style={styles.expandableHeader}>
               <Ionicons name={expandedSection === "seaEmergency" ? "chevron-up" : "chevron-down"} size={18} color={Colors.text.tertiary} />
               <View style={styles.expandableTitleRow}>
-                <Text style={styles.seaBadge}>🌊</Text>
+                <Ionicons name="water-outline" size={16} color={Colors.text.tertiary} />
                 <Ionicons name="boat-outline" size={18} color={Colors.primary.green} />
                 <Text style={styles.expandableTitle}>{emergency.seaEmergency.title}</Text>
               </View>
@@ -612,10 +612,6 @@ const styles = StyleSheet.create({
     writingDirection: "rtl",
     flex: 1,
     lineHeight: 22,
-  },
-  seaBadge: {
-    fontSize: 14,
-    opacity: 0.7,
   },
   disclaimerBox: {
     flexDirection: "row",

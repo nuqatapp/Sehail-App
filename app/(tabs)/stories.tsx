@@ -120,8 +120,8 @@ export default function StoriesScreen() {
                 setExpandedId(expandedId === story.id ? null : story.id);
               }}
             >
-              {(story as any).environment === "land" && <Text style={styles.envBadge}>🏜️</Text>}
-              {(story as any).environment === "sea" && <Text style={styles.envBadge}>🌊</Text>}
+              {(story as any).environment === "land" && <View style={styles.envBadge}><Ionicons name="sunny-outline" size={14} color={Colors.text.tertiary} /></View>}
+              {(story as any).environment === "sea" && <View style={styles.envBadge}><Ionicons name="water-outline" size={14} color={Colors.text.tertiary} /></View>}
               <View style={styles.storyHeader}>
                 <View style={styles.storyTitleRow}>
                   <View
@@ -241,8 +241,6 @@ const styles = StyleSheet.create({
     position: "absolute" as const,
     top: 8,
     left: 8,
-    fontSize: 14,
-    opacity: 0.6,
     zIndex: 1,
   },
   storyHeader: {

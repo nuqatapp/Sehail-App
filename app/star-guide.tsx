@@ -24,9 +24,9 @@ function getDirectionIcon(direction: string): string {
   return "compass-outline";
 }
 
-function getEnvBadge(env?: string) {
-  if (env === "land") return "🏜️";
-  if (env === "sea") return "🌊";
+function getEnvIcon(env?: string): string | null {
+  if (env === "land") return "sunny-outline";
+  if (env === "sea") return "water-outline";
   return null;
 }
 
@@ -102,15 +102,15 @@ export default function StarGuideScreen() {
         )}
 
         {currentSection?.items.map((item, index) => {
-          const envBadge = getEnvBadge(currentSection.environment);
+          const envIcon = getEnvIcon(currentSection.environment);
           return (
             <Animated.View
               key={item.id || index}
               entering={FadeInDown.delay(100 + index * 100).duration(500)}
             >
               <View style={styles.starCard}>
-                {envBadge && (
-                  <Text style={styles.envBadge}>{envBadge}</Text>
+                {envIcon && (
+                  <View style={styles.envBadge}><Ionicons name={envIcon as any} size={14} color={Colors.text.tertiary} /></View>
                 )}
                 <View style={styles.starHeader}>
                   <View style={styles.directionBadge}>
@@ -260,8 +260,6 @@ const styles = StyleSheet.create({
     position: "absolute" as const,
     top: 8,
     left: 8,
-    fontSize: 14,
-    opacity: 0.6,
     zIndex: 1,
   },
   starHeader: {
