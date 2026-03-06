@@ -70,7 +70,7 @@ export default function PrepGearScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: insets.bottom + 30 },
+          { paddingBottom: (Platform.OS === "web" ? 34 : insets.bottom) + 30 },
         ]}
         showsVerticalScrollIndicator={false}
       >

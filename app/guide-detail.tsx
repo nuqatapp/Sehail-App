@@ -4,6 +4,7 @@ import {
   Text,
   View,
   ScrollView,
+  Platform,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
@@ -73,7 +74,7 @@ export default function GuideDetailScreen() {
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
-          { paddingBottom: insets.bottom + 30 },
+          { paddingBottom: (Platform.OS === "web" ? 34 : insets.bottom) + 30 },
         ]}
         showsVerticalScrollIndicator={false}
       >
