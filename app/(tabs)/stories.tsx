@@ -120,6 +120,8 @@ export default function StoriesScreen() {
                 setExpandedId(expandedId === story.id ? null : story.id);
               }}
             >
+              {(story as any).environment === "land" && <Text style={styles.envBadge}>🏜️</Text>}
+              {(story as any).environment === "sea" && <Text style={styles.envBadge}>🌊</Text>}
               <View style={styles.storyHeader}>
                 <View style={styles.storyTitleRow}>
                   <View
@@ -233,6 +235,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderWidth: 1,
     borderColor: Colors.card.border,
+    position: "relative" as const,
+  },
+  envBadge: {
+    position: "absolute" as const,
+    top: 8,
+    left: 8,
+    fontSize: 14,
+    opacity: 0.6,
+    zIndex: 1,
   },
   storyHeader: {
     flexDirection: "row",

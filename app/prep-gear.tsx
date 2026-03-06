@@ -80,7 +80,7 @@ export default function PrepGearScreen() {
           contentContainerStyle={styles.tripTypeRow}
           style={styles.tripTypeContainer}
         >
-          {prepGear.tripTypes.map((tripType) => (
+          {prepGear.tripTypes.map((tripType: any) => (
             <Pressable
               key={tripType.id}
               style={[
@@ -109,6 +109,8 @@ export default function PrepGearScreen() {
               >
                 {tripType.name}
               </Text>
+              {tripType.environment === "sea" && <Text style={{ fontSize: 12, opacity: 0.6 }}>🌊</Text>}
+              {tripType.environment === "land" && <Text style={{ fontSize: 12, opacity: 0.6 }}>🏜️</Text>}
             </Pressable>
           ))}
         </ScrollView>

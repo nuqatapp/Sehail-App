@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -14,6 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
 import * as Location from "expo-location";
+import * as Clipboard from "expo-clipboard";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
@@ -59,6 +60,22 @@ export default function EmergencyScreen() {
   const insets = useSafeAreaInsets();
   const webTopInset = Platform.OS === "web" ? 67 : 0;
   const webBottomInset = Platform.OS === "web" ? 34 : 0;
+  const [copied, setCopied] = useState(false);
+  const [expandedSection, setExpandedSection] = useState<string | null>(null);
+
+  const copyTemplate = async () => {
+    if (Platform.OS !== "web") Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+    await Clipboard.setStringAsync(emergency.messageTemplate.template);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
+
+  const toggleSection = (id: string) => {
+    if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    setExpandedSection(expandedSection === id ? null : id);
+  };
+
+  let animDelay = 100;
 
   return (
     <View style={styles.container}>
@@ -74,12 +91,12 @@ export default function EmergencyScreen() {
       >
         <LogoHeader />
 
-        <Animated.View entering={FadeInDown.delay(100).duration(400)}>
+        <Animated.View entering={FadeInDown.delay(animDelay).duration(400)}>
           <Text style={styles.screenTitle}>{emergency.title}</Text>
           <Text style={styles.screenSubtitle}>{emergency.subtitle}</Text>
         </Animated.View>
 
-        <Animated.View entering={FadeInDown.delay(100).duration(500)}>
+        <Animated.View entering={FadeInDown.delay((animDelay += 50)).duration(500)}>
           <Text style={styles.disclaimer}>
             هذه الأرقام رسمية من الجهات الحكومية السعودية. التطبيق يسهّل الوصول
             لها فقط ولا يقدم خدمة إنقاذ مباشرة.
@@ -89,7 +106,7 @@ export default function EmergencyScreen() {
         {emergency.contacts.map((contact, index) => (
           <Animated.View
             key={contact.id}
-            entering={FadeInDown.delay(150 + index * 80).duration(400)}
+            entering={FadeInDown.delay((animDelay += 60)).duration(400)}
           >
             <Pressable
               style={({ pressed }) => [
@@ -117,7 +134,7 @@ export default function EmergencyScreen() {
           </Animated.View>
         ))}
 
-        <Animated.View entering={FadeInDown.delay(600).duration(500)}>
+        <Animated.View entering={FadeInDown.delay((animDelay += 80)).duration(500)}>
           <Pressable
             style={({ pressed }) => [
               styles.shareLocationBtn,
@@ -138,7 +155,141 @@ export default function EmergencyScreen() {
           </Pressable>
         </Animated.View>
 
-        <Animated.View entering={FadeInDown.delay(700).duration(500)}>
+        <Animated.View entering={FadeInDown.delay((animDelay += 80)).duration(500)}>
+          <View style={styles.templateCard}>
+            <View style={styles.templateHeader}>
+              <Pressable onPress={copyTemplate} style={styles.copyButton}>
+                <Ionicons name={copied ? "checkmark-circle" : "copy-outline"} size={20} color={copied ? Colors.status.success : Colors.primary.green} />
+                <Text style={[styles.copyText, copied && { color: Colors.status.success }]}>{copied ? "تم النسخ" : "انسخ"}</Text>
+              </Pressable>
+              <View style={styles.templateTitleRow}>
+                <Ionicons name="document-text-outline" size={18} color={Colors.primary.green} />
+                <Text style={styles.templateTitle}>{emergency.messageTemplate.title}</Text>
+              </View>
+            </View>
+            <Text style={styles.templateSubtitle}>{emergency.messageTemplate.subtitle}</Text>
+            <View style={styles.templateBody}>
+              <Text style={styles.templateText}>{emergency.messageTemplate.template}</Text>
+            </View>
+          </View>
+        </Animated.View>
+
+        <Animated.View entering={FadeInDown.delay((animDelay += 80)).duration(500)}>
+          <Pressable
+            style={styles.expandableCard}
+            onPress={() => toggleSection("locationGuide")}
+          >
+            <View style={styles.expandableHeader}>
+              <Ionicons name={expandedSection === "locationGuide" ? "chevron-up" : "chevron-down"} size={18} color={Colors.text.tertiary} />
+              <View style={styles.expandableTitleRow}>
+                <Ionicons name="navigate-outline" size={18} color={Colors.primary.green} />
+                <Text style={styles.expandableTitle}>{emergency.locationGuide.title}</Text>
+              </View>
+            </View>
+            <Text style={styles.expandableSubtitle}>{emergency.locationGuide.subtitle}</Text>
+
+            {expandedSection === "locationGuide" && (
+              <View style={styles.expandableContent}>
+                {emergency.locationGuide.steps.map((step) => (
+                  <View key={step.id} style={styles.stepCard}>
+                    <Text style={styles.stepTitle}>{step.title}</Text>
+                    <Text style={styles.stepText}>{step.steps}</Text>
+                  </View>
+                ))}
+                <View style={styles.tipBox}>
+                  <Ionicons name="alert-circle" size={16} color={Colors.status.warning} />
+                  <Text style={styles.tipText}>{emergency.locationGuide.tip}</Text>
+                </View>
+              </View>
+            )}
+          </Pressable>
+        </Animated.View>
+
+        <Animated.View entering={FadeInDown.delay((animDelay += 80)).duration(500)}>
+          <Pressable
+            style={styles.expandableCard}
+            onPress={() => toggleSection("reporting")}
+          >
+            <View style={styles.expandableHeader}>
+              <Ionicons name={expandedSection === "reporting" ? "chevron-up" : "chevron-down"} size={18} color={Colors.text.tertiary} />
+              <View style={styles.expandableTitleRow}>
+                <Ionicons name="megaphone-outline" size={18} color={Colors.primary.green} />
+                <Text style={styles.expandableTitle}>{emergency.reportingGuide.title}</Text>
+              </View>
+            </View>
+            <Text style={styles.expandableSubtitle}>{emergency.reportingGuide.subtitle}</Text>
+
+            {expandedSection === "reporting" && (
+              <View style={styles.expandableContent}>
+                {emergency.reportingGuide.items.map((item, idx) => (
+                  <View key={idx} style={styles.reportItem}>
+                    <Text style={styles.reportNumber}>{idx + 1}</Text>
+                    <Text style={styles.reportText}>{item}</Text>
+                  </View>
+                ))}
+                <View style={styles.tipBox}>
+                  <Ionicons name="bulb-outline" size={16} color={Colors.primary.gold} />
+                  <Text style={styles.tipText}>{emergency.reportingGuide.tip}</Text>
+                </View>
+              </View>
+            )}
+          </Pressable>
+        </Animated.View>
+
+        <Animated.View entering={FadeInDown.delay((animDelay += 80)).duration(500)}>
+          <Pressable
+            style={styles.expandableCard}
+            onPress={() => toggleSection("battery")}
+          >
+            <View style={styles.expandableHeader}>
+              <Ionicons name={expandedSection === "battery" ? "chevron-up" : "chevron-down"} size={18} color={Colors.text.tertiary} />
+              <View style={styles.expandableTitleRow}>
+                <Ionicons name="battery-half-outline" size={18} color={Colors.primary.green} />
+                <Text style={styles.expandableTitle}>{emergency.batteryManagement.title}</Text>
+              </View>
+            </View>
+            <Text style={styles.expandableSubtitle}>{emergency.batteryManagement.subtitle}</Text>
+
+            {expandedSection === "battery" && (
+              <View style={styles.expandableContent}>
+                <Text style={styles.contentText}>{emergency.batteryManagement.content}</Text>
+              </View>
+            )}
+          </Pressable>
+        </Animated.View>
+
+        <Animated.View entering={FadeInDown.delay((animDelay += 80)).duration(500)}>
+          <Pressable
+            style={[styles.expandableCard, styles.seaCard]}
+            onPress={() => toggleSection("seaEmergency")}
+          >
+            <View style={styles.expandableHeader}>
+              <Ionicons name={expandedSection === "seaEmergency" ? "chevron-up" : "chevron-down"} size={18} color={Colors.text.tertiary} />
+              <View style={styles.expandableTitleRow}>
+                <Text style={styles.seaBadge}>🌊</Text>
+                <Ionicons name="boat-outline" size={18} color={Colors.primary.green} />
+                <Text style={styles.expandableTitle}>{emergency.seaEmergency.title}</Text>
+              </View>
+            </View>
+            <Text style={styles.expandableSubtitle}>{emergency.seaEmergency.subtitle}</Text>
+
+            {expandedSection === "seaEmergency" && (
+              <View style={styles.expandableContent}>
+                <Text style={styles.contentText}>{emergency.seaEmergency.content}</Text>
+                <View style={styles.vhfBox}>
+                  <Ionicons name="radio-outline" size={16} color={Colors.primary.green} />
+                  <Text style={styles.vhfText}>{emergency.seaEmergency.vhfGuide}</Text>
+                </View>
+                <View style={styles.tipBox}>
+                  <Ionicons name="alert-circle" size={16} color={Colors.status.warning} />
+                  <Text style={styles.tipText}>{emergency.seaEmergency.tip}</Text>
+                </View>
+              </View>
+            )}
+          </Pressable>
+        </Animated.View>
+
+        <Animated.View entering={FadeInDown.delay((animDelay += 80)).duration(500)}>
           <View style={styles.disclaimerBox}>
             <Ionicons
               name="information-circle-outline"
@@ -262,6 +413,209 @@ const styles = StyleSheet.create({
     textAlign: "right",
     writingDirection: "rtl",
     marginTop: 2,
+  },
+  templateCard: {
+    backgroundColor: Colors.card.background,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: Colors.card.border,
+  },
+  templateHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    marginBottom: 4,
+  },
+  templateTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  templateTitle: {
+    fontFamily: "Cairo_700Bold",
+    fontSize: 16,
+    color: Colors.text.primary,
+  },
+  templateSubtitle: {
+    fontFamily: "Cairo_400Regular",
+    fontSize: 12,
+    color: Colors.text.secondary,
+    textAlign: "right",
+    writingDirection: "rtl",
+    marginBottom: 12,
+  },
+  copyButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+    backgroundColor: "rgba(0, 108, 53, 0.08)",
+    paddingHorizontal: 12,
+    paddingVertical: 6,
+    borderRadius: 10,
+  },
+  copyText: {
+    fontFamily: "Cairo_600SemiBold",
+    fontSize: 12,
+    color: Colors.primary.green,
+  },
+  templateBody: {
+    backgroundColor: "rgba(0, 0, 0, 0.03)",
+    borderRadius: 12,
+    padding: 14,
+  },
+  templateText: {
+    fontFamily: "Cairo_400Regular",
+    fontSize: 14,
+    color: Colors.text.primary,
+    textAlign: "right",
+    writingDirection: "rtl",
+    lineHeight: 24,
+  },
+  expandableCard: {
+    backgroundColor: Colors.card.background,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: Colors.card.border,
+  },
+  seaCard: {
+    borderColor: "rgba(52, 152, 219, 0.2)",
+  },
+  expandableHeader: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
+  expandableTitleRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+  },
+  expandableTitle: {
+    fontFamily: "Cairo_700Bold",
+    fontSize: 16,
+    color: Colors.text.primary,
+  },
+  expandableSubtitle: {
+    fontFamily: "Cairo_400Regular",
+    fontSize: 12,
+    color: Colors.text.secondary,
+    textAlign: "right",
+    writingDirection: "rtl",
+    marginTop: 4,
+  },
+  expandableContent: {
+    marginTop: 14,
+    paddingTop: 14,
+    borderTopWidth: 1,
+    borderTopColor: Colors.card.border,
+  },
+  stepCard: {
+    backgroundColor: "rgba(0, 0, 0, 0.02)",
+    borderRadius: 12,
+    padding: 14,
+    marginBottom: 10,
+  },
+  stepTitle: {
+    fontFamily: "Cairo_700Bold",
+    fontSize: 14,
+    color: Colors.text.primary,
+    textAlign: "right",
+    writingDirection: "rtl",
+    marginBottom: 6,
+  },
+  stepText: {
+    fontFamily: "Cairo_400Regular",
+    fontSize: 13,
+    color: Colors.text.secondary,
+    textAlign: "right",
+    writingDirection: "rtl",
+    lineHeight: 22,
+  },
+  reportItem: {
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "flex-end",
+    gap: 10,
+    marginBottom: 10,
+  },
+  reportNumber: {
+    fontFamily: "Cairo_700Bold",
+    fontSize: 14,
+    color: Colors.primary.green,
+    width: 22,
+    height: 22,
+    textAlign: "center",
+    lineHeight: 22,
+    backgroundColor: "rgba(0, 108, 53, 0.08)",
+    borderRadius: 11,
+    overflow: "hidden",
+  },
+  reportText: {
+    fontFamily: "Cairo_400Regular",
+    fontSize: 14,
+    color: Colors.text.primary,
+    textAlign: "right",
+    writingDirection: "rtl",
+    flex: 1,
+    lineHeight: 22,
+  },
+  contentText: {
+    fontFamily: "Cairo_400Regular",
+    fontSize: 14,
+    color: Colors.text.primary,
+    textAlign: "right",
+    writingDirection: "rtl",
+    lineHeight: 24,
+  },
+  vhfBox: {
+    backgroundColor: "rgba(0, 108, 53, 0.05)",
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 12,
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "flex-end",
+    gap: 8,
+    borderWidth: 1,
+    borderColor: "rgba(0, 108, 53, 0.1)",
+  },
+  vhfText: {
+    fontFamily: "Cairo_400Regular",
+    fontSize: 13,
+    color: Colors.text.primary,
+    textAlign: "right",
+    writingDirection: "rtl",
+    flex: 1,
+    lineHeight: 22,
+  },
+  tipBox: {
+    backgroundColor: "rgba(243, 156, 18, 0.06)",
+    borderRadius: 12,
+    padding: 12,
+    marginTop: 10,
+    flexDirection: "row",
+    alignItems: "flex-start",
+    justifyContent: "flex-end",
+    gap: 8,
+    borderWidth: 1,
+    borderColor: "rgba(243, 156, 18, 0.12)",
+  },
+  tipText: {
+    fontFamily: "Cairo_400Regular",
+    fontSize: 13,
+    color: Colors.text.primary,
+    textAlign: "right",
+    writingDirection: "rtl",
+    flex: 1,
+    lineHeight: 22,
+  },
+  seaBadge: {
+    fontSize: 14,
+    opacity: 0.7,
   },
   disclaimerBox: {
     flexDirection: "row",

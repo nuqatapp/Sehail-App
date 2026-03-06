@@ -114,7 +114,9 @@ export default function GuideScreen() {
           ))}
         </ScrollView>
 
-        {currentSection?.items.map((item, index) => (
+        {currentSection?.items.map((item: any, index: number) => {
+          const envBadge = item.environment === "land" ? "🏜️" : item.environment === "sea" ? "🌊" : null;
+          return (
           <Animated.View
             key={item.id}
             entering={FadeInDown.delay(index * 80).duration(400)}
@@ -138,6 +140,7 @@ export default function GuideScreen() {
                 });
               }}
             >
+              {envBadge && <Text style={styles.envBadge}>{envBadge}</Text>}
               <View style={styles.cardHeader}>
                 <View
                   style={[
@@ -175,7 +178,8 @@ export default function GuideScreen() {
               </View>
             </Pressable>
           </Animated.View>
-        ))}
+          );
+        })}
       </ScrollView>
     </View>
   );
@@ -242,6 +246,15 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderWidth: 1,
     borderColor: Colors.card.border,
+    position: "relative" as const,
+  },
+  envBadge: {
+    position: "absolute" as const,
+    top: 8,
+    left: 8,
+    fontSize: 14,
+    opacity: 0.6,
+    zIndex: 1,
   },
   cardHeader: {
     flexDirection: "row",

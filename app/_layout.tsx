@@ -36,7 +36,7 @@ function RootLayoutNav() {
         name="star-guide"
         options={{
           headerShown: true,
-          headerTitle: "دليل النجوم",
+          headerTitle: "دليل الملاحة",
           headerStyle: { backgroundColor: Colors.primary.green },
           headerTintColor: Colors.primary.gold,
           headerTitleStyle: { fontFamily: "Cairo_700Bold" },

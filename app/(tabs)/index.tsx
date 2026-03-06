@@ -41,7 +41,9 @@ function getDailyTip(): string {
   const dayOfYear = Math.floor(
     (Date.now() - new Date(new Date().getFullYear(), 0, 0).getTime()) / 86400000
   );
-  return wisdomData.categories.dailyTips[dayOfYear % wisdomData.categories.dailyTips.length];
+  const tips = wisdomData.categories.dailyTips;
+  const tip = tips[dayOfYear % tips.length];
+  return typeof tip === "string" ? tip : tip.text;
 }
 
 interface SectionCardProps {
@@ -136,9 +138,9 @@ export default function HomeScreen() {
             delay={300}
           />
           <SectionCard
-            title="دليل النجوم"
-            subtitle="ملاحة بالنجوم"
-            icon="star-outline"
+            title="دليل الملاحة"
+            subtitle="النجوم والاتجاهات"
+            icon="compass-outline"
             onPress={() => router.push("/star-guide")}
             delay={350}
           />
