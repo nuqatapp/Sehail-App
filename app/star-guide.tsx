@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   StyleSheet,
   Text,
@@ -13,6 +13,7 @@ import * as Haptics from "expo-haptics";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
+import { markAsRead } from "@/lib/read-tracker";
 
 const navGuide = wisdomData.categories.navigationGuide;
 
@@ -35,6 +36,14 @@ export default function StarGuideScreen() {
   const [activeSection, setActiveSection] = useState(navGuide.sections[0].id);
 
   const currentSection = navGuide.sections.find((s) => s.id === activeSection);
+
+  useEffect(() => {
+    if (currentSection) {
+      currentSection.items.forEach((item) => {
+        if (item.id) markAsRead(item.id);
+      });
+    }
+  }, [activeSection]);
 
   return (
     <View style={styles.container}>

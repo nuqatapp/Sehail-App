@@ -1,16 +1,20 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
   ScrollView,
   Platform,
+  Pressable,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import * as Haptics from "expo-haptics";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
+import { markAsRead } from "@/lib/read-tracker";
+import { getFavorites, toggleFavorite, isFavorite } from "@/lib/favorites";
 
 function getDangerColor(level: string): string {
   switch (level) {
@@ -59,7 +63,8 @@ function getDangerIcon(level: string): string {
 
 export default function GuideDetailScreen() {
   const insets = useSafeAreaInsets();
-  const { name, description, action, source, dangerLevel } = useLocalSearchParams<{
+  const { id, name, description, action, source, dangerLevel } = useLocalSearchParams<{
+    id: string;
     name: string;
     description: string;
     action: string;
@@ -67,6 +72,23 @@ export default function GuideDetailScreen() {
     dangerLevel: string;
   }>();
 
+  const [favorites, setFavorites] = useState<string[]>([]);
+
+  useEffect(() => {
+    if (id) {
+      markAsRead(id);
+    }
+    getFavorites().then(setFavorites);
+  }, [id]);
+
+  const handleToggleFavorite = async () => {
+    if (!id) return;
+    if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const updated = await toggleFavorite(id);
+    setFavorites(updated);
+  };
+
+  const favorited = id ? isFavorite(id, favorites) : false;
   const dangerColor = getDangerColor(dangerLevel || "");
 
   return (
@@ -79,20 +101,29 @@ export default function GuideDetailScreen() {
         showsVerticalScrollIndicator={false}
       >
         <Animated.View entering={FadeInDown.duration(500)} style={styles.headerSection}>
-          <View
-            style={[
-              styles.dangerBanner,
-              { backgroundColor: dangerColor + "10", borderColor: dangerColor + "25" },
-            ]}
-          >
-            <Ionicons
-              name={getDangerIcon(dangerLevel || "") as any}
-              size={22}
-              color={dangerColor}
-            />
-            <Text style={[styles.dangerLabel, { color: dangerColor }]}>
-              {getDangerLabel(dangerLevel || "")}
-            </Text>
+          <View style={styles.headerTopRow}>
+            <Pressable onPress={handleToggleFavorite} hitSlop={8}>
+              <Ionicons
+                name={favorited ? "star" : "star-outline"}
+                size={24}
+                color={Colors.primary.gold}
+              />
+            </Pressable>
+            <View
+              style={[
+                styles.dangerBanner,
+                { backgroundColor: dangerColor + "10", borderColor: dangerColor + "25" },
+              ]}
+            >
+              <Ionicons
+                name={getDangerIcon(dangerLevel || "") as any}
+                size={22}
+                color={dangerColor}
+              />
+              <Text style={[styles.dangerLabel, { color: dangerColor }]}>
+                {getDangerLabel(dangerLevel || "")}
+              </Text>
+            </View>
           </View>
 
           <Text style={styles.itemName}>{name}</Text>
@@ -136,6 +167,13 @@ const styles = StyleSheet.create({
     marginBottom: 24,
     alignItems: "flex-end",
   },
+  headerTopRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    width: "100%",
+    marginBottom: 16,
+  },
   dangerBanner: {
     flexDirection: "row",
     alignItems: "center",
@@ -144,7 +182,6 @@ const styles = StyleSheet.create({
     paddingVertical: 10,
     borderRadius: 14,
     borderWidth: 1,
-    marginBottom: 16,
     alignSelf: "flex-end",
   },
   dangerLabel: {

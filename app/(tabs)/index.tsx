@@ -10,6 +10,7 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import { Image } from "expo-image";
@@ -17,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
 import LogoHeader from "@/components/LogoHeader";
+import { getReadItems } from "@/lib/read-tracker";
 
 function getWeatherAlert(): { message: string; icon: string } {
   const hour = new Date().getHours();
@@ -128,6 +130,22 @@ export default function HomeScreen() {
   const [streakData, setStreakData] = useState<StreakData | null>(null);
   const [respondedToday, setRespondedToday] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [readCount, setReadCount] = useState(0);
+
+  const totalFieldGuideItems = wisdomData.categories.fieldGuide.sections.reduce(
+    (sum, s) => sum + s.items.length, 0
+  );
+  const totalStories = wisdomData.categories.stories.items.length;
+  const totalContent = totalFieldGuideItems + totalStories;
+
+  useFocusEffect(
+    useCallback(() => {
+      getReadItems().then((items) => setReadCount(items.length));
+    }, [])
+  );
+
+  const discoveryPercent = totalContent > 0 ? Math.round((readCount / totalContent) * 100) : 0;
+  const [newTipsCount, setNewTipsCount] = useState(0);
 
   useEffect(() => {
     AsyncStorage.getItem(STREAK_KEY).then((val) => {
@@ -142,6 +160,9 @@ export default function HomeScreen() {
           }
         } catch {}
       }
+    });
+    AsyncStorage.getItem("sehail_new_tips_count").then((val) => {
+      if (val) setNewTipsCount(parseInt(val, 10) || 0);
     });
   }, []);
 
@@ -172,7 +193,15 @@ export default function HomeScreen() {
     setRespondedToday(true);
     setShowConfirmation(true);
     setTimeout(() => setShowConfirmation(false), 1500);
-  }, [streakData]);
+
+    if (response === "new") {
+      const updatedCount = newTipsCount + 1;
+      setNewTipsCount(updatedCount);
+      try {
+        await AsyncStorage.setItem("sehail_new_tips_count", String(updatedCount));
+      } catch {}
+    }
+  }, [streakData, newTipsCount]);
 
   const last7 = getLast7Days();
   const historySet = new Set(streakData?.history ?? []);
@@ -248,6 +277,12 @@ export default function HomeScreen() {
               <Text style={styles.streakTitle}>سلسلة التعلّم</Text>
             </View>
             <Text style={styles.streakCount}>{toArabicNum(streakData.count)} يوم</Text>
+            {newTipsCount > 0 && (
+              <View style={styles.knowledgeRow}>
+                <Ionicons name="bulb-outline" size={16} color={Colors.primary.gold} />
+                <Text style={styles.knowledgeText}>تعلمت {newTipsCount} معلومة جديدة</Text>
+              </View>
+            )}
             <View style={styles.streakDaysRow}>
               {last7.map((day, i) => {
                 const active = historySet.has(day);
@@ -263,6 +298,17 @@ export default function HomeScreen() {
             </View>
           </Animated.View>
         )}
+
+        <Animated.View entering={FadeInDown.delay(280).duration(500)} style={styles.discoveryCard}>
+          <View style={styles.discoveryHeader}>
+            <Ionicons name="stats-chart-outline" size={18} color={Colors.primary.green} />
+            <Text style={styles.discoveryTitle}>اكتشفت {toArabicNum(discoveryPercent)}٪ من المحتوى</Text>
+          </View>
+          <View style={styles.discoveryBarBg}>
+            <View style={[styles.discoveryBarFill, { width: `${discoveryPercent}%` }]} />
+          </View>
+          <Text style={styles.discoverySubtext}>{toArabicNum(readCount)} من {toArabicNum(totalContent)} عنصر</Text>
+        </Animated.View>
 
         <View style={styles.sectionGrid}>
           <SectionCard
@@ -294,18 +340,46 @@ export default function HomeScreen() {
             delay={450}
           />
           <SectionCard
+            title="البوصلة"
+            subtitle="البوصلة وحفظ المواقع"
+            icon="compass-outline"
+            onPress={() => router.push("/compass")}
+            delay={475}
+          />
+          <SectionCard
+            title="المفضلة"
+            subtitle="العناصر المحفوظة"
+            icon="star-outline"
+            onPress={() => router.push("/favorites")}
+            delay={500}
+          />
+          <SectionCard
+            title="اختبر معلوماتك"
+            subtitle="كويزات تفاعلية"
+            icon="help-circle-outline"
+            onPress={() => router.push("/quiz")}
+            delay={525}
+          />
+          <SectionCard
+            title="إنجازاتي"
+            subtitle="شارات وتحديات"
+            icon="trophy-outline"
+            onPress={() => router.push("/badges")}
+            delay={540}
+          />
+          <SectionCard
             title="أول ٥ دقائق"
             subtitle="بطاقات الطوارئ"
             icon="flash-outline"
             onPress={() => router.push("/first-five")}
-            delay={500}
+            delay={550}
           />
           <SectionCard
             title="تعرّف بسرعة"
             subtitle="وش شفت للتو؟"
             icon="search-outline"
             onPress={() => router.push("/quick-id")}
-            delay={550}
+            delay={600}
           />
         </View>
 
@@ -431,6 +505,48 @@ const styles = StyleSheet.create({
     textAlign: "right",
     writingDirection: "rtl",
     lineHeight: 24,
+  },
+  discoveryCard: {
+    backgroundColor: Colors.card.background,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: Colors.card.border,
+  },
+  discoveryHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: 8,
+    marginBottom: 10,
+  },
+  discoveryTitle: {
+    fontFamily: "Cairo_700Bold",
+    fontSize: 15,
+    color: Colors.text.primary,
+    textAlign: "right",
+    writingDirection: "rtl" as const,
+  },
+  discoveryBarBg: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: "rgba(0, 0, 0, 0.06)",
+    overflow: "hidden" as const,
+    marginBottom: 8,
+  },
+  discoveryBarFill: {
+    height: 6,
+    borderRadius: 3,
+    backgroundColor: Colors.primary.green,
+    alignSelf: "flex-end" as const,
+  },
+  discoverySubtext: {
+    fontFamily: "Cairo_400Regular",
+    fontSize: 12,
+    color: Colors.text.tertiary,
+    textAlign: "right",
+    writingDirection: "rtl" as const,
   },
   sectionGrid: {
     marginBottom: 16,
@@ -572,6 +688,19 @@ const styles = StyleSheet.create({
     fontSize: 28,
     color: Colors.primary.green,
     marginBottom: 12,
+  },
+  knowledgeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginBottom: 12,
+  },
+  knowledgeText: {
+    fontFamily: "Cairo_600SemiBold",
+    fontSize: 13,
+    color: Colors.primary.gold,
+    textAlign: "right",
+    writingDirection: "rtl" as const,
   },
   streakDaysRow: {
     flexDirection: "row",

@@ -77,6 +77,50 @@ function RootLayoutNav() {
         }}
       />
       <Stack.Screen
+        name="favorites"
+        options={{
+          headerShown: true,
+          headerTitle: "المفضلة",
+          headerStyle: { backgroundColor: Colors.primary.green },
+          headerTintColor: Colors.primary.gold,
+          headerTitleStyle: { fontFamily: "Cairo_700Bold" },
+          presentation: "card",
+        }}
+      />
+      <Stack.Screen
+        name="compass"
+        options={{
+          headerShown: true,
+          headerTitle: "البوصلة والموقع",
+          headerStyle: { backgroundColor: Colors.primary.green },
+          headerTintColor: Colors.primary.gold,
+          headerTitleStyle: { fontFamily: "Cairo_700Bold" },
+          presentation: "card",
+        }}
+      />
+      <Stack.Screen
+        name="quiz"
+        options={{
+          headerShown: true,
+          headerTitle: "الكويز",
+          headerStyle: { backgroundColor: Colors.primary.green },
+          headerTintColor: Colors.primary.gold,
+          headerTitleStyle: { fontFamily: "Cairo_700Bold" },
+          presentation: "card",
+        }}
+      />
+      <Stack.Screen
+        name="badges"
+        options={{
+          headerShown: true,
+          headerTitle: "الإنجازات",
+          headerStyle: { backgroundColor: Colors.primary.green },
+          headerTintColor: Colors.primary.gold,
+          headerTitleStyle: { fontFamily: "Cairo_700Bold" },
+          presentation: "card",
+        }}
+      />
+      <Stack.Screen
         name="settings"
         options={{
           headerShown: true,

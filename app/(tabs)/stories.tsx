@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -9,11 +9,14 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
 import LogoHeader from "@/components/LogoHeader";
+import { markAsRead, getReadItems, isRead } from "@/lib/read-tracker";
+import { getFavorites, toggleFavorite, isFavorite } from "@/lib/favorites";
 
 const stories = wisdomData.categories.stories;
 
@@ -47,8 +50,23 @@ export default function StoriesScreen() {
   const insets = useSafeAreaInsets();
   const [expandedId, setExpandedId] = useState<string | null>(null);
   const [activeFilter, setActiveFilter] = useState<string>("all");
+  const [readItems, setReadItems] = useState<string[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
   const webTopInset = Platform.OS === "web" ? 67 : 0;
   const webBottomInset = Platform.OS === "web" ? 34 : 0;
+
+  useFocusEffect(
+    useCallback(() => {
+      getReadItems().then(setReadItems);
+      getFavorites().then(setFavorites);
+    }, [])
+  );
+
+  const handleToggleFavorite = async (storyId: string) => {
+    if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const updated = await toggleFavorite(storyId);
+    setFavorites(updated);
+  };
 
   const categories = ["all", "سلامة", "مهارة", "معرفة"];
   const filteredStories =
@@ -117,32 +135,58 @@ export default function StoriesScreen() {
               ]}
               onPress={() => {
                 if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
-                setExpandedId(expandedId === story.id ? null : story.id);
+                const isExpanding = expandedId !== story.id;
+                setExpandedId(isExpanding ? story.id : null);
+                if (isExpanding) {
+                  markAsRead(story.id).then(() => {
+                    getReadItems().then(setReadItems);
+                  });
+                }
               }}
             >
+              {isRead(story.id, readItems) && (
+                <View style={styles.readBadge}>
+                  <Ionicons name="checkmark-circle" size={16} color={Colors.text.tertiary} />
+                </View>
+              )}
               {(story as any).environment === "land" && <View style={styles.envBadge}><Ionicons name="sunny-outline" size={14} color={Colors.text.tertiary} /></View>}
               {(story as any).environment === "sea" && <View style={styles.envBadge}><Ionicons name="water-outline" size={14} color={Colors.text.tertiary} /></View>}
               <View style={styles.storyHeader}>
                 <View style={styles.storyTitleRow}>
-                  <View
-                    style={[
-                      styles.categoryBadge,
-                      { backgroundColor: getCategoryColor(story.category) + "15" },
-                    ]}
-                  >
-                    <Ionicons
-                      name={getCategoryIcon(story.category) as any}
-                      size={12}
-                      color={getCategoryColor(story.category)}
-                    />
-                    <Text
+                  <View style={styles.storyBadgeRow}>
+                    <Pressable
+                      onPress={(e) => {
+                        e.stopPropagation();
+                        handleToggleFavorite(story.id);
+                      }}
+                      hitSlop={8}
+                    >
+                      <Ionicons
+                        name={isFavorite(story.id, favorites) ? "star" : "star-outline"}
+                        size={18}
+                        color={Colors.primary.gold}
+                      />
+                    </Pressable>
+                    <View
                       style={[
-                        styles.categoryText,
-                        { color: getCategoryColor(story.category) },
+                        styles.categoryBadge,
+                        { backgroundColor: getCategoryColor(story.category) + "15" },
                       ]}
                     >
-                      {story.category}
-                    </Text>
+                      <Ionicons
+                        name={getCategoryIcon(story.category) as any}
+                        size={12}
+                        color={getCategoryColor(story.category)}
+                      />
+                      <Text
+                        style={[
+                          styles.categoryText,
+                          { color: getCategoryColor(story.category) },
+                        ]}
+                      >
+                        {story.category}
+                      </Text>
+                    </View>
                   </View>
                   <Text style={styles.storyTitle}>{story.title}</Text>
                 </View>
@@ -237,6 +281,12 @@ const styles = StyleSheet.create({
     borderColor: Colors.card.border,
     position: "relative" as const,
   },
+  readBadge: {
+    position: "absolute" as const,
+    top: 8,
+    right: 8,
+    zIndex: 1,
+  },
   envBadge: {
     position: "absolute" as const,
     top: 8,
@@ -247,6 +297,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "flex-start",
+  },
+  storyBadgeRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
   },
   storyTitleRow: {
     flex: 1,

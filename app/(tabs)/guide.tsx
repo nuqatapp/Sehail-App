@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -10,11 +10,13 @@ import {
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
+import { useFocusEffect } from "@react-navigation/native";
 import * as Haptics from "expo-haptics";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
 import LogoHeader from "@/components/LogoHeader";
+import { getReadItems, isRead } from "@/lib/read-tracker";
 
 const fieldGuide = wisdomData.categories.fieldGuide;
 
@@ -51,8 +53,15 @@ function getDangerLabel(level: string): string {
 export default function GuideScreen() {
   const insets = useSafeAreaInsets();
   const [activeSection, setActiveSection] = useState(fieldGuide.sections[0].id);
+  const [readItems, setReadItems] = useState<string[]>([]);
   const webTopInset = Platform.OS === "web" ? 67 : 0;
   const webBottomInset = Platform.OS === "web" ? 34 : 0;
+
+  useFocusEffect(
+    useCallback(() => {
+      getReadItems().then(setReadItems);
+    }, [])
+  );
 
   const currentSection = fieldGuide.sections.find((s) => s.id === activeSection);
 
@@ -131,6 +140,7 @@ export default function GuideScreen() {
                 router.push({
                   pathname: "/guide-detail",
                   params: {
+                    id: item.id,
                     name: item.name,
                     description: item.description,
                     action: item.action,
@@ -140,6 +150,11 @@ export default function GuideScreen() {
                 });
               }}
             >
+              {isRead(item.id, readItems) && (
+                <View style={styles.readBadge}>
+                  <Ionicons name="checkmark-circle" size={16} color={Colors.text.tertiary} />
+                </View>
+              )}
               {envIcon && <View style={styles.envBadge}><Ionicons name={envIcon as any} size={14} color={Colors.text.tertiary} /></View>}
               <View style={styles.cardHeader}>
                 <View
@@ -247,6 +262,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.card.border,
     position: "relative" as const,
+  },
+  readBadge: {
+    position: "absolute" as const,
+    top: 8,
+    right: 8,
+    zIndex: 1,
   },
   envBadge: {
     position: "absolute" as const,

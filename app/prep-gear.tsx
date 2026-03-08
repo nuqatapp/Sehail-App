@@ -22,11 +22,13 @@ export default function PrepGearScreen() {
   const insets = useSafeAreaInsets();
   const [activeTripType, setActiveTripType] = useState(prepGear.tripTypes[0].id);
   const [checkedItems, setCheckedItems] = useState<Record<string, boolean>>({});
+  const [tripsCompleted, setTripsCompleted] = useState(0);
 
   const currentTrip = prepGear.tripTypes.find((t) => t.id === activeTripType);
 
   useEffect(() => {
     loadCheckedItems();
+    loadTripsCompleted();
   }, []);
 
   const loadCheckedItems = async () => {
@@ -34,6 +36,15 @@ export default function PrepGearScreen() {
       const stored = await AsyncStorage.getItem("sehail_checklist");
       if (stored) {
         setCheckedItems(JSON.parse(stored));
+      }
+    } catch {}
+  };
+
+  const loadTripsCompleted = async () => {
+    try {
+      const stored = await AsyncStorage.getItem("sehail_trips_completed");
+      if (stored) {
+        setTripsCompleted(parseInt(stored, 10) || 0);
       }
     } catch {}
   };
@@ -50,8 +61,26 @@ export default function PrepGearScreen() {
     [checkedItems]
   );
 
+  const checkedCount = currentTrip?.items.filter((i) => checkedItems[i.id]).length || 0;
+  const totalCount = currentTrip?.items.length || 0;
+  const progress = totalCount > 0 ? checkedCount / totalCount : 0;
+
   const resetChecklist = useCallback(async () => {
     if (Platform.OS !== "web") Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
+    if (progress === 1) {
+      const newCount = tripsCompleted + 1;
+      setTripsCompleted(newCount);
+      try {
+        await AsyncStorage.setItem("sehail_trips_completed", String(newCount));
+        const envRaw = await AsyncStorage.getItem("sehail_completed_envs");
+        const envSet: string[] = envRaw ? JSON.parse(envRaw) : [];
+        const tripEnv = currentTrip?.environment;
+        if (tripEnv && !envSet.includes(tripEnv)) {
+          envSet.push(tripEnv);
+          await AsyncStorage.setItem("sehail_completed_envs", JSON.stringify(envSet));
+        }
+      } catch {}
+    }
     const newChecked = { ...checkedItems };
     currentTrip?.items.forEach((item) => {
       delete newChecked[item.id];
@@ -60,11 +89,7 @@ export default function PrepGearScreen() {
     try {
       await AsyncStorage.setItem("sehail_checklist", JSON.stringify(newChecked));
     } catch {}
-  }, [checkedItems, currentTrip]);
-
-  const checkedCount = currentTrip?.items.filter((i) => checkedItems[i.id]).length || 0;
-  const totalCount = currentTrip?.items.length || 0;
-  const progress = totalCount > 0 ? checkedCount / totalCount : 0;
+  }, [checkedItems, currentTrip, progress, tripsCompleted]);
 
   return (
     <View style={styles.container}>
@@ -133,6 +158,14 @@ export default function PrepGearScreen() {
           </View>
           {progress === 1 && (
             <Text style={styles.readyText}>جاهز للطلعة!</Text>
+          )}
+          {tripsCompleted > 0 && (
+            <View style={styles.tripCountRow}>
+              <Ionicons name="ribbon-outline" size={16} color={Colors.primary.gold} />
+              <Text style={styles.tripCountText}>
+                أكملت {tripsCompleted} رحلات بتجهيز كامل
+              </Text>
+            </View>
           )}
         </View>
 
@@ -295,6 +328,20 @@ const styles = StyleSheet.create({
     color: Colors.status.success,
     textAlign: "center",
     marginTop: 10,
+  },
+  tripCountRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: 6,
+    marginTop: 10,
+  },
+  tripCountText: {
+    fontFamily: "Cairo_600SemiBold",
+    fontSize: 13,
+    color: Colors.primary.gold,
+    textAlign: "right",
+    writingDirection: "rtl" as const,
   },
   checkItem: {
     backgroundColor: Colors.card.background,
