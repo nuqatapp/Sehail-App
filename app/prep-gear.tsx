@@ -6,6 +6,7 @@ import {
   ScrollView,
   Pressable,
   Platform,
+  Share,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -176,6 +177,37 @@ export default function PrepGearScreen() {
             </Pressable>
           </Animated.View>
         ))}
+
+        {progress === 1 && currentTrip && (
+          <Animated.View entering={FadeInDown.duration(400)}>
+            <View style={styles.shareCard}>
+              <View style={styles.shareStarCircle}>
+                <Text style={styles.shareStarIcon}>✦</Text>
+              </View>
+              <Text style={styles.shareTitle}>جاهز للرحلة</Text>
+              <Text style={styles.shareSubtitle}>
+                كمّلت {totalCount} من {totalCount} عنصر تجهيز
+              </Text>
+              <Pressable
+                style={({ pressed }) => [
+                  styles.shareButton,
+                  pressed && { opacity: 0.85 },
+                ]}
+                onPress={async () => {
+                  if (Platform.OS !== "web") Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
+                  const tripName = currentTrip.name;
+                  const message = `أنا جاهز لرحلة ${tripName} — جهّزت كل شيء عبر تطبيق سهيل ✦\n\n${checkedCount} عنصر تجهيز مكتمل\n\nحمّل سهيل وجهّز رحلتك!`;
+                  try {
+                    await Share.share({ message });
+                  } catch {}
+                }}
+              >
+                <Ionicons name="share-outline" size={18} color="#FFFFFF" />
+                <Text style={styles.shareButtonText}>شارك في الواتساب</Text>
+              </Pressable>
+            </View>
+          </Animated.View>
+        )}
       </ScrollView>
     </View>
   );
@@ -319,5 +351,54 @@ const styles = StyleSheet.create({
   checkboxChecked: {
     backgroundColor: Colors.primary.green,
     borderColor: Colors.primary.green,
+  },
+  shareCard: {
+    backgroundColor: Colors.card.background,
+    borderRadius: 20,
+    padding: 24,
+    marginTop: 16,
+    marginBottom: 8,
+    borderWidth: 1,
+    borderColor: "rgba(0, 108, 53, 0.15)",
+    alignItems: "center",
+  },
+  shareStarCircle: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    backgroundColor: Colors.primary.green,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 14,
+  },
+  shareStarIcon: {
+    fontSize: 28,
+    color: "#FFFFFF",
+  },
+  shareTitle: {
+    fontFamily: "Cairo_700Bold",
+    fontSize: 20,
+    color: Colors.primary.green,
+    marginBottom: 4,
+  },
+  shareSubtitle: {
+    fontFamily: "Cairo_400Regular",
+    fontSize: 14,
+    color: Colors.text.secondary,
+    marginBottom: 18,
+  },
+  shareButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 8,
+    backgroundColor: Colors.primary.green,
+    paddingHorizontal: 24,
+    paddingVertical: 12,
+    borderRadius: 14,
+  },
+  shareButtonText: {
+    fontFamily: "Cairo_600SemiBold",
+    fontSize: 15,
+    color: "#FFFFFF",
   },
 });

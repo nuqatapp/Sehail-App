@@ -55,6 +55,28 @@ function RootLayoutNav() {
         }}
       />
       <Stack.Screen
+        name="first-five"
+        options={{
+          headerShown: true,
+          headerTitle: "أول ٥ دقائق",
+          headerStyle: { backgroundColor: Colors.primary.green },
+          headerTintColor: Colors.primary.gold,
+          headerTitleStyle: { fontFamily: "Cairo_700Bold" },
+          presentation: "card",
+        }}
+      />
+      <Stack.Screen
+        name="quick-id"
+        options={{
+          headerShown: true,
+          headerTitle: "تعرّف بسرعة",
+          headerStyle: { backgroundColor: Colors.primary.green },
+          headerTintColor: Colors.primary.gold,
+          headerTitleStyle: { fontFamily: "Cairo_700Bold" },
+          presentation: "card",
+        }}
+      />
+      <Stack.Screen
         name="settings"
         options={{
           headerShown: true,

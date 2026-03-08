@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import {
   StyleSheet,
   Text,
@@ -11,8 +11,9 @@ import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
-import Animated, { FadeInDown } from "react-native-reanimated";
+import Animated, { FadeInDown, FadeIn } from "react-native-reanimated";
 import { Image } from "expo-image";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
 import LogoHeader from "@/components/LogoHeader";
@@ -82,12 +83,99 @@ function SectionCard({ title, subtitle, icon, onPress, delay }: SectionCardProps
   );
 }
 
+const STREAK_KEY = "sehail_streak";
+const DAY_ABBRS = ["س", "ح", "ن", "ث", "ر", "ج", "س"];
+
+interface StreakData {
+  count: number;
+  lastDate: string;
+  history: string[];
+}
+
+function getTodayStr(): string {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+}
+
+function toArabicNum(n: number): string {
+  const arabicDigits = ["٠", "١", "٢", "٣", "٤", "٥", "٦", "٧", "٨", "٩"];
+  return String(n).replace(/\d/g, (d) => arabicDigits[parseInt(d)]);
+}
+
+function dayDiff(a: string, b: string): number {
+  const da = new Date(a + "T00:00:00");
+  const db = new Date(b + "T00:00:00");
+  return Math.round((da.getTime() - db.getTime()) / 86400000);
+}
+
+function getLast7Days(): string[] {
+  const days: string[] = [];
+  for (let i = 6; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(d.getDate() - i);
+    days.push(`${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`);
+  }
+  return days;
+}
+
 export default function HomeScreen() {
   const insets = useSafeAreaInsets();
   const weatherAlert = getWeatherAlert();
   const dailyTip = getDailyTip();
   const webTopInset = Platform.OS === "web" ? 67 : 0;
   const webBottomInset = Platform.OS === "web" ? 34 : 0;
+
+  const [streakData, setStreakData] = useState<StreakData | null>(null);
+  const [respondedToday, setRespondedToday] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
+
+  useEffect(() => {
+    AsyncStorage.getItem(STREAK_KEY).then((val) => {
+      if (val) {
+        try {
+          const data = JSON.parse(val);
+          if (data && typeof data.count === "number" && typeof data.lastDate === "string" && Array.isArray(data.history)) {
+            setStreakData(data as StreakData);
+            if (data.lastDate === getTodayStr()) {
+              setRespondedToday(true);
+            }
+          }
+        } catch {}
+      }
+    });
+  }, []);
+
+  const handleTipResponse = useCallback(async (response: string) => {
+    if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
+    const today = getTodayStr();
+    let newData: StreakData;
+
+    if (streakData && streakData.lastDate) {
+      const diff = dayDiff(today, streakData.lastDate);
+      if (diff === 1) {
+        newData = {
+          count: streakData.count + 1,
+          lastDate: today,
+          history: [...streakData.history, today],
+        };
+      } else if (diff === 0) {
+        newData = { ...streakData };
+      } else {
+        newData = { count: 1, lastDate: today, history: [today] };
+      }
+    } else {
+      newData = { count: 1, lastDate: today, history: [today] };
+    }
+
+    await AsyncStorage.setItem(STREAK_KEY, JSON.stringify(newData));
+    setStreakData(newData);
+    setRespondedToday(true);
+    setShowConfirmation(true);
+    setTimeout(() => setShowConfirmation(false), 1500);
+  }, [streakData]);
+
+  const last7 = getLast7Days();
+  const historySet = new Set(streakData?.history ?? []);
 
   return (
     <View style={styles.container}>
@@ -127,7 +215,54 @@ export default function HomeScreen() {
             <Text style={styles.tipLabel}>نصيحة سهيل اليوم</Text>
           </View>
           <Text style={styles.tipText}>{dailyTip}</Text>
+
+          {showConfirmation ? (
+            <Animated.View entering={FadeIn.duration(300)} style={styles.confirmationRow}>
+              <Ionicons name="checkmark-circle" size={20} color={Colors.status.success} />
+              <Text style={styles.confirmationText}>تم</Text>
+            </Animated.View>
+          ) : !respondedToday ? (
+            <View style={styles.tipButtonsRow}>
+              <Pressable
+                style={({ pressed }) => [styles.tipButton, styles.tipButtonGold, pressed && { opacity: 0.7 }]}
+                onPress={() => handleTipResponse("new")}
+              >
+                <Ionicons name="bulb-outline" size={16} color={Colors.primary.gold} />
+                <Text style={styles.tipButtonTextGold}>معلومة جديدة!</Text>
+              </Pressable>
+              <Pressable
+                style={({ pressed }) => [styles.tipButton, styles.tipButtonGreen, pressed && { opacity: 0.7 }]}
+                onPress={() => handleTipResponse("known")}
+              >
+                <Ionicons name="checkmark-circle-outline" size={16} color={Colors.primary.green} />
+                <Text style={styles.tipButtonTextGreen}>أيوا عارفها</Text>
+              </Pressable>
+            </View>
+          ) : null}
         </Animated.View>
+
+        {respondedToday && streakData && (
+          <Animated.View entering={FadeInDown.delay(250).duration(500)} style={styles.streakCard}>
+            <View style={styles.streakHeader}>
+              <Ionicons name="flame" size={20} color={Colors.primary.gold} />
+              <Text style={styles.streakTitle}>سلسلة التعلّم</Text>
+            </View>
+            <Text style={styles.streakCount}>{toArabicNum(streakData.count)} يوم</Text>
+            <View style={styles.streakDaysRow}>
+              {last7.map((day, i) => {
+                const active = historySet.has(day);
+                return (
+                  <View key={day} style={styles.streakDayCol}>
+                    <View style={[styles.streakDot, active && styles.streakDotActive]} />
+                    <Text style={[styles.streakDayLabel, active && styles.streakDayLabelActive]}>
+                      {DAY_ABBRS[new Date(day + "T00:00:00").getDay()]}
+                    </Text>
+                  </View>
+                );
+              })}
+            </View>
+          </Animated.View>
+        )}
 
         <View style={styles.sectionGrid}>
           <SectionCard
@@ -158,9 +293,23 @@ export default function HomeScreen() {
             onPress={() => router.push("/(tabs)/stories")}
             delay={450}
           />
+          <SectionCard
+            title="أول ٥ دقائق"
+            subtitle="بطاقات الطوارئ"
+            icon="flash-outline"
+            onPress={() => router.push("/first-five")}
+            delay={500}
+          />
+          <SectionCard
+            title="تعرّف بسرعة"
+            subtitle="وش شفت للتو؟"
+            icon="search-outline"
+            onPress={() => router.push("/quick-id")}
+            delay={550}
+          />
         </View>
 
-        <Animated.View entering={FadeInDown.delay(500).duration(500)}>
+        <Animated.View entering={FadeInDown.delay(600).duration(500)}>
           <Pressable
             style={({ pressed }) => [
               styles.emergencyBanner,
@@ -355,5 +504,103 @@ const styles = StyleSheet.create({
     flex: 1,
     textAlign: "right",
     writingDirection: "rtl",
+  },
+  tipButtonsRow: {
+    flexDirection: "row",
+    gap: 10,
+    marginTop: 14,
+    justifyContent: "flex-end",
+  },
+  tipButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    paddingHorizontal: 14,
+    paddingVertical: 8,
+    borderRadius: 10,
+  },
+  tipButtonGreen: {
+    backgroundColor: "rgba(0, 108, 53, 0.08)",
+  },
+  tipButtonGold: {
+    backgroundColor: "rgba(212, 175, 55, 0.1)",
+  },
+  tipButtonTextGreen: {
+    fontFamily: "Cairo_600SemiBold",
+    fontSize: 13,
+    color: Colors.primary.green,
+  },
+  tipButtonTextGold: {
+    fontFamily: "Cairo_600SemiBold",
+    fontSize: 13,
+    color: Colors.primary.gold,
+  },
+  confirmationRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "flex-end",
+    gap: 6,
+    marginTop: 12,
+  },
+  confirmationText: {
+    fontFamily: "Cairo_600SemiBold",
+    fontSize: 14,
+    color: Colors.status.success,
+  },
+  streakCard: {
+    backgroundColor: Colors.card.background,
+    borderRadius: 16,
+    padding: 16,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: Colors.card.border,
+    alignItems: "center",
+  },
+  streakHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 6,
+    marginBottom: 8,
+  },
+  streakTitle: {
+    fontFamily: "Cairo_700Bold",
+    fontSize: 15,
+    color: Colors.text.primary,
+  },
+  streakCount: {
+    fontFamily: "Cairo_700Bold",
+    fontSize: 28,
+    color: Colors.primary.green,
+    marginBottom: 12,
+  },
+  streakDaysRow: {
+    flexDirection: "row",
+    gap: 12,
+    justifyContent: "center",
+  },
+  streakDayCol: {
+    alignItems: "center",
+    gap: 4,
+  },
+  streakDot: {
+    width: 28,
+    height: 28,
+    borderRadius: 14,
+    backgroundColor: "rgba(0, 0, 0, 0.06)",
+    borderWidth: 2,
+    borderColor: "rgba(0, 0, 0, 0.06)",
+  },
+  streakDotActive: {
+    backgroundColor: Colors.primary.green,
+    borderColor: Colors.primary.green,
+  },
+  streakDayLabel: {
+    fontFamily: "Cairo_400Regular",
+    fontSize: 11,
+    color: Colors.text.tertiary,
+  },
+  streakDayLabelActive: {
+    color: Colors.primary.green,
+    fontFamily: "Cairo_600SemiBold",
   },
 });
