@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سِهيل — ميزات بدون حساب</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&display=swap');
+:root{--green:#1B6B3A;--green-light:#E8F5EC;--gold:#C8A951;--gold-light:#FFF8E7;--red:#D94040;--blue:#2B6CB0;--orange:#E68A2E;--g100:#F5F5F5;--g200:#E5E5E5;--g400:#A3A3A3;--g600:#525252;--g800:#262626}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'IBM Plex Sans Arabic',sans-serif;background:#FAFAF8;color:var(--g800);line-height:1.8}
+.header{background:var(--green);color:white;padding:40px 24px 32px;text-align:center}
+.header h1{font-size:26px;font-weight:800;margin-bottom:6px}
+.header p{font-size:13px;opacity:.8;max-width:440px;margin:0 auto}
+.wrap{max-width:700px;margin:0 auto;padding:24px 16px 80px}
+.verdict{background:var(--green-light);border-radius:14px;padding:20px;margin-bottom:24px;border:1px solid #C5E6CF}
+.verdict h3{color:var(--green);font-size:16px;margin-bottom:6px}
+.verdict p{font-size:13px;color:var(--g600)}
+.section-label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:2px;color:var(--g400);margin:32px 0 12px;padding-top:8px}
+.feat-card{background:white;border-radius:14px;padding:20px;margin-bottom:12px;border:1px solid var(--g200);transition:box-shadow .2s}
+.feat-card:hover{box-shadow:0 4px 20px rgba(0,0,0,.06)}
+.feat-card .top{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}
+.feat-card h3{font-size:16px;font-weight:700;display:flex;align-items:center;gap:8px}
+.feat-card .desc{font-size:13px;color:var(--g600);margin-bottom:10px}
+.badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700}
+.b-easy{background:var(--green-light);color:var(--green)}
+.b-med{background:var(--gold-light);color:#8B6914}
+.b-hard{background:#FFF0F0;color:var(--red)}
+.storage-tag{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:6px;font-size:10px;font-weight:600;background:#F0F0F0;color:var(--g600)}
+.what-box{background:var(--g100);border-radius:10px;padding:12px 14px;margin-top:8px;font-size:12px;color:var(--g600)}
+.what-box strong{color:var(--g800)}
+.counter{display:flex;gap:12px;margin:24px 0}
+.counter-box{flex:1;text-align:center;background:white;border-radius:12px;padding:16px 8px;border:1px solid var(--g200)}
+.counter-box .n{font-size:32px;font-weight:800;color:var(--green)}
+.counter-box .l{font-size:10px;color:var(--g400);margin-top:2px}
+.priority-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;margin-top:6px}
+.p-high{background:var(--red)}.p-med{background:var(--orange)}.p-low{background:var(--green)}
+.roadmap{margin:24px 0}
+.roadmap-item{display:flex;gap:12px;padding:14px 0;border-bottom:1px solid var(--g200)}
+.roadmap-item .num{width:32px;height:32px;border-radius:8px;background:var(--gold-light);color:#8B6914;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:800;flex-shrink:0}
+.roadmap-item h4{font-size:14px;font-weight:600;margin-bottom:2px}
+.roadmap-item p{font-size:12px;color:var(--g400)}
+.tech-note{background:var(--gold-light);border-radius:12px;padding:16px 20px;margin:20px 0;border:1px solid #FDE68A}
+.tech-note p{font-size:12px;color:#8B6914}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>✦ ميزات بدون حساب</h1>
+  <p>كل شيء يتخزن على جوال المستخدم — بدون تسجيل، بدون إنترنت، بدون سيرفر</p>
+</div>
+
+<div class="wrap">
+
+<div class="verdict">
+  <h3>القاعدة: افتح واستخدم</h3>
+  <p>كل الميزات تشتغل من أول ثانية. ما فيه شاشة تسجيل. ما فيه إيميل. ما فيه كلمة مرور. البيانات تتخزن على الجوال فقط باستخدام AsyncStorage. لو المستخدم حذف التطبيق = تنمسح. لو أعاد تثبيته = يبدأ من جديد. هذا مقبول — التطبيق أداة سلامة مو منصة اجتماعية.</p>
+</div>
+
+<div class="counter">
+  <div class="counter-box"><div class="n">١٧</div><div class="l">ميزة ممكنة</div></div>
+  <div class="counter-box"><div class="n">٠</div><div class="l">تحتاج حساب</div></div>
+  <div class="counter-box"><div class="n">٠</div><div class="l">تحتاج سيرفر</div></div>
+</div>
+
+<!-- ==================== CHECKLISTS ==================== -->
+<div class="section-label">التشيك ليست التفاعلية</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>☑️ تشيك ليست تتذكر</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">المستخدم يضغط على كل عنصر لما يجهّزه. التطبيق يحفظ العناصر المحددة ويعرض شريط تقدم (٧ من ١٢). لما يفتح التطبيق مرة ثانية = يلقى تقدّمه محفوظ.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> مصفوفة IDs للعناصر المحددة لكل قائمة<br>
+    <strong>مثال:</strong> <code>checklist_vehicle: ["fuel","tires","water","tools"]</code><br>
+    <strong>حجم:</strong> أقل من 1KB
+  </div>
+</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>🔄 زر إعادة تعيين</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">زر "رحلة جديدة" يمسح كل التحديدات ويرجّع القائمة للصفر. المستخدم يبدأ تجهيز جديد كل رحلة.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> لا شيء إضافي — يمسح البيانات المحفوظة<br>
+    <strong>حجم:</strong> 0
+  </div>
+</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>📊 عدّاد الرحلات</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">كل مرة المستخدم يكمّل تشيك ليست ويضغط "إعادة تعيين"، العدّاد يزيد ١. "أكملت ٥ رحلات بتجهيز كامل". رقم بسيط يعطي إحساس بالإنجاز.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> رقم واحد<br>
+    <strong>مثال:</strong> <code>trips_completed: 5</code><br>
+    <strong>حجم:</strong> بضع بايتات
+  </div>
+</div>
+
+<!-- ==================== DAILY TIP ==================== -->
+<div class="section-label">نصيحة اليوم التفاعلية</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>💡 "عرفتها" أو "معلومة جديدة"</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">بدل بانر ساكن، النصيحة تعرض زرين: "أيوا عارفها ✅" و "معلومة جديدة 💡". المستخدم يضغط واحد. التطبيق يحفظ إجابته ويعرض النصيحة التالية بكرا.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> آخر نصيحة مقروءة + تاريخ + إجابة<br>
+    <strong>مثال:</strong> <code>tip_last: {id:47, date:"2026-03-09", answer:"new"}</code><br>
+    <strong>حجم:</strong> أقل من 1KB
+  </div>
+</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>🔥 سلسلة التعلّم (Streak)</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">لو المستخدم قرأ النصيحة كل يوم = السلسلة تزيد. لو فات يوم = ترجع صفر. "سلسلة ١٢ يوم 🔥". نفس فكرة Duolingo — بدون حساب.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> عدد أيام السلسلة + تاريخ آخر زيارة<br>
+    <strong>مثال:</strong> <code>streak: {count:12, lastDate:"2026-03-09"}</code><br>
+    <strong>حجم:</strong> أقل من 1KB
+  </div>
+</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>📈 عدّاد المعرفة</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">"تعلمت ٣٤ معلومة جديدة" — كل مرة المستخدم يضغط "معلومة جديدة" العدّاد يزيد. رقم بسيط يعطي شعور بالتراكم.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> رقم واحد<br>
+    <strong>مثال:</strong> <code>new_tips_count: 34</code><br>
+    <strong>حجم:</strong> بضع بايتات
+  </div>
+</div>
+
+<!-- ==================== QUIZ ==================== -->
+<div class="section-label">الكويز</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>❓ كويز قصير بعد كل قسم</h3>
+    <span class="badge b-med">متوسط</span>
+  </div>
+  <div class="desc">٥-١٠ أسئلة اختيار من متعدد بعد كل قسم رئيسي. "وش أول شيء تسويه لو لدغك عقرب؟" الأسئلة مخزنة في ملف البيانات مع المحتوى. النتيجة تتحفظ محلياً.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> أعلى نتيجة لكل كويز<br>
+    <strong>مثال:</strong> <code>quiz_safety: {best:8, total:10, date:"2026-03-09"}</code><br>
+    <strong>حجم:</strong> أقل من 1KB
+  </div>
+</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>🎯 إعادة المحاولة</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">لو ما جبت ١٠٠٪ = زر "حاول مرة ثانية". التطبيق يحفظ أعلى نتيجة بس. يخلّي المستخدم يبي يرجع ويحسّن.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> مشمول في النقطة السابقة
+  </div>
+</div>
+
+<!-- ==================== BADGES ==================== -->
+<div class="section-label">الإنجازات (Badges)</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>🏆 شارات الإنجاز</h3>
+    <span class="badge b-med">متوسط</span>
+  </div>
+  <div class="desc">شارات تُفتح تلقائياً لما المستخدم يحقق شروطها. كل شارة لها اسم عربي وأيقونة. تُعرض في صفحة "إنجازاتي" أو في الصفحة الرئيسية.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> مصفوفة IDs الشارات المفتوحة + تاريخ الفتح<br>
+    <strong>مثال:</strong> <code>badges: ["desert_ready","navigator","first_aid_pro"]</code><br>
+    <strong>حجم:</strong> أقل من 1KB
+  </div>
+</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>📋 قائمة الشارات المقترحة</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">
+    <strong>جاهز للبر 🏜️</strong> — كمّل تشيك ليست بر كاملة<br>
+    <strong>جاهز للبحر 🌊</strong> — كمّل تشيك ليست بحر كاملة<br>
+    <strong>ملاّح ✦</strong> — قرأ كل محتوى دليل الملاحة<br>
+    <strong>مسعف أولي 🏥</strong> — نجح في كويز السلامة ١٠٠٪<br>
+    <strong>عارف البر 🦂</strong> — قرأ كل بطاقات الكائنات<br>
+    <strong>صاحب سوالف 💧</strong> — قرأ ١٠ سوالف<br>
+    <strong>متعلّم يومي 🔥</strong> — سلسلة ٧ أيام نصيحة<br>
+    <strong>محترف 🔥🔥</strong> — سلسلة ٣٠ يوم نصيحة<br>
+    <strong>مستكشف ⭐</strong> — فتح كل الشارات الثانية
+  </div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> مشمول في النقطة السابقة — الشروط محسوبة من البيانات المحلية
+  </div>
+</div>
+
+<!-- ==================== EMERGENCY ==================== -->
+<div class="section-label">أدوات الطوارئ</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>📋 رسالة طوارئ جاهزة للنسخ</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">نص رسالة جاهز بالعربي فيه فراغات يعبّيها المستخدم. زر "انسخ" ينسخ الرسالة للكليبورد. زر "أرسل واتساب" يفتح واتساب مباشرة بالرسالة.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> لا شيء — النص يتولّد في اللحظة<br>
+    <strong>يستخدم:</strong> <code>Clipboard API</code> + <code>Linking.openURL</code> لفتح واتساب
+  </div>
+</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>📍 زر شارك موقعك</h3>
+    <span class="badge b-med">متوسط</span>
+  </div>
+  <div class="desc">زر واحد يقرأ GPS الجوال ويفتح share sheet بالإحداثيات أو رابط خريطة. يشتغل بدون إنترنت — GPS يعطيك إحداثيات حتى بدون شبكة.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> لا شيء<br>
+    <strong>يستخدم:</strong> <code>expo-location</code> + <code>expo-sharing</code> أو <code>Share API</code>
+  </div>
+</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>⚡ بطاقات أول ٥ دقائق</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">كل سالفة سلامة لها نسخة طوارئ: خطوات مرقّمة كبيرة واضحة. الخطوة الحالية بارزة باللون الأخضر. زر "اتصل 911" دائماً ظاهر في الأسفل.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> لا شيء — المحتوى موجود في ملف البيانات<br>
+    <strong>يستخدم:</strong> نفس البيانات الحالية بتصميم مختلف
+  </div>
+</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>⏱️ مؤقت الأمان (Safety Timer)</h3>
+    <span class="badge b-hard">متقدم</span>
+  </div>
+  <div class="desc">المستخدم يحدد: "بارجع الساعة ٨ مساء". لو ما فتح التطبيق بعد الوقت المحدد = التطبيق يرسل SMS تلقائي بآخر موقع لرقم طوارئ حدده المستخدم مسبقاً.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> وقت العودة + رقم جهة الاتصال + آخر موقع<br>
+    <strong>مثال:</strong> <code>safety_timer: {return:"20:00", contact:"+966...", lat:24.7, lng:46.6}</code><br>
+    <strong>يستخدم:</strong> <code>expo-notifications</code> (local) + <code>expo-sms</code><br>
+    <strong>ملاحظة:</strong> يحتاج إذن المستخدم لإرسال SMS + تشغيل في الخلفية
+  </div>
+</div>
+
+<!-- ==================== NAVIGATION ==================== -->
+<div class="section-label">أدوات الملاحة</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>🧭 بوصلة مدمجة</h3>
+    <span class="badge b-med">متوسط</span>
+  </div>
+  <div class="desc">بوصلة حقيقية تقرأ حساس المغناطيس في الجوال. تُعرض داخل صفحة دليل الملاحة. تشتغل بدون إنترنت.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> لا شيء<br>
+    <strong>يستخدم:</strong> <code>expo-sensors</code> (Magnetometer) — مجاني ومدمج في Expo
+  </div>
+</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>📌 حفظ نقطة الانطلاق</h3>
+    <span class="badge b-med">متوسط</span>
+  </div>
+  <div class="desc">زر "سجّل مكاني" يحفظ إحداثيات GPS الحالية. يعرضها بعدين كـ "نقطة الانطلاق: 24.7136°N 46.6753°E". زر "ارجع لنقطة الانطلاق" يفتح خرائط الجوال بالإحداثيات المحفوظة.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> إحداثيات + وقت + اسم اختياري<br>
+    <strong>مثال:</strong> <code>saved_points: [{name:"المخيم", lat:24.7, lng:46.6, time:"15:30"}]</code><br>
+    <strong>حجم:</strong> أقل من 1KB
+  </div>
+</div>
+
+<!-- ==================== QUICK ACCESS ==================== -->
+<div class="section-label">الوصول السريع</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>🔍 "تعرّف بسرعة" — وش شفت؟</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">أزرار كبيرة في الصفحة الرئيسية: عقرب 🦂 / ثعبان 🐍 / قنديل 🪼 / نبتة 🌵. ضغطة وحدة = يوصل لبطاقة التعريف + "وش تسوي". مسار اختصار — ما يحتاج تتصفح.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> لا شيء — مسار تنقل فقط<br>
+    <strong>يستخدم:</strong> React Navigation مع params
+  </div>
+</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>🔖 المفضلة</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">أيقونة قلب أو نجمة على أي بطاقة (كائن، سالفة، نصيحة). المستخدم يضغطها = تنحفظ في قائمة "مفضلاتي". يقدر يوصلها بسرعة بدون ما يبحث.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> مصفوفة IDs المفضلة<br>
+    <strong>مثال:</strong> <code>favorites: ["creature_scorpion","story_snakebite","tip_42"]</code><br>
+    <strong>حجم:</strong> أقل من 1KB
+  </div>
+</div>
+
+<!-- ==================== SHARING ==================== -->
+<div class="section-label">المشاركة</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>📤 شارك جاهزيتك</h3>
+    <span class="badge b-med">متوسط</span>
+  </div>
+  <div class="desc">لما يكمّل التشيك ليست = زر "شارك". يولّد رسالة نصية: "أنا جاهز لرحلة البر — جهّزت ١٢ من ١٢ عنصر عبر تطبيق سهيل ✦". يفتح share sheet الجوال (واتساب، سناب، رسائل).</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> لا شيء<br>
+    <strong>يستخدم:</strong> <code>Share API</code> (React Native مدمج)
+  </div>
+</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>📤 شارك نتيجة الكويز</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">"جبت ٩ من ١٠ في كويز السلامة! جرّب تطبيق سهيل ✦". نفس آلية المشاركة — نص جاهز + share sheet.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> لا شيء<br>
+    <strong>يستخدم:</strong> <code>Share API</code>
+  </div>
+</div>
+
+<!-- ==================== READING TRACKING ==================== -->
+<div class="section-label">تتبع القراءة</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>👁️ "مقروء" تلقائي</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">لما المستخدم يفتح بطاقة كائن أو سالفة = تنحفظ كـ "مقروءة". البطاقات المقروءة تظهر بشكل مختلف (شفافية أخف أو علامة ✓ صغيرة). هذا يعطي إحساس بالتقدم.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> مصفوفة IDs المحتوى المقروء<br>
+    <strong>مثال:</strong> <code>read_items: ["creature_scorpion","creature_viper","story_camp"]</code><br>
+    <strong>حجم:</strong> أقل من 2KB
+  </div>
+</div>
+
+<div class="feat-card">
+  <div class="top">
+    <h3>📊 "اكتشفت ٦٠٪ من المحتوى"</h3>
+    <span class="badge b-easy">سهل</span>
+  </div>
+  <div class="desc">شريط تقدم صغير يعرض نسبة المحتوى المقروء. يظهر في الصفحة الرئيسية أو في كل قسم. يحسب من عدد العناصر المقروءة ÷ العدد الكلي.</div>
+  <div class="what-box">
+    <strong>يتخزن:</strong> مشمول في النقطة السابقة — النسبة تُحسب تلقائياً
+  </div>
+</div>
+
+<!-- ==================== TECH SUMMARY ==================== -->
+<div class="tech-note">
+  <p>💾 <strong>كل البيانات المحفوظة مجتمعة</strong> تأخذ أقل من <strong>10KB</strong> على جوال المستخدم. AsyncStorage يقدر يخزن ميغابايتات. أنت تحتاج كيلوبايتات فقط.</p>
+</div>
+
+<div class="tech-note">
+  <p>📦 <strong>المكتبات المطلوبة</strong> (كلها مجانية ومدمجة في Expo):<br><br>
+  <code>AsyncStorage</code> — تخزين محلي (مثبّت غالباً)<br>
+  <code>expo-location</code> — GPS للموقع<br>
+  <code>expo-sensors</code> — بوصلة (Magnetometer)<br>
+  <code>expo-sharing</code> أو <code>Share</code> — مشاركة واتساب/سناب<br>
+  <code>expo-clipboard</code> — نسخ رسالة الطوارئ<br>
+  <code>expo-notifications</code> — تنبيهات محلية (مؤقت الأمان)<br>
+  <code>expo-sms</code> — إرسال SMS (مؤقت الأمان)
+  </p>
+</div>
+
+<!-- ==================== ROADMAP ==================== -->
+<div class="section-label">ترتيب التنفيذ</div>
+
+<div class="roadmap">
+  <div class="roadmap-item">
+    <div class="num">١</div>
+    <div><h4>التشيك ليست التفاعلية + شريط التقدم</h4><p>أسهل شيء وأكبر فرق. ساعة أو ساعتين عمل.</p></div>
+  </div>
+  <div class="roadmap-item">
+    <div class="num">٢</div>
+    <div><h4>بطاقات أول ٥ دقائق</h4><p>نفس المحتوى بتصميم مختلف. ما يحتاج بيانات جديدة.</p></div>
+  </div>
+  <div class="roadmap-item">
+    <div class="num">٣</div>
+    <div><h4>نصيحة اليوم التفاعلية + Streak</h4><p>زرين + عدّاد. ساعة عمل.</p></div>
+  </div>
+  <div class="roadmap-item">
+    <div class="num">٤</div>
+    <div><h4>تتبع "مقروء" + نسبة التقدم</h4><p>يعطي إحساس بالتقدم في كل قسم.</p></div>
+  </div>
+  <div class="roadmap-item">
+    <div class="num">٥</div>
+    <div><h4>المفضلة</h4><p>أيقونة قلب + قائمة. سريع جداً.</p></div>
+  </div>
+  <div class="roadmap-item">
+    <div class="num">٦</div>
+    <div><h4>رسالة الطوارئ + زر شارك موقعك</h4><p>ميزة حقيقية في فزعة.</p></div>
+  </div>
+  <div class="roadmap-item">
+    <div class="num">٧</div>
+    <div><h4>"تعرّف بسرعة" — الأزرار السريعة</h4><p>مسار اختصار في الرئيسية. ما يحتاج محتوى جديد.</p></div>
+  </div>
+  <div class="roadmap-item">
+    <div class="num">٨</div>
+    <div><h4>الكويز</h4><p>يحتاج كتابة أسئلة + تصميم شاشة. جلسة عمل كاملة.</p></div>
+  </div>
+  <div class="roadmap-item">
+    <div class="num">٩</div>
+    <div><h4>الشارات (Badges)</h4><p>يحتاج تصميم + منطق فتح الشارة. بعد ما الكويز والتشيك ليست يشتغلون.</p></div>
+  </div>
+  <div class="roadmap-item">
+    <div class="num">١٠</div>
+    <div><h4>المشاركة (واتساب/سناب)</h4><p>بعد ما التشيك ليست والكويز يشتغلون — أضف أزرار مشاركة.</p></div>
+  </div>
+  <div class="roadmap-item">
+    <div class="num">١١</div>
+    <div><h4>البوصلة المدمجة</h4><p>ميزة جميلة داخل دليل الملاحة.</p></div>
+  </div>
+  <div class="roadmap-item">
+    <div class="num">١٢</div>
+    <div><h4>حفظ نقطة الانطلاق</h4><p>مع البوصلة — يكمّلون بعض.</p></div>
+  </div>
+  <div class="roadmap-item">
+    <div class="num">١٣</div>
+    <div><h4>مؤقت الأمان</h4><p>الأصعب — يحتاج تشغيل خلفية + إذن SMS. خلّه آخر شيء.</p></div>
+  </div>
+</div>
+
+</div>
+</body>
+</html>
