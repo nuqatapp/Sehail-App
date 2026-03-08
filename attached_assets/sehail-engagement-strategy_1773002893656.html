@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>سِهيل — من مكتبة إلى رفيق</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700;800&display=swap');
+
+  :root {
+    --green: #1B6B3A;
+    --green-dark: #0F4D28;
+    --green-light: #E8F5EC;
+    --green-mid: #C5E6CF;
+    --gold: #C8A951;
+    --gold-light: #FFF8E7;
+    --red: #D94040;
+    --red-light: #FFF0F0;
+    --orange: #E68A2E;
+    --orange-light: #FFF4E6;
+    --blue: #2B6CB0;
+    --blue-light: #EBF4FF;
+    --gray-50: #FAFAFA;
+    --gray-100: #F5F5F5;
+    --gray-200: #E5E5E5;
+    --gray-300: #D4D4D4;
+    --gray-400: #A3A3A3;
+    --gray-600: #525252;
+    --gray-800: #262626;
+    --gray-900: #171717;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'IBM Plex Sans Arabic', sans-serif;
+    background: var(--gray-900);
+    color: white;
+    line-height: 1.8;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 80vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 24px;
+    background: radial-gradient(ellipse at 50% 80%, rgba(27,107,58,0.25) 0%, transparent 60%), var(--gray-900);
+    position: relative;
+  }
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 120px;
+    background: linear-gradient(transparent, var(--gray-900));
+  }
+  .hero .star {
+    font-size: 48px;
+    margin-bottom: 24px;
+    animation: pulse 3s ease-in-out infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 0.6; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.1); }
+  }
+  .hero h1 {
+    font-size: 36px;
+    font-weight: 800;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, white, var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+  .hero .subtitle {
+    font-size: 16px;
+    color: var(--gray-400);
+    max-width: 480px;
+    font-weight: 300;
+  }
+
+  /* SECTIONS */
+  .section {
+    max-width: 720px;
+    margin: 0 auto;
+    padding: 60px 20px;
+  }
+  .section-label {
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gold);
+    margin-bottom: 12px;
+  }
+  .section h2 {
+    font-size: 28px;
+    font-weight: 700;
+    margin-bottom: 20px;
+    line-height: 1.4;
+  }
+  .section p.lead {
+    font-size: 15px;
+    color: var(--gray-400);
+    margin-bottom: 32px;
+    line-height: 2;
+  }
+
+  /* PROBLEM CARDS */
+  .problem-grid {
+    display: grid;
+    gap: 16px;
+    margin-bottom: 32px;
+  }
+  .problem-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+    transition: all 0.3s;
+  }
+  .problem-card:hover {
+    background: rgba(255,255,255,0.07);
+    transform: translateY(-2px);
+  }
+  .problem-card .emoji { font-size: 28px; margin-bottom: 12px; }
+  .problem-card h3 {
+    font-size: 17px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  .problem-card p {
+    font-size: 13px;
+    color: var(--gray-400);
+    line-height: 1.9;
+  }
+
+  /* VS COMPARISON */
+  .vs-container {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    gap: 16px;
+    align-items: start;
+    margin: 32px 0;
+  }
+  @media (max-width: 600px) {
+    .vs-container {
+      grid-template-columns: 1fr;
+    }
+    .vs-badge { display: none; }
+  }
+  .vs-col {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 16px;
+    padding: 24px;
+  }
+  .vs-col.google { border-color: rgba(217,64,64,0.3); }
+  .vs-col.sehail { border-color: rgba(27,107,58,0.5); background: rgba(27,107,58,0.08); }
+  .vs-col h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .vs-item {
+    padding: 8px 0;
+    font-size: 13px;
+    color: var(--gray-400);
+    display: flex;
+    gap: 8px;
+    align-items: flex-start;
+  }
+  .vs-item .icon { flex-shrink: 0; }
+  .vs-badge {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 800;
+    color: var(--gray-600);
+    padding-top: 60px;
+  }
+
+  /* FEATURE CONCEPTS */
+  .feature-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 20px;
+    margin-bottom: 24px;
+    overflow: hidden;
+    transition: all 0.3s;
+  }
+  .feature-card:hover {
+    border-color: rgba(200,169,81,0.3);
+    transform: translateY(-3px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+  }
+  .feature-mockup {
+    padding: 24px;
+    min-height: 280px;
+    position: relative;
+    overflow: hidden;
+  }
+  .feature-info {
+    padding: 24px;
+    border-top: 1px solid rgba(255,255,255,0.06);
+  }
+  .feature-info .tag {
+    display: inline-block;
+    padding: 3px 12px;
+    border-radius: 20px;
+    font-size: 11px;
+    font-weight: 600;
+    margin-bottom: 10px;
+  }
+  .tag-engagement { background: rgba(200,169,81,0.15); color: var(--gold); }
+  .tag-survival { background: rgba(27,107,58,0.2); color: #86EFAC; }
+  .tag-social { background: rgba(43,108,176,0.2); color: #93C5FD; }
+  .tag-ux { background: rgba(230,138,46,0.15); color: var(--orange); }
+  .feature-info h3 {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 8px;
+  }
+  .feature-info p {
+    font-size: 13px;
+    color: var(--gray-400);
+    line-height: 1.9;
+  }
+  .feature-info .why {
+    margin-top: 12px;
+    padding: 12px 16px;
+    background: rgba(200,169,81,0.08);
+    border-radius: 10px;
+    font-size: 12px;
+    color: var(--gold);
+    line-height: 1.8;
+  }
+
+  /* PHONE MOCKUPS */
+  .phone {
+    width: 260px;
+    margin: 0 auto;
+    background: var(--gray-900);
+    border-radius: 28px;
+    border: 2px solid rgba(255,255,255,0.12);
+    padding: 12px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+  }
+  .phone-screen {
+    background: white;
+    border-radius: 20px;
+    overflow: hidden;
+    color: var(--gray-800);
+  }
+  .phone-header {
+    background: var(--green);
+    color: white;
+    padding: 16px 16px 12px;
+    font-size: 14px;
+    font-weight: 600;
+    text-align: center;
+  }
+  .phone-content { padding: 12px; }
+
+  /* Mini card inside phone mockup */
+  .mini-card {
+    background: var(--gray-50);
+    border-radius: 10px;
+    padding: 10px 12px;
+    margin-bottom: 8px;
+    font-size: 11px;
+    color: var(--gray-800);
+    border: 1px solid var(--gray-200);
+  }
+  .mini-card-title {
+    font-weight: 700;
+    font-size: 12px;
+    margin-bottom: 3px;
+  }
+  .mini-card-sub {
+    color: var(--gray-400);
+    font-size: 10px;
+  }
+
+  /* Checklist mockup */
+  .mock-check {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+    padding: 6px 0;
+    font-size: 11px;
+    color: var(--gray-800);
+  }
+  .mock-check .box {
+    width: 18px;
+    height: 18px;
+    border-radius: 5px;
+    border: 2px solid var(--gray-300);
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+  }
+  .mock-check .box.checked {
+    background: var(--green);
+    border-color: var(--green);
+    color: white;
+  }
+
+  /* Progress bar */
+  .mock-progress {
+    height: 6px;
+    background: var(--gray-200);
+    border-radius: 3px;
+    overflow: hidden;
+    margin: 8px 0;
+  }
+  .mock-progress-fill {
+    height: 100%;
+    background: var(--green);
+    border-radius: 3px;
+    transition: width 0.5s;
+  }
+
+  /* Badge mockup */
+  .mock-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 10px;
+    font-weight: 600;
+  }
+
+  /* Emergency pulse */
+  .emergency-pulse {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--red);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    margin: 0 auto 8px;
+    animation: emergencyPulse 2s ease-in-out infinite;
+  }
+  @keyframes emergencyPulse {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(217,64,64,0.4); }
+    50% { box-shadow: 0 0 0 12px rgba(217,64,64,0); }
+  }
+
+  /* Priority list */
+  .priority-list {
+    counter-reset: priority;
+    margin: 32px 0;
+  }
+  .priority-item {
+    counter-increment: priority;
+    display: flex;
+    gap: 16px;
+    align-items: flex-start;
+    padding: 20px 0;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+  }
+  .priority-item .num {
+    width: 36px;
+    height: 36px;
+    border-radius: 10px;
+    background: rgba(200,169,81,0.15);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .priority-item h3 {
+    font-size: 15px;
+    font-weight: 600;
+    margin-bottom: 4px;
+  }
+  .priority-item p {
+    font-size: 13px;
+    color: var(--gray-400);
+  }
+
+  /* Final CTA */
+  .cta-section {
+    text-align: center;
+    padding: 80px 24px;
+    background: radial-gradient(ellipse at 50% 20%, rgba(200,169,81,0.1) 0%, transparent 60%);
+  }
+  .cta-section h2 {
+    font-size: 28px;
+    font-weight: 800;
+    margin-bottom: 16px;
+  }
+  .cta-section p {
+    font-size: 14px;
+    color: var(--gray-400);
+    max-width: 500px;
+    margin: 0 auto;
+  }
+
+  .divider {
+    width: 40px;
+    height: 2px;
+    background: var(--gold);
+    margin: 0 auto 40px;
+    opacity: 0.5;
+  }
+</style>
+</head>
+<body>
+
+<!-- ===== HERO ===== -->
+<div class="hero">
+  <div class="star">✦</div>
+  <h1>سهيل مو مكتبة</h1>
+  <p class="subtitle">المستخدم ما يبي يقرأ. يبي يحس إنه جاهز، يبي أحد معه، يبي يرجع سالم. هذا الفرق بين تطبيق حي وتطبيق مرجع.</p>
+</div>
+
+<!-- ===== THE PROBLEM ===== -->
+<div class="section">
+  <div class="section-label">المشكلة</div>
+  <h2>ليش التطبيق يحس كأنه كتاب؟</h2>
+  <p class="lead">التصميم حلو والمحتوى ممتاز. لكن التجربة الحالية هي: افتح → اقرأ → أقفل. ما فيه سبب يخلي المستخدم يفتح التطبيق مرة ثانية أو يحس إن التطبيق يعرفه.</p>
+
+  <div class="problem-grid">
+    <div class="problem-card">
+      <div class="emoji">📖</div>
+      <h3>كل شيء "اقرأ"</h3>
+      <p>كروت فيها نص، تضغط عليها تقرأ أكثر. ما فيه تفاعل — لا تشيك بوكس، لا تقدم، لا تكمل شيء. المستخدم يستقبل معلومات بس ما يسوي شيء فيها.</p>
+    </div>
+    <div class="problem-card">
+      <div class="emoji">🔁</div>
+      <h3>ما فيه تقدّم</h3>
+      <p>المستخدم يدخل اليوم ويدخل بعد شهر — نفس الشاشة بالضبط. ما فيه إحساس إنه تعلم شيء أو أنجز شيء. ما فيه سبب يرجع.</p>
+    </div>
+    <div class="problem-card">
+      <div class="emoji">😴</div>
+      <h3>ما فيه لحظة "واو"</h3>
+      <p>التطبيق هادي زيادة. ما فيه شيء يفاجئك أو يخلّيك تبي تكمل. الطوارئ لازم تحس بطوارئ. النصيحة لازم تحس بأهمية.</p>
+    </div>
+    <div class="problem-card">
+      <div class="emoji">🔍</div>
+      <h3>ليش ما أقوقل بدالها؟</h3>
+      <p>لو المحتوى بس نص + معلومات = قوقل يسويها. المستخدم يحتاج سبب يخلّيه يفتح سهيل مو قوقل. السبب لازم يكون: "هذا الشيء ما يقدر يسويه قوقل".</p>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SEHAIL vs GOOGLE ===== -->
+<div class="section">
+  <div class="section-label">الفرق الحقيقي</div>
+  <h2>سهيل يقدر يسوي أشياء قوقل ما يقدر عليها</h2>
+
+  <div class="vs-container">
+    <div class="vs-col google">
+      <h3>🔍 قوقل</h3>
+      <div class="vs-item"><span class="icon">❌</span> ما يشتغل بدون إنترنت — وفي البر والبحر ما فيه إنترنت</div>
+      <div class="vs-item"><span class="icon">❌</span> نتائج عشوائية — ممكن يعطيك معلومة غلط عن حيوان سعودي</div>
+      <div class="vs-item"><span class="icon">❌</span> يحتاج تعرف تسأل — لو ما تعرف اسم العقرب كيف تبحث؟</div>
+      <div class="vs-item"><span class="icon">❌</span> ما يعرف إنك في رحلة — ما يقدر يجهّزك خطوة خطوة</div>
+      <div class="vs-item"><span class="icon">❌</span> ما يعطيك أرقام طوارئ سعودية بلمسة وحدة</div>
+      <div class="vs-item"><span class="icon">❌</span> ما يتذكر وش جهّزت ووش ما جهّزت</div>
+      <div class="vs-item"><span class="icon">❌</span> ما يعلّمك شيء جديد كل يوم بأسلوب سعودي</div>
+    </div>
+    <div class="vs-badge">VS</div>
+    <div class="vs-col sehail">
+      <h3>✦ سهيل</h3>
+      <div class="vs-item"><span class="icon">✅</span> يشتغل بدون إنترنت ١٠٠٪ — كل المحتوى محمّل على جوالك</div>
+      <div class="vs-item"><span class="icon">✅</span> محتوى مراجع ومحلي — كل حيوان ونبتة من السعودية</div>
+      <div class="vs-item"><span class="icon">✅</span> يعرض لك الخطر حتى لو ما تعرف اسمه — تصفّح وتعرف</div>
+      <div class="vs-item"><span class="icon">✅</span> يجهّزك للرحلة ويتابع معك — تشيك ليست تفاعلية</div>
+      <div class="vs-item"><span class="icon">✅</span> فزعة بلمسة — 911 فوراً</div>
+      <div class="vs-item"><span class="icon">✅</span> يعرف وش سوّيت ووش بقى — تقدّم واضح</div>
+      <div class="vs-item"><span class="icon">✅</span> نصيحة يومية + سوالف بلغة سعودية = عادة</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== THE 6 FEATURES ===== -->
+<div class="section">
+  <div class="divider"></div>
+  <div class="section-label">الحلول — ٦ أشياء تحوّل سهيل</div>
+  <h2>من "أقرأ وأطلع" إلى "أفتح كل يوم"</h2>
+  <p class="lead">كل فكرة تحتها: ليش تخلي المستخدم يرجع، كيف تبدو في التطبيق، وليش قوقل ما يقدر يسويها.</p>
+</div>
+
+<!-- FEATURE 1: Interactive Checklists -->
+<div class="section" style="padding-top:0">
+  <div class="feature-card">
+    <div class="feature-mockup" style="background: linear-gradient(135deg, #0F4D28, #1B6B3A); display:flex; align-items:center; justify-content:center;">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-header">إحتياجات الرحلة — بر 🏜️</div>
+          <div class="phone-content">
+            <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+              <span style="font-size:12px;font-weight:700;color:var(--green)">جاهزية المركبة</span>
+              <span style="font-size:10px;color:var(--gray-400)">٤ من ٧</span>
+            </div>
+            <div class="mock-progress"><div class="mock-progress-fill" style="width:57%"></div></div>
+            <div class="mock-check"><div class="box checked">✓</div><span>الوقود — خزان ممتلئ ✅</span></div>
+            <div class="mock-check"><div class="box checked">✓</div><span>الكفرات — ضغط مناسب ✅</span></div>
+            <div class="mock-check"><div class="box checked">✓</div><span>ماء — ٢٠ لتر كحد أدنى ✅</span></div>
+            <div class="mock-check"><div class="box checked">✓</div><span>أدوات التغريز ✅</span></div>
+            <div class="mock-check"><div class="box"></div><span>البطارية — فحص الشحن</span></div>
+            <div class="mock-check"><div class="box"></div><span>كفر احتياطي</span></div>
+            <div class="mock-check"><div class="box"></div><span>السوائل — زيت وماء رديتر</span></div>
+            <div style="margin-top:10px;text-align:center;">
+              <div class="mock-badge" style="background:var(--gold-light);color:#8B6914;">🏆 كمّل القائمة = جاهز للبر</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-info">
+      <span class="tag tag-engagement">تفاعل + عادة</span>
+      <h3>١. تشيك ليست تفاعلية — مو قائمة قراءة</h3>
+      <p>بدل قائمة تقرأها وتطلع، المستخدم يضغط على كل عنصر لما يجهّزه. يشوف تقدّمه بنسبة مئوية. لما يكمّل = يحصل على حالة "جاهز ✅". الإحساس بالإنجاز يخلّيه يستخدم القائمة كل رحلة.</p>
+      <div class="why">💡 <strong>ليش قوقل ما يقدر:</strong> قوقل يعطيك قائمة تقرأها. سهيل يتذكر وش جهّزت ويبيّن لك وش بقى. كل رحلة تبدأ من سهيل.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE 2: Trip Mode -->
+<div class="section" style="padding-top:0">
+  <div class="feature-card">
+    <div class="feature-mockup" style="background: linear-gradient(135deg, #1a1a2e, #16213e); display:flex; align-items:center; justify-content:center;">
+      <div class="phone">
+        <div class="phone-screen">
+          <div style="background:var(--green-dark);color:white;padding:16px;text-align:center;">
+            <div style="font-size:10px;opacity:0.7;margin-bottom:4px;">⚡ وضع الرحلة نشط</div>
+            <div style="font-size:16px;font-weight:700;">رحلة بر — الربع الخالي</div>
+            <div style="font-size:11px;opacity:0.6;margin-top:4px;">بدأت ٣:٤٥ م • ٢ ساعة و ١٥ دقيقة</div>
+          </div>
+          <div class="phone-content">
+            <div class="mini-card" style="border-right:3px solid var(--red);display:flex;align-items:center;gap:8px;">
+              <span style="font-size:18px;">🌡️</span>
+              <div>
+                <div class="mini-card-title" style="color:var(--red)">تنبيه — حرارة عالية</div>
+                <div class="mini-card-sub">٤٤°م الآن. اشرب ماء كل ٢٠ دقيقة.</div>
+              </div>
+            </div>
+            <div class="mini-card" style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:18px;">📍</span>
+              <div>
+                <div class="mini-card-title">شارك موقعك</div>
+                <div class="mini-card-sub">آخر مشاركة: قبل ٤٥ دقيقة</div>
+              </div>
+            </div>
+            <div class="mini-card" style="display:flex;align-items:center;gap:8px;">
+              <span style="font-size:18px;">🔋</span>
+              <div>
+                <div class="mini-card-title">البطارية: ٦٧٪</div>
+                <div class="mini-card-sub">متوقع تكفيك ٤ ساعات بالوضع الحالي</div>
+              </div>
+            </div>
+            <div style="margin-top:8px;background:var(--red);color:white;text-align:center;padding:10px;border-radius:10px;font-size:13px;font-weight:700;">
+              🚨 فزعة — طلب مساعدة فوري
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-info">
+      <span class="tag tag-survival">سلامة + أداة حقيقية</span>
+      <h3>٢. وضع الرحلة — سهيل يصحى معك</h3>
+      <p>قبل ما تطلع، تفعّل "وضع الرحلة". تختار: بر أو بحر، المنطقة، عدد الأشخاص. سهيل يتحول من مرجع إلى لوحة تحكم حية: تذكيرات ماء، مراقبة بطارية، مشاركة موقع سريعة، وزر فزعة كبير. هذا الشيء ما يسويه أي تطبيق ثاني.</p>
+      <div class="why">💡 <strong>ليش قوقل ما يقدر:</strong> قوقل ما يعرف إنك في رحلة. سهيل يعرف ويتصرف على هالأساس. هذي ميزة تنقذ حياة مو بس معلومة.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE 3: Quick Action Cards -->
+<div class="section" style="padding-top:0">
+  <div class="feature-card">
+    <div class="feature-mockup" style="background: linear-gradient(135deg, #3B0D0D, #7C1D1D); display:flex; align-items:center; justify-content:center;">
+      <div class="phone">
+        <div class="phone-screen">
+          <div style="background:var(--red);color:white;padding:12px 16px;text-align:center;">
+            <div style="font-size:14px;font-weight:700;">⚡ أول ٥ دقائق</div>
+          </div>
+          <div class="phone-content">
+            <div style="text-align:center;margin-bottom:8px;">
+              <div style="font-size:20px;font-weight:800;color:var(--gray-800);">لدغة عقرب</div>
+              <div style="font-size:11px;color:var(--gray-400);">اتبع الخطوات بالترتيب</div>
+            </div>
+            <div style="background:var(--green);color:white;border-radius:12px;padding:14px;margin-bottom:6px;display:flex;gap:10px;align-items:center;">
+              <span style="font-size:24px;font-weight:800;">١</span>
+              <div style="font-size:12px;line-height:1.6;">ابتعد عن مكان اللدغة فوراً</div>
+            </div>
+            <div style="background:var(--gray-100);border-radius:12px;padding:14px;margin-bottom:6px;display:flex;gap:10px;align-items:center;">
+              <span style="font-size:24px;font-weight:800;color:var(--gray-400);">٢</span>
+              <div style="font-size:12px;color:var(--gray-600);line-height:1.6;">هدّي نفسك — الحركة تنشر السم</div>
+            </div>
+            <div style="background:var(--gray-100);border-radius:12px;padding:14px;margin-bottom:6px;display:flex;gap:10px;align-items:center;">
+              <span style="font-size:24px;font-weight:800;color:var(--gray-400);">٣</span>
+              <div style="font-size:12px;color:var(--gray-600);line-height:1.6;">اغسل مكان اللدغة بماء وصابون</div>
+            </div>
+            <div style="background:var(--red);color:white;text-align:center;padding:10px;border-radius:10px;font-size:12px;font-weight:700;margin-top:8px;">
+              📞 اتصل 911
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-info">
+      <span class="tag tag-survival">سلامة + سرعة</span>
+      <h3>٣. بطاقات "أول ٥ دقائق" — خطوة خطوة</h3>
+      <p>لما أحد يلدغه عقرب، ما يبي يقرأ فقرة. يبي خطوات مرقّمة كبيرة واضحة يتبعها وحدة وحدة. كل سالفة سلامة تتحول إلى بطاقة طوارئ سريعة: خطوة ١ → ٢ → ٣ → اتصل. هذا التحويل من "مقال تقرأه" إلى "أداة تستخدمها في لحظة ذعر".</p>
+      <div class="why">💡 <strong>ليش قوقل ما يقدر:</strong> قوقل يعطيك ١٠ نتائج مختلفة تقرأها وتقارنها. سهيل يعطيك إجابة واحدة واضحة — خطوة خطوة — والزر يتصل مباشرة.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE 4: Daily Streak -->
+<div class="section" style="padding-top:0">
+  <div class="feature-card">
+    <div class="feature-mockup" style="background: linear-gradient(135deg, #1B3A2A, #1B6B3A); display:flex; align-items:center; justify-content:center;">
+      <div class="phone">
+        <div class="phone-screen">
+          <div style="background:var(--gold);padding:16px;text-align:center;">
+            <div style="font-size:10px;color:var(--green-dark);font-weight:600;">نصيحة سهيل #٤٧</div>
+            <div style="font-size:14px;font-weight:700;color:var(--green-dark);margin-top:4px;">نفّض حذاءك قبل ما تلبسه الصبح</div>
+            <div style="font-size:11px;color:var(--green-dark);opacity:0.7;margin-top:6px;">العقارب تحب الأماكن الضيقة والدافئة</div>
+          </div>
+          <div class="phone-content" style="text-align:center;">
+            <div style="font-size:11px;color:var(--gray-400);margin-bottom:8px;">هل عرفت هالمعلومة من قبل؟</div>
+            <div style="display:flex;gap:8px;justify-content:center;margin-bottom:12px;">
+              <div style="flex:1;background:var(--green-light);color:var(--green);padding:10px;border-radius:10px;font-size:12px;font-weight:600;">أيوا عارفها ✅</div>
+              <div style="flex:1;background:var(--gold-light);color:#8B6914;padding:10px;border-radius:10px;font-size:12px;font-weight:600;">معلومة جديدة! 💡</div>
+            </div>
+            <div style="background:var(--gray-50);border-radius:12px;padding:12px;border:1px solid var(--gray-200);">
+              <div style="font-size:11px;color:var(--gray-400);margin-bottom:4px;">سلسلة التعلّم 🔥</div>
+              <div style="font-size:24px;font-weight:800;color:var(--green);">١٢ يوم</div>
+              <div style="display:flex;gap:3px;justify-content:center;margin-top:6px;">
+                <div style="width:16px;height:16px;background:var(--green);border-radius:4px;font-size:8px;color:white;display:flex;align-items:center;justify-content:center;">س</div>
+                <div style="width:16px;height:16px;background:var(--green);border-radius:4px;font-size:8px;color:white;display:flex;align-items:center;justify-content:center;">ح</div>
+                <div style="width:16px;height:16px;background:var(--green);border-radius:4px;font-size:8px;color:white;display:flex;align-items:center;justify-content:center;">ن</div>
+                <div style="width:16px;height:16px;background:var(--green);border-radius:4px;font-size:8px;color:white;display:flex;align-items:center;justify-content:center;">ث</div>
+                <div style="width:16px;height:16px;background:var(--green);border-radius:4px;font-size:8px;color:white;display:flex;align-items:center;justify-content:center;">ر</div>
+                <div style="width:16px;height:16px;background:var(--green);border-radius:4px;font-size:8px;color:white;display:flex;align-items:center;justify-content:center;">ج</div>
+                <div style="width:16px;height:16px;background:var(--gold);border-radius:4px;font-size:8px;color:white;display:flex;align-items:center;justify-content:center;">س</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-info">
+      <span class="tag tag-engagement">عادة يومية</span>
+      <h3>٤. نصيحة اليوم + "هل عرفت؟" + سلسلة</h3>
+      <p>بدل ما تكون النصيحة بانر ساكن تتجاوزه، تصير تفاعلية: اقرأ النصيحة → اختر "عارفها" أو "معلومة جديدة" → تتبنى سلسلة تعلّم يومية (streak). المستخدم يبي يحافظ على سلسلته = يفتح التطبيق كل يوم. نفس فكرة Duolingo لكن بأسلوب سهيل.</p>
+      <div class="why">💡 <strong>ليش قوقل ما يقدر:</strong> قوقل ما يعلّمك شيء جديد كل يوم عن البر السعودي. سهيل يبني عندك معرفة تراكمية بدون ما تحس.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE 5: Quick ID -->
+<div class="section" style="padding-top:0">
+  <div class="feature-card">
+    <div class="feature-mockup" style="background: linear-gradient(135deg, #2D1B00, #5C3D00); display:flex; align-items:center; justify-content:center;">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-header" style="background:#5C3D00;">تعرّف بسرعة</div>
+          <div class="phone-content" style="text-align:center;">
+            <div style="font-size:12px;color:var(--gray-600);margin-bottom:10px;">وش شفت؟</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;">
+              <div style="background:var(--red-light);border-radius:12px;padding:16px 8px;border:1px solid #FECACA;">
+                <div style="font-size:28px;margin-bottom:4px;">🦂</div>
+                <div style="font-size:11px;font-weight:600;color:var(--red);">عقرب</div>
+              </div>
+              <div style="background:var(--orange-light);border-radius:12px;padding:16px 8px;border:1px solid #FDE68A;">
+                <div style="font-size:28px;margin-bottom:4px;">🐍</div>
+                <div style="font-size:11px;font-weight:600;color:var(--orange);">ثعبان</div>
+              </div>
+              <div style="background:var(--blue-light);border-radius:12px;padding:16px 8px;border:1px solid #BFDBFE;">
+                <div style="font-size:28px;margin-bottom:4px;">🪼</div>
+                <div style="font-size:11px;font-weight:600;color:var(--blue);">قنديل بحر</div>
+              </div>
+              <div style="background:var(--green-light);border-radius:12px;padding:16px 8px;border:1px solid var(--green-mid);">
+                <div style="font-size:28px;margin-bottom:4px;">🌵</div>
+                <div style="font-size:11px;font-weight:600;color:var(--green);">نبتة</div>
+              </div>
+            </div>
+            <div style="margin-top:10px;font-size:10px;color:var(--gray-400);">اضغط وبيوصلك: وش هو + خطره + وش تسوي</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-info">
+      <span class="tag tag-ux">سهولة استخدام</span>
+      <h3>٥. "تعرّف بسرعة" — وش شفت للتو؟</h3>
+      <p>بدل ما المستخدم يتصفح قائمة كائنات طويلة، زر سريع: "شفت شيء وما أعرفه". يختار النوع (عقرب، ثعبان، نبتة، كائن بحري) → يوصل فوراً لبطاقة التعريف مع "وش تسوي لو لدغك". مسار سريع = ثانيتين من السؤال للإجابة.</p>
+      <div class="why">💡 <strong>ليش قوقل ما يقدر:</strong> قوقل يحتاج تكتب اسم الكائن. لو ما تعرف اسمه، وش تكتب؟ سهيل يوصلك بدون ما تعرف الاسم.</div>
+    </div>
+  </div>
+</div>
+
+<!-- FEATURE 6: Share Readiness -->
+<div class="section" style="padding-top:0">
+  <div class="feature-card">
+    <div class="feature-mockup" style="background: linear-gradient(135deg, #0B3D2E, #1B6B3A); display:flex; align-items:center; justify-content:center;">
+      <div class="phone">
+        <div class="phone-screen">
+          <div class="phone-header">شارك جاهزيتك</div>
+          <div class="phone-content" style="text-align:center;">
+            <div style="width:64px;height:64px;border-radius:50%;background:var(--green);margin:0 auto 8px;display:flex;align-items:center;justify-content:center;font-size:28px;">✦</div>
+            <div style="font-size:16px;font-weight:800;color:var(--green);">جاهز للبر ✅</div>
+            <div style="font-size:11px;color:var(--gray-400);margin:4px 0 12px;">كمّلت ١٢ من ١٢ عنصر تجهيز</div>
+            <div style="background:var(--gray-50);border-radius:12px;padding:12px;border:1px solid var(--gray-200);text-align:right;margin-bottom:8px;">
+              <div style="font-size:10px;color:var(--gray-400);">✅ جاهزية المركبة</div>
+              <div style="font-size:10px;color:var(--gray-400);">✅ قائمة تجهيزات البر</div>
+              <div style="font-size:10px;color:var(--gray-400);">✅ الإسعافات الأولية</div>
+              <div style="font-size:10px;color:var(--gray-400);">✅ أدوات الملاحة</div>
+            </div>
+            <div style="background:var(--green);color:white;padding:10px;border-radius:10px;font-size:12px;font-weight:600;">📤 شارك في الواتساب</div>
+            <div style="font-size:9px;color:var(--gray-400);margin-top:6px;">"أنا جاهز لرحلة البر — جهّزت كل شيء عبر تطبيق سهيل ✦"</div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="feature-info">
+      <span class="tag tag-social">انتشار + فخر</span>
+      <h3>٦. شارك جاهزيتك — "أنا جاهز"</h3>
+      <p>لما المستخدم يكمّل تشيك ليست الرحلة، يقدر يشارك بطاقة "جاهز ✅" في الواتساب أو سناب. البطاقة تبيّن إنه جهّز كل شيء + رابط لتحميل سهيل. هذا يسوي شيئين: يخلّي المستخدم يحس بالفخر + ينشر التطبيق عضوياً.</p>
+      <div class="why">💡 <strong>ليش قوقل ما يقدر:</strong> ما تقدر "تشارك جاهزيتك" من قوقل. سهيل يحوّل التحضير إلى شيء تفتخر فيه وتشاركه.</div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PRIORITY ORDER ===== -->
+<div class="section">
+  <div class="divider"></div>
+  <div class="section-label">ترتيب التنفيذ</div>
+  <h2>ابدأ بهذا الترتيب</h2>
+  <p class="lead">ليس كل شيء لازم يكون في النسخة الجاية. هذا ترتيب حسب التأثير وسهولة التنفيذ.</p>
+
+  <div class="priority-list">
+    <div class="priority-item">
+      <div class="num">١</div>
+      <div>
+        <h3>التشيك ليست التفاعلية + شريط التقدم</h3>
+        <p>أسهل شيء تنفذه وأكبر فرق يسويه. حوّل قوائم القراءة إلى قوائم تفاعلية بضغطة. تحتاج useState + AsyncStorage بس.</p>
+      </div>
+    </div>
+    <div class="priority-item">
+      <div class="num">٢</div>
+      <div>
+        <h3>بطاقات "أول ٥ دقائق" للطوارئ</h3>
+        <p>حوّل سوالف السلامة إلى بطاقات خطوة-خطوة. مو محتوى جديد — نفس المحتوى بتصميم مختلف. ممكن تنفذه في جلسة وحدة.</p>
+      </div>
+    </div>
+    <div class="priority-item">
+      <div class="num">٣</div>
+      <div>
+        <h3>نصيحة اليوم التفاعلية + السلسلة</h3>
+        <p>غيّر النصيحة من بانر ساكن إلى بطاقة فيها زرين + عدّاد أيام. يحتاج AsyncStorage لحفظ السلسلة.</p>
+      </div>
+    </div>
+    <div class="priority-item">
+      <div class="num">٤</div>
+      <div>
+        <h3>"تعرّف بسرعة" — المسار السريع</h3>
+        <p>شاشة بسيطة فيها ٤-٦ أزرار كبيرة توصل مباشرة للمحتوى المناسب. ما تحتاج محتوى جديد — فقط مسار اختصار.</p>
+      </div>
+    </div>
+    <div class="priority-item">
+      <div class="num">٥</div>
+      <div>
+        <h3>مشاركة الجاهزية في الواتساب</h3>
+        <p>بعد ما التشيك ليست تشتغل — أضف زر مشاركة ينشئ صورة أو رسالة جاهزة. يحتاج مكتبة مشاركة.</p>
+      </div>
+    </div>
+    <div class="priority-item">
+      <div class="num">٦</div>
+      <div>
+        <h3>وضع الرحلة</h3>
+        <p>هذي الأكبر والأصعب. تحتاج: شاشة مخصصة، تتبع وقت، تذكيرات. خلّها للنسخة الكبيرة القادمة.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== CTA ===== -->
+<div class="cta-section">
+  <div class="star" style="font-size:40px;margin-bottom:20px;animation:pulse 3s ease-in-out infinite;">✦</div>
+  <h2>القاعدة الذهبية</h2>
+  <p style="margin-bottom:24px;">كل شاشة في سهيل لازم يكون فيها <strong>شيء يسويه</strong> المستخدم — مو بس شيء يقرأه. لو الشاشة ما فيها زر أو اختيار أو تفاعل = حوّلها.</p>
+  <div style="display:inline-block;padding:4px 20px;border-radius:20px;border:1px solid rgba(200,169,81,0.3);font-size:13px;color:var(--gold);">اقرأ → تفاعل → أنجز → شارك → ارجع</div>
+</div>
+
+</body>
+</html>
