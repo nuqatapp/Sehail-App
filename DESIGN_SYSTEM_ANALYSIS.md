@@ -83,11 +83,12 @@ This means the project does not yet have a reusable component library for common
 
 These are the biggest missing primitives for a real design system:
 
-- `Modal`
-- `Tooltip`
-- `Dropdown` or `Select`
-- `Toast`
-- `Drawer` or bottom sheet
+- ✅ `Modal` — `components/Modal.tsx`
+- ✅ `Tooltip` — `components/Tooltip.tsx`
+- ✅ `Dropdown` / `Select` — `components/Dropdown.tsx`
+- ✅ `Toast` — `components/Toast.tsx`
+- ✅ `Drawer` — `components/Drawer.tsx`
+- ✅ `TextInput` — `components/TextInput.tsx`
 
 Additional common primitives that are also absent:
 
@@ -207,9 +208,10 @@ Typical problems:
 
 ### Reusable components
 
-- Add base primitives for `Button`, `Card`, `Badge`, `Input`, `Switch`, `Modal`, `Toast`, `Dropdown`, and `Drawer`.
-- Standardize size variants, tone variants, and state variants.
-- Add keyboard/focus behavior for web and accessibility metadata for all interactive components.
+- ✅ Added `Modal`, `Toast`, `Dropdown`, `Drawer`, `Tooltip`, and `TextInput` — all with token-driven styles, RTL support, full accessibility metadata, and animated transitions.
+- Still needed: `Button`, `Card`, `Badge`, `Switch`, `Checkbox`, `Radio`, `Chip`, `Divider`, `EmptyState`, `LoadingSpinner`.
+- Standardize size variants, tone variants, and state variants across remaining primitives.
+- Add keyboard/focus behavior for web on remaining interactive components.
 
 ### Accessibility
 
@@ -244,10 +246,10 @@ Typical problems:
 
 ### P1 - High value next
 
-1. Add `Modal`, `Toast`, `Drawer`, `Dropdown`, and `Tooltip` primitives.
-2. Standardize hover/focus/disabled/loading states.
-3. Replace raw hex values with semantic tokens.
-4. Add prop documentation and usage examples.
+1. ✅ Added `Modal`, `Toast`, `Drawer`, `Dropdown`, `Tooltip`, and `TextInput` primitives.
+2. ✅ Standardized hover/focus/disabled/loading states (PressableSurface slots; component-level variants).
+3. Replace raw hex values with semantic tokens across screen files.
+4. ✅ Added prop documentation and usage examples (COMPONENTS.md).
 
 ### P2 - Structural cleanup
 
