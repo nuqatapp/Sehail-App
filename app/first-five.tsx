@@ -7,6 +7,7 @@ import {
   Pressable,
   Linking,
   Platform,
+  I18nManager,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -14,6 +15,7 @@ import * as Haptics from "expo-haptics";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
+import PressableSurface from "@/components/PressableSurface";
 
 const firstFive = wisdomData.categories.firstFiveMinutes;
 
@@ -30,7 +32,7 @@ export default function FirstFiveScreen() {
   const activeEntry = firstFive.entries.find((e) => e.id === selectedEntry);
 
   return (
-    <View style={styles.container}>
+    <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -56,11 +58,14 @@ export default function FirstFiveScreen() {
                   entering={FadeInDown.delay(100 + index * 80).duration(400)}
                   style={styles.gridItem}
                 >
-                  <Pressable
-                    style={({ pressed }) => [
-                      styles.entryButton,
-                      pressed && styles.entryButtonPressed,
-                    ]}
+                  <PressableSurface
+                    accessibilityRole="button"
+                    accessibilityLabel={`فتح ${entry.title}`}
+                    hitSlop={10}
+                    baseStyle={styles.entryButton}
+                    hoverStyle={styles.entryButtonHover}
+                    focusStyle={styles.entryButtonFocus}
+                    pressedStyle={styles.entryButtonPressed}
                     onPress={() => {
                       if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                       setSelectedEntry(entry.id);
@@ -73,7 +78,7 @@ export default function FirstFiveScreen() {
                     )}
                     <Text style={styles.entryEmoji}>{entry.icon}</Text>
                     <Text style={styles.entryLabel}>{entry.title}</Text>
-                  </Pressable>
+                  </PressableSurface>
                 </Animated.View>
               );
             })}
@@ -81,8 +86,11 @@ export default function FirstFiveScreen() {
         ) : activeEntry ? (
           <View>
             <Animated.View entering={FadeInDown.duration(300)}>
-              <Pressable
-                style={styles.backButton}
+              <PressableSurface
+                accessibilityRole="button"
+                accessibilityLabel="رجوع إلى القائمة"
+                hitSlop={10}
+                baseStyle={styles.backButton}
                 onPress={() => {
                   if (Platform.OS !== "web") Haptics.selectionAsync();
                   setSelectedEntry(null);
@@ -90,7 +98,7 @@ export default function FirstFiveScreen() {
               >
                 <Text style={styles.backText}>رجوع</Text>
                 <Ionicons name="arrow-forward" size={16} color={Colors.primary.green} />
-              </Pressable>
+              </PressableSurface>
             </Animated.View>
 
             <Animated.View entering={FadeInDown.delay(50).duration(400)} style={styles.emergencyHeader}>
@@ -133,11 +141,14 @@ export default function FirstFiveScreen() {
             <Animated.View
               entering={FadeInDown.delay(100 + activeEntry.steps.length * 80).duration(400)}
             >
-              <Pressable
-                style={({ pressed }) => [
-                  styles.callButton,
-                  pressed && { opacity: 0.85 },
-                ]}
+              <PressableSurface
+                accessibilityRole="button"
+                accessibilityLabel={`اتصل على ${activeEntry.callNumber}`}
+                hitSlop={10}
+                baseStyle={styles.callButton}
+                hoverStyle={styles.callButtonHover}
+                focusStyle={styles.callButtonFocus}
+                pressedStyle={{ opacity: 0.85 }}
                 onPress={() => {
                   if (Platform.OS !== "web") Haptics.notificationAsync(Haptics.NotificationFeedbackType.Warning);
                   const num = activeEntry.callNumber;
@@ -150,7 +161,7 @@ export default function FirstFiveScreen() {
               >
                 <Ionicons name="call" size={20} color="#FFFFFF" />
                 <Text style={styles.callButtonText}>اتصل {activeEntry.callNumber}</Text>
-              </Pressable>
+              </PressableSurface>
             </Animated.View>
           </View>
         ) : null}
@@ -220,6 +231,17 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
     position: "relative" as const,
+    minHeight: 44,
+  },
+  entryButtonHover: {
+    borderColor: Colors.primary.greenLight,
+  },
+  entryButtonFocus: {
+    borderColor: Colors.primary.green,
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.14,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
   },
   entryButtonPressed: {
     opacity: 0.7,
@@ -228,7 +250,7 @@ const styles = StyleSheet.create({
   envIcon: {
     position: "absolute" as const,
     top: 8,
-    left: 8,
+    start: 8,
   },
   entryEmoji: {
     fontSize: 36,
@@ -246,9 +268,20 @@ const styles = StyleSheet.create({
     gap: 6,
     marginBottom: 16,
     paddingVertical: 4,
+    minHeight: 44,
   },
   backText: {
+    minHeight: 44,
     fontFamily: "Cairo_600SemiBold",
+  callButtonHover: {
+    opacity: 0.96,
+  },
+  callButtonFocus: {
+    shadowColor: Colors.status.danger,
+    shadowOpacity: 0.16,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
+  },
     fontSize: 14,
     color: Colors.primary.green,
   },

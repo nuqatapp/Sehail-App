@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { StyleSheet, View } from "react-native";
+import { I18nManager, Platform, StyleSheet, View } from "react-native";
 import { Image } from "expo-image";
 import Animated, {
   useSharedValue,
@@ -13,11 +13,42 @@ import Colors from "@/constants/colors";
 
 const logo = require("@/assets/images/sehail-logo.png");
 
-interface AppSplashProps {
+/**
+ * Props for the Sehail splash experience.
+ */
+export interface AppSplashProps {
+  /** Callback fired after the exit animation completes. */
   onFinish: () => void;
+  /** Main brand title shown below the logo. */
+  title?: string;
+  /** Short supporting line shown after the title. */
+  tagline?: string;
+  /** Secondary supporting line shown beneath the tagline. */
+  subtitle?: string;
+  /** Bidi direction used by web rendering and logical layout. */
+  dir?: "ltr" | "rtl";
+  /** Accessibility label for the splash as a single announcement. */
+  accessibilityLabel?: string;
+  /** Accessibility label for the logo image. */
+  logoAccessibilityLabel?: string;
+  /** Optional test id for automation. */
+  testID?: string;
 }
 
-export default function AppSplash({ onFinish }: AppSplashProps) {
+/**
+ * Animated full-screen splash view used during app bootstrap.
+ */
+export default function AppSplash({
+  onFinish,
+  title = "سهيل",
+  tagline = "دليلك في البر",
+  subtitle = "جاهزة للرحلة؟",
+  dir = I18nManager.isRTL ? "rtl" : "ltr",
+  accessibilityLabel = "شاشة بدء تطبيق سهيل",
+  logoAccessibilityLabel = "شعار تطبيق سهيل",
+  testID,
+}: AppSplashProps) {
+  const isRtl = dir === "rtl";
   const logoScale = useSharedValue(0.7);
   const logoOpacity = useSharedValue(0);
   const nameOpacity = useSharedValue(0);
@@ -71,19 +102,29 @@ export default function AppSplash({ onFinish }: AppSplashProps) {
   }));
 
   return (
-    <Animated.View style={[styles.container, screenStyle]}>
-      <View style={styles.content}>
+    <Animated.View
+      {...(Platform.OS === "web" ? { dir } : {})}
+      accessibilityLabel={accessibilityLabel}
+      accessibilityRole="image"
+      importantForAccessibility="yes"
+      testID={testID}
+      style={[styles.container, screenStyle]}
+    >
+      <View style={[styles.content, isRtl ? styles.contentRtl : styles.contentLtr]}>
         <Animated.View style={[styles.logoContainer, logoStyle]}>
-          <Image source={logo} style={styles.logo} contentFit="contain" />
+          <Image
+            accessibilityLabel={logoAccessibilityLabel}
+            source={logo}
+            style={styles.logo}
+            contentFit="contain"
+          />
         </Animated.View>
-        <Animated.Text style={[styles.appName, nameStyle]}>سهيل</Animated.Text>
+        <Animated.Text style={[styles.appName, nameStyle]}>{title}</Animated.Text>
         <View style={styles.taglineContainer}>
           <Animated.Text style={[styles.tagline, line1Style]}>
-            دليلك في البر
+            {tagline}
           </Animated.Text>
-          <Animated.Text style={[styles.taglineSub, line2Style]}>
-            جاهزة للرحلة؟
-          </Animated.Text>
+          <Animated.Text style={[styles.taglineSub, line2Style]}>{subtitle}</Animated.Text>
         </View>
       </View>
     </Animated.View>
@@ -97,9 +138,18 @@ const styles = StyleSheet.create({
     zIndex: 100,
     justifyContent: "center",
     alignItems: "center",
+    paddingHorizontal: 24,
   },
   content: {
     alignItems: "center",
+    width: "100%",
+    maxWidth: 360,
+  },
+  contentRtl: {
+    writingDirection: "rtl",
+  },
+  contentLtr: {
+    writingDirection: "ltr",
   },
   logoContainer: {
     marginBottom: 16,
@@ -118,15 +168,18 @@ const styles = StyleSheet.create({
   taglineContainer: {
     alignItems: "center",
     gap: 4,
+    width: "100%",
   },
   tagline: {
     fontFamily: "Cairo_600SemiBold",
     fontSize: 18,
     color: Colors.text.secondary,
+    textAlign: "center",
   },
   taglineSub: {
     fontFamily: "Cairo_400Regular",
     fontSize: 16,
     color: Colors.text.tertiary,
+    textAlign: "center",
   },
 });

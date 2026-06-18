@@ -6,6 +6,7 @@ import {
   ScrollView,
   Pressable,
   Platform,
+  I18nManager,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -15,6 +16,7 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
 import LogoHeader from "@/components/LogoHeader";
+import PressableSurface from "@/components/PressableSurface";
 import { markAsRead, getReadItems, isRead } from "@/lib/read-tracker";
 import { getFavorites, toggleFavorite, isFavorite } from "@/lib/favorites";
 
@@ -75,7 +77,7 @@ export default function StoriesScreen() {
       : stories.items.filter((s) => s.category === activeFilter);
 
   return (
-    <View style={styles.container}>
+    <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -100,12 +102,19 @@ export default function StoriesScreen() {
           style={styles.filterContainer}
         >
           {categories.map((cat) => (
-            <Pressable
+            <PressableSurface
               key={cat}
-              style={[
+              accessibilityRole="button"
+              accessibilityLabel={cat === "all" ? "عرض كل القصص" : `تصفية القصص حسب ${cat}`}
+              accessibilityState={{ selected: activeFilter === cat }}
+              hitSlop={10}
+              baseStyle={[
                 styles.filterChip,
                 activeFilter === cat && styles.filterChipActive,
               ]}
+              hoverStyle={styles.filterChipHover}
+              focusStyle={styles.filterChipFocus}
+              pressedStyle={styles.filterChipPressed}
               onPress={() => {
                 if (Platform.OS !== "web") Haptics.selectionAsync();
                 setActiveFilter(cat);
@@ -119,7 +128,7 @@ export default function StoriesScreen() {
               >
                 {cat === "all" ? "الكل" : cat}
               </Text>
-            </Pressable>
+            </PressableSurface>
           ))}
         </ScrollView>
 
@@ -128,11 +137,15 @@ export default function StoriesScreen() {
             key={story.id}
             entering={FadeInDown.delay(index * 80).duration(400)}
           >
-            <Pressable
-              style={({ pressed }) => [
-                styles.storyCard,
-                pressed && { opacity: 0.9 },
-              ]}
+            <PressableSurface
+              accessibilityRole="button"
+              accessibilityLabel={`${story.title}${expandedId === story.id ? "، مطوّلة" : "، اضغط لعرض التفاصيل"}`}
+              accessibilityState={{ expanded: expandedId === story.id }}
+              hitSlop={10}
+              baseStyle={styles.storyCard}
+              hoverStyle={styles.storyCardHover}
+              focusStyle={styles.storyCardFocus}
+              pressedStyle={{ opacity: 0.9 }}
               onPress={() => {
                 if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 const isExpanding = expandedId !== story.id;
@@ -154,19 +167,26 @@ export default function StoriesScreen() {
               <View style={styles.storyHeader}>
                 <View style={styles.storyTitleRow}>
                   <View style={styles.storyBadgeRow}>
-                    <Pressable
+                    <PressableSurface
                       onPress={(e) => {
                         e.stopPropagation();
                         handleToggleFavorite(story.id);
                       }}
-                      hitSlop={8}
+                      accessibilityRole="button"
+                      accessibilityLabel={isFavorite(story.id, favorites) ? `إزالة ${story.title} من المفضلة` : `إضافة ${story.title} إلى المفضلة`}
+                      accessibilityState={{ selected: isFavorite(story.id, favorites) }}
+                      hitSlop={10}
+                      baseStyle={styles.favoriteButton}
+                      hoverStyle={styles.favoriteButtonHover}
+                      focusStyle={styles.favoriteButtonFocus}
+                      pressedStyle={styles.favoriteButtonPressed}
                     >
                       <Ionicons
                         name={isFavorite(story.id, favorites) ? "star" : "star-outline"}
                         size={18}
                         color={Colors.primary.gold}
                       />
-                    </Pressable>
+                    </PressableSurface>
                     <View
                       style={[
                         styles.categoryBadge,
@@ -213,7 +233,7 @@ export default function StoriesScreen() {
                   </View>
                 </View>
               )}
-            </Pressable>
+            </PressableSurface>
           </Animated.View>
         ))}
       </ScrollView>
@@ -254,11 +274,25 @@ const styles = StyleSheet.create({
   },
   filterChip: {
     paddingHorizontal: 16,
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: 20,
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: Colors.card.border,
+    minHeight: 44,
+  },
+  filterChipHover: {
+    borderColor: Colors.primary.greenLight,
+  },
+  filterChipFocus: {
+    borderColor: Colors.primary.green,
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.14,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
+  },
+  filterChipPressed: {
+    opacity: 0.9,
   },
   filterChipActive: {
     backgroundColor: Colors.primary.green,
@@ -281,16 +315,26 @@ const styles = StyleSheet.create({
     borderColor: Colors.card.border,
     position: "relative" as const,
   },
+  storyCardHover: {
+    borderColor: Colors.primary.greenLight,
+  },
+  storyCardFocus: {
+    borderColor: Colors.primary.green,
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
+  },
   readBadge: {
     position: "absolute" as const,
     top: 8,
-    right: 8,
+    end: 8,
     zIndex: 1,
   },
   envBadge: {
     position: "absolute" as const,
     top: 8,
-    left: 8,
+    start: 8,
     zIndex: 1,
   },
   storyHeader: {
@@ -306,7 +350,7 @@ const styles = StyleSheet.create({
   storyTitleRow: {
     flex: 1,
     alignItems: "flex-end",
-    marginLeft: 12,
+    marginStart: 12,
   },
   storyTitle: {
     fontFamily: "Cairo_700Bold",
@@ -327,6 +371,23 @@ const styles = StyleSheet.create({
   categoryText: {
     fontFamily: "Cairo_600SemiBold",
     fontSize: 11,
+  },
+  favoriteButton: {
+    width: 44,
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 12,
+  },
+  favoriteButtonHover: {
+    backgroundColor: "rgba(212, 175, 55, 0.08)",
+  },
+  favoriteButtonFocus: {
+    borderWidth: 1,
+    borderColor: Colors.primary.gold,
+  },
+  favoriteButtonPressed: {
+    transform: [{ scale: 0.96 }],
   },
   storyContent: {
     marginTop: 14,

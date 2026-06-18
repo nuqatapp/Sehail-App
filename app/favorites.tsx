@@ -6,6 +6,7 @@ import {
   ScrollView,
   Pressable,
   Platform,
+  I18nManager,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router, useFocusEffect } from "expo-router";
@@ -15,6 +16,7 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
 import { getFavorites, toggleFavorite } from "@/lib/favorites";
+import PressableSurface from "@/components/PressableSurface";
 
 interface FavItem {
   id: string;
@@ -84,7 +86,7 @@ export default function FavoritesScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -103,11 +105,15 @@ export default function FavoritesScreen() {
               key={item.id}
               entering={FadeInDown.delay(index * 60).duration(400)}
             >
-              <Pressable
-                style={({ pressed }) => [
-                  styles.favCard,
-                  pressed && { opacity: 0.8 },
-                ]}
+              <PressableSurface
+                  accessibilityRole="button"
+                  accessibilityLabel={item.type === "guide" ? `فتح ${item.title}` : `${expandedStory === item.id ? "إخفاء" : "عرض"} ${item.title}`}
+                  accessibilityState={{ expanded: item.type === "story" ? expandedStory === item.id : false }}
+                  hitSlop={10}
+                  baseStyle={styles.favCard}
+                  hoverStyle={styles.favCardHover}
+                  focusStyle={styles.favCardFocus}
+                  pressedStyle={{ opacity: 0.8 }}
                 onPress={() => {
                   if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                   if (item.type === "guide" && item.params) {
@@ -121,12 +127,18 @@ export default function FavoritesScreen() {
                 }}
               >
                 <View style={styles.favCardInner}>
-                  <Pressable
+                  <PressableSurface
                     onPress={() => handleRemove(item.id)}
-                    hitSlop={8}
+                    accessibilityRole="button"
+                    accessibilityLabel={`إزالة ${item.title} من المفضلة`}
+                    hitSlop={10}
+                    baseStyle={styles.removeButton}
+                    hoverStyle={styles.removeButtonHover}
+                    focusStyle={styles.removeButtonFocus}
+                    pressedStyle={{ opacity: 0.8 }}
                   >
                     <Ionicons name="star" size={20} color={Colors.primary.gold} />
-                  </Pressable>
+                  </PressableSurface>
                   <View style={styles.favTextContainer}>
                     <Text style={styles.favTitle}>{item.title}</Text>
                     {expandedStory !== item.id && (
@@ -153,7 +165,7 @@ export default function FavoritesScreen() {
                     color={Colors.text.tertiary}
                   />
                 )}
-              </Pressable>
+              </PressableSurface>
               {item.type === "story" && expandedStory === item.id && item.storyText && (
                 <View style={styles.storyExpanded}>
                   <Text style={styles.storyText}>{item.storyText}</Text>
@@ -198,6 +210,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    minHeight: 44,
+  },
+  favCardHover: {
+    borderColor: Colors.primary.greenLight,
+  },
+  favCardFocus: {
+    borderColor: Colors.primary.green,
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.14,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
   },
   favCardInner: {
     flex: 1,
@@ -233,8 +256,22 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     borderWidth: 1,
     borderColor: Colors.card.border,
-    borderTopLeftRadius: 0,
-    borderTopRightRadius: 0,
+    borderTopStartRadius: 0,
+    borderTopEndRadius: 0,
+  },
+  removeButton: {
+    width: 44,
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 12,
+  },
+  removeButtonHover: {
+    backgroundColor: "rgba(212, 175, 55, 0.08)",
+  },
+  removeButtonFocus: {
+    borderWidth: 1,
+    borderColor: Colors.primary.gold,
   },
   storyText: {
     fontFamily: "Cairo_400Regular",

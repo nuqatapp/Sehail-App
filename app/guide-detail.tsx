@@ -6,6 +6,7 @@ import {
   ScrollView,
   Platform,
   Pressable,
+  I18nManager,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useLocalSearchParams } from "expo-router";
@@ -15,6 +16,7 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import { markAsRead } from "@/lib/read-tracker";
 import { getFavorites, toggleFavorite, isFavorite } from "@/lib/favorites";
+import PressableSurface from "@/components/PressableSurface";
 
 function getDangerColor(level: string): string {
   switch (level) {
@@ -90,9 +92,10 @@ export default function GuideDetailScreen() {
 
   const favorited = id ? isFavorite(id, favorites) : false;
   const dangerColor = getDangerColor(dangerLevel || "");
+  const dangerLabel = getDangerLabel(dangerLevel || "");
 
   return (
-    <View style={styles.container}>
+    <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -102,18 +105,30 @@ export default function GuideDetailScreen() {
       >
         <Animated.View entering={FadeInDown.duration(500)} style={styles.headerSection}>
           <View style={styles.headerTopRow}>
-            <Pressable onPress={handleToggleFavorite} hitSlop={8}>
+            <PressableSurface
+              onPress={handleToggleFavorite}
+              accessibilityLabel={favorited ? "إزالة من المفضلة" : "إضافة إلى المفضلة"}
+              accessibilityRole="button"
+              accessibilityState={{ selected: favorited }}
+              hitSlop={10}
+              baseStyle={styles.favoriteButton}
+              hoverStyle={styles.favoriteButtonHover}
+              focusStyle={styles.favoriteButtonFocus}
+              pressedStyle={styles.favoriteButtonPressed}
+            >
               <Ionicons
                 name={favorited ? "star" : "star-outline"}
                 size={24}
                 color={Colors.primary.gold}
               />
-            </Pressable>
+            </PressableSurface>
             <View
               style={[
                 styles.dangerBanner,
                 { backgroundColor: dangerColor + "10", borderColor: dangerColor + "25" },
               ]}
+              accessibilityRole="text"
+              accessibilityLabel={dangerLabel ? `مستوى الخطورة: ${dangerLabel}` : "مستوى الخطورة غير محدد"}
             >
               <Ionicons
                 name={getDangerIcon(dangerLevel || "") as any}
@@ -184,6 +199,23 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     alignSelf: "flex-end",
   },
+  favoriteButton: {
+    width: 44,
+    height: 44,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 12,
+  },
+  favoriteButtonHover: {
+    backgroundColor: "rgba(212, 175, 55, 0.08)",
+  },
+  favoriteButtonFocus: {
+    borderWidth: 1,
+    borderColor: Colors.primary.gold,
+  },
+  favoriteButtonPressed: {
+    transform: [{ scale: 0.96 }],
+  },
   dangerLabel: {
     fontFamily: "Cairo_700Bold",
     fontSize: 15,
@@ -210,8 +242,8 @@ const styles = StyleSheet.create({
     marginBottom: 14,
     borderWidth: 1,
     borderColor: Colors.card.border,
-    borderLeftWidth: 3,
-    borderLeftColor: Colors.primary.gold,
+    borderStartWidth: 3,
+    borderStartColor: Colors.primary.gold,
   },
   sectionHeader: {
     flexDirection: "row",
@@ -244,6 +276,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
     gap: 6,
     paddingVertical: 12,
+    minHeight: 44,
   },
   sourceText: {
     fontFamily: "Cairo_400Regular",

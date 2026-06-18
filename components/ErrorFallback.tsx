@@ -13,15 +13,42 @@ import {
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { Feather } from "@expo/vector-icons";
 
+/**
+ * Props for the error fallback screen.
+ */
 export type ErrorFallbackProps = {
+  /** The error that triggered the fallback UI. */
   error: Error;
+  /** Clears the error boundary state. */
   resetError: () => void;
+  /** Optional bidi direction for web rendering. */
+  dir?: "ltr" | "rtl";
+  /** Custom title text shown to the user. */
+  title?: string;
+  /** Custom helper text shown under the title. */
+  message?: string;
+  /** Label for the primary recovery action. */
+  primaryActionLabel?: string;
+  /** Label for the dev-only details button. */
+  detailsButtonLabel?: string;
 };
 
-export function ErrorFallback({ error, resetError }: ErrorFallbackProps) {
+/**
+ * Production-ready error fallback with recovery and diagnostics controls.
+ */
+export function ErrorFallback({
+  error,
+  resetError,
+  dir = "ltr",
+  title = "Something went wrong",
+  message = "Please reload the app to continue.",
+  primaryActionLabel = "Try Again",
+  detailsButtonLabel = "View error details",
+}: ErrorFallbackProps) {
   const colorScheme = useColorScheme();
   const isDark = colorScheme === "dark";
   const insets = useSafeAreaInsets();
+  const isRtl = dir === "rtl";
 
   const theme = {
     background: isDark ? "#000000" : "#FFFFFF",
@@ -33,13 +60,17 @@ export function ErrorFallback({ error, resetError }: ErrorFallbackProps) {
   };
 
   const [isModalVisible, setIsModalVisible] = useState(false);
+  const [isRestarting, setIsRestarting] = useState(false);
 
   const handleRestart = async () => {
+    setIsRestarting(true);
     try {
       await reloadAppAsync();
     } catch (restartError) {
       console.error("Failed to restart app:", restartError);
       resetError();
+    } finally {
+      setIsRestarting(false);
     }
   };
 
@@ -58,18 +89,27 @@ export function ErrorFallback({ error, resetError }: ErrorFallbackProps) {
   });
 
   return (
-    <View style={[styles.container, { backgroundColor: theme.background }]}>
+    <View
+      {...(Platform.OS === "web" ? { dir } : {})}
+      accessibilityRole="alert"
+      style={[styles.container, { backgroundColor: theme.background }]}
+    >
       {__DEV__ ? (
         <Pressable
           onPress={() => setIsModalVisible(true)}
-          accessibilityLabel="View error details"
+          accessibilityHint="Opens a modal with the error message and stack trace"
+          accessibilityLabel={detailsButtonLabel}
           accessibilityRole="button"
+          accessibilityState={{ expanded: isModalVisible }}
+          hitSlop={10}
           style={({ pressed }) => [
             styles.topButton,
             {
               top: insets.top + 16,
+              insetInlineEnd: 16,
               backgroundColor: theme.backgroundSecondary,
               opacity: pressed ? 0.8 : 1,
+              transform: [{ scale: pressed ? 0.98 : 1 }],
             },
           ]}
         >
@@ -77,28 +117,31 @@ export function ErrorFallback({ error, resetError }: ErrorFallbackProps) {
         </Pressable>
       ) : null}
 
-      <View style={styles.content}>
-        <Text style={[styles.title, { color: theme.text }]}>
-          Something went wrong
+      <View style={[styles.content, isRtl ? styles.contentRtl : styles.contentLtr]}>
+        <Text accessibilityRole="header" style={[styles.title, { color: theme.text }]}>
+          {title}
         </Text>
 
-        <Text style={[styles.message, { color: theme.textSecondary }]}>
-          Please reload the app to continue.
-        </Text>
+        <Text style={[styles.message, { color: theme.textSecondary }]}>{message}</Text>
 
         <Pressable
           onPress={handleRestart}
+          disabled={isRestarting}
+          accessibilityHint="Attempts to recover by reloading the app"
+          accessibilityLabel={primaryActionLabel}
+          accessibilityRole="button"
+          accessibilityState={{ disabled: isRestarting, busy: isRestarting }}
           style={({ pressed }) => [
             styles.button,
             {
               backgroundColor: theme.link,
-              opacity: pressed ? 0.9 : 1,
+              opacity: pressed || isRestarting ? 0.9 : 1,
               transform: [{ scale: pressed ? 0.98 : 1 }],
             },
           ]}
         >
           <Text style={[styles.buttonText, { color: theme.buttonText }]}>
-            Try Again
+            {isRestarting ? "Reloading..." : primaryActionLabel}
           </Text>
         </Pressable>
       </View>
@@ -109,8 +152,14 @@ export function ErrorFallback({ error, resetError }: ErrorFallbackProps) {
           animationType="slide"
           transparent={true}
           onRequestClose={() => setIsModalVisible(false)}
+          accessibilityViewIsModal
+          onAccessibilityEscape={() => setIsModalVisible(false)}
+          presentationStyle="overFullScreen"
         >
-          <View style={styles.modalOverlay}>
+          <View
+            accessibilityRole="dialog"
+            style={styles.modalOverlay}
+          >
             <View
               style={[
                 styles.modalContainer,
@@ -127,13 +176,14 @@ export function ErrorFallback({ error, resetError }: ErrorFallbackProps) {
                   },
                 ]}
               >
-                <Text style={[styles.modalTitle, { color: theme.text }]}>
+                <Text accessibilityRole="header" style={[styles.modalTitle, { color: theme.text }]}>
                   Error Details
                 </Text>
                 <Pressable
                   onPress={() => setIsModalVisible(false)}
                   accessibilityLabel="Close error details"
                   accessibilityRole="button"
+                  accessibilityHint="Dismisses the diagnostics modal"
                   style={({ pressed }) => [
                     styles.closeButton,
                     { opacity: pressed ? 0.6 : 1 },
@@ -166,6 +216,7 @@ export function ErrorFallback({ error, resetError }: ErrorFallbackProps) {
                       },
                     ]}
                     selectable
+                    textAlign={isRtl ? "right" : "left"}
                   >
                     {formatErrorDetails()}
                   </Text>
@@ -186,7 +237,8 @@ const styles = StyleSheet.create({
     height: "100%",
     justifyContent: "center",
     alignItems: "center",
-    padding: 24,
+    paddingHorizontal: 20,
+    paddingVertical: 24,
   },
   content: {
     alignItems: "center",
@@ -194,6 +246,12 @@ const styles = StyleSheet.create({
     gap: 16,
     width: "100%",
     maxWidth: 600,
+  },
+  contentRtl: {
+    writingDirection: "rtl",
+  },
+  contentLtr: {
+    writingDirection: "ltr",
   },
   title: {
     fontSize: 28,
@@ -208,7 +266,7 @@ const styles = StyleSheet.create({
   },
   topButton: {
     position: "absolute",
-    right: 16,
+    end: 16,
     width: 44,
     height: 44,
     borderRadius: 8,
@@ -244,8 +302,8 @@ const styles = StyleSheet.create({
   modalContainer: {
     width: "100%",
     height: "90%",
-    borderTopLeftRadius: 16,
-    borderTopRightRadius: 16,
+    borderTopStartRadius: 16,
+    borderTopEndRadius: 16,
   },
   modalHeader: {
     flexDirection: "row",

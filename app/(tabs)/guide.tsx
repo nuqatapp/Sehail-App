@@ -6,6 +6,7 @@ import {
   ScrollView,
   Pressable,
   Platform,
+  I18nManager,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -16,6 +17,7 @@ import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
 import LogoHeader from "@/components/LogoHeader";
+import PressableSurface from "@/components/PressableSurface";
 import { getReadItems, isRead } from "@/lib/read-tracker";
 
 const fieldGuide = wisdomData.categories.fieldGuide;
@@ -66,7 +68,7 @@ export default function GuideScreen() {
   const currentSection = fieldGuide.sections.find((s) => s.id === activeSection);
 
   return (
-    <View style={styles.container}>
+    <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -91,12 +93,19 @@ export default function GuideScreen() {
           style={styles.filterContainer}
         >
           {fieldGuide.sections.map((section) => (
-            <Pressable
+            <PressableSurface
               key={section.id}
-              style={[
+              accessibilityRole="button"
+              accessibilityLabel={`تصفية الدليل حسب ${section.name}`}
+              accessibilityState={{ selected: activeSection === section.id }}
+              baseStyle={[
                 styles.filterChip,
                 activeSection === section.id && styles.filterChipActive,
               ]}
+              hoverStyle={styles.filterChipHover}
+              focusStyle={styles.filterChipFocus}
+              pressedStyle={styles.filterChipPressed}
+              hitSlop={10}
               onPress={() => {
                 if (Platform.OS !== "web") Haptics.selectionAsync();
                 setActiveSection(section.id);
@@ -119,7 +128,7 @@ export default function GuideScreen() {
               >
                 {section.name}
               </Text>
-            </Pressable>
+            </PressableSurface>
           ))}
         </ScrollView>
 
@@ -130,11 +139,15 @@ export default function GuideScreen() {
             key={item.id}
             entering={FadeInDown.delay(index * 80).duration(400)}
           >
-            <Pressable
-              style={({ pressed }) => [
-                styles.guideCard,
-                pressed && { opacity: 0.8 },
-              ]}
+            <PressableSurface
+              accessibilityRole="button"
+              accessibilityLabel={`${item.name}، افتح التفاصيل`}
+              accessibilityState={{ selected: false }}
+              baseStyle={styles.guideCard}
+              hoverStyle={styles.guideCardHover}
+              focusStyle={styles.guideCardFocus}
+              pressedStyle={{ opacity: 0.8 }}
+              hitSlop={10}
               onPress={() => {
                 if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
                 router.push({
@@ -191,7 +204,7 @@ export default function GuideScreen() {
                 />
                 <Text style={styles.cardSource}>{item.source}</Text>
               </View>
-            </Pressable>
+            </PressableSurface>
           </Animated.View>
           );
         })}
@@ -236,11 +249,25 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 6,
     paddingHorizontal: 14,
-    paddingVertical: 8,
+    paddingVertical: 10,
     borderRadius: 20,
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: Colors.card.border,
+    minHeight: 44,
+  },
+  filterChipHover: {
+    borderColor: Colors.primary.greenLight,
+  },
+  filterChipFocus: {
+    borderColor: Colors.primary.green,
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.14,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
+  },
+  filterChipPressed: {
+    opacity: 0.9,
   },
   filterChipActive: {
     backgroundColor: Colors.primary.green,
@@ -263,16 +290,26 @@ const styles = StyleSheet.create({
     borderColor: Colors.card.border,
     position: "relative" as const,
   },
+  guideCardHover: {
+    borderColor: Colors.primary.greenLight,
+  },
+  guideCardFocus: {
+    borderColor: Colors.primary.green,
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.15,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
+  },
   readBadge: {
     position: "absolute" as const,
     top: 8,
-    right: 8,
+    end: 8,
     zIndex: 1,
   },
   envBadge: {
     position: "absolute" as const,
     top: 8,
-    left: 8,
+    start: 8,
     zIndex: 1,
   },
   cardHeader: {

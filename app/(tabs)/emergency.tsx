@@ -9,6 +9,7 @@ import {
   Alert,
   Platform,
   Share,
+  I18nManager,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -18,6 +19,8 @@ import * as Clipboard from "expo-clipboard";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
+import PressableSurface from "@/components/PressableSurface";
+import PressableSurface from "@/components/PressableSurface";
 import LogoHeader from "@/components/LogoHeader";
 
 const emergency = wisdomData.categories.emergency;
@@ -78,7 +81,7 @@ export default function EmergencyScreen() {
   let animDelay = 100;
 
   return (
-    <View style={styles.container}>
+    <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -108,11 +111,12 @@ export default function EmergencyScreen() {
             key={contact.id}
             entering={FadeInDown.delay((animDelay += 60)).duration(400)}
           >
-            <Pressable
-              style={({ pressed }) => [
-                styles.contactCard,
-                pressed && { opacity: 0.8, transform: [{ scale: 0.98 }] },
-              ]}
+            <PressableSurface
+              accessibilityRole="button"
+              accessibilityLabel={`اتصل على ${contact.name}، ${contact.number}`}
+              hitSlop={10}
+              baseStyle={styles.contactCard}
+              pressedStyle={{ opacity: 0.8, transform: [{ scale: 0.98 }] }}
               onPress={() => {
                 if (Platform.OS !== "web") {
                   Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
@@ -130,16 +134,17 @@ export default function EmergencyScreen() {
                 <Ionicons name="call" size={18} color={Colors.status.success} />
                 <Text style={styles.contactNumber}>{contact.number}</Text>
               </View>
-            </Pressable>
+            </PressableSurface>
           </Animated.View>
         ))}
 
         <Animated.View entering={FadeInDown.delay((animDelay += 80)).duration(500)}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.shareLocationBtn,
-              pressed && { opacity: 0.85, transform: [{ scale: 0.98 }] },
-            ]}
+          <PressableSurface
+            accessibilityRole="button"
+            accessibilityLabel="شارك موقعي الحالي"
+            hitSlop={10}
+            baseStyle={styles.shareLocationBtn}
+            pressedStyle={{ opacity: 0.85, transform: [{ scale: 0.98 }] }}
             onPress={() => {
               if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Heavy);
               shareLocation();
@@ -152,16 +157,16 @@ export default function EmergencyScreen() {
                 يرسل رابط خرائط بإحداثياتك عبر رسالة SMS
               </Text>
             </View>
-          </Pressable>
+          </PressableSurface>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay((animDelay += 80)).duration(500)}>
           <View style={styles.templateCard}>
             <View style={styles.templateHeader}>
-              <Pressable onPress={copyTemplate} style={styles.copyButton}>
+              <PressableSurface onPress={copyTemplate} accessibilityRole="button" accessibilityLabel={copied ? "تم نسخ رسالة الطوارئ" : "انسخ رسالة الطوارئ"} hitSlop={10} baseStyle={styles.copyButton}>
                 <Ionicons name={copied ? "checkmark-circle" : "copy-outline"} size={20} color={copied ? Colors.status.success : Colors.primary.green} />
                 <Text style={[styles.copyText, copied && { color: Colors.status.success }]}>{copied ? "تم النسخ" : "انسخ"}</Text>
-              </Pressable>
+              </PressableSurface>
               <View style={styles.templateTitleRow}>
                 <Ionicons name="document-text-outline" size={18} color={Colors.primary.green} />
                 <Text style={styles.templateTitle}>{emergency.messageTemplate.title}</Text>
@@ -175,9 +180,12 @@ export default function EmergencyScreen() {
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay((animDelay += 80)).duration(500)}>
-          <Pressable
-            style={styles.expandableCard}
+          <PressableSurface
+            baseStyle={styles.expandableCard}
             onPress={() => toggleSection("locationGuide")}
+            accessibilityRole="button"
+            accessibilityLabel="عرض أو إخفاء دليل تحديد الموقع"
+            accessibilityState={{ expanded: expandedSection === "locationGuide" }}
           >
             <View style={styles.expandableHeader}>
               <Ionicons name={expandedSection === "locationGuide" ? "chevron-up" : "chevron-down"} size={18} color={Colors.text.tertiary} />
@@ -202,13 +210,16 @@ export default function EmergencyScreen() {
                 </View>
               </View>
             )}
-          </Pressable>
+          </PressableSurface>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay((animDelay += 80)).duration(500)}>
-          <Pressable
-            style={styles.expandableCard}
+          <PressableSurface
+            baseStyle={styles.expandableCard}
             onPress={() => toggleSection("reporting")}
+            accessibilityRole="button"
+            accessibilityLabel="عرض أو إخفاء دليل الإبلاغ"
+            accessibilityState={{ expanded: expandedSection === "reporting" }}
           >
             <View style={styles.expandableHeader}>
               <Ionicons name={expandedSection === "reporting" ? "chevron-up" : "chevron-down"} size={18} color={Colors.text.tertiary} />
@@ -233,13 +244,16 @@ export default function EmergencyScreen() {
                 </View>
               </View>
             )}
-          </Pressable>
+          </PressableSurface>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay((animDelay += 80)).duration(500)}>
-          <Pressable
-            style={styles.expandableCard}
+          <PressableSurface
+            baseStyle={styles.expandableCard}
             onPress={() => toggleSection("battery")}
+            accessibilityRole="button"
+            accessibilityLabel="عرض أو إخفاء إدارة البطارية"
+            accessibilityState={{ expanded: expandedSection === "battery" }}
           >
             <View style={styles.expandableHeader}>
               <Ionicons name={expandedSection === "battery" ? "chevron-up" : "chevron-down"} size={18} color={Colors.text.tertiary} />
@@ -255,13 +269,16 @@ export default function EmergencyScreen() {
                 <Text style={styles.contentText}>{emergency.batteryManagement.content}</Text>
               </View>
             )}
-          </Pressable>
+          </PressableSurface>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay((animDelay += 80)).duration(500)}>
-          <Pressable
-            style={[styles.expandableCard, styles.seaCard]}
+          <PressableSurface
+            baseStyle={[styles.expandableCard, styles.seaCard]}
             onPress={() => toggleSection("seaEmergency")}
+            accessibilityRole="button"
+            accessibilityLabel="عرض أو إخفاء الطوارئ البحرية"
+            accessibilityState={{ expanded: expandedSection === "seaEmergency" }}
           >
             <View style={styles.expandableHeader}>
               <Ionicons name={expandedSection === "seaEmergency" ? "chevron-up" : "chevron-down"} size={18} color={Colors.text.tertiary} />
@@ -286,7 +303,7 @@ export default function EmergencyScreen() {
                 </View>
               </View>
             )}
-          </Pressable>
+          </PressableSurface>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay((animDelay += 80)).duration(500)}>
@@ -349,11 +366,12 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderWidth: 1,
     borderColor: Colors.card.border,
+    minHeight: 44,
   },
   contactInfo: {
     flex: 1,
     alignItems: "flex-end",
-    marginLeft: 16,
+    marginStart: 16,
   },
   contactName: {
     fontFamily: "Cairo_700Bold",
@@ -378,6 +396,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 12,
+    minHeight: 44,
   },
   contactNumber: {
     fontFamily: "Cairo_700Bold",
@@ -394,6 +413,7 @@ const styles = StyleSheet.create({
     gap: 14,
     marginTop: 10,
     marginBottom: 16,
+    minHeight: 44,
   },
   shareLocationTextContainer: {
     flex: 1,
@@ -454,6 +474,8 @@ const styles = StyleSheet.create({
     paddingHorizontal: 12,
     paddingVertical: 6,
     borderRadius: 10,
+    minHeight: 44,
+    minWidth: 44,
   },
   copyText: {
     fontFamily: "Cairo_600SemiBold",
@@ -480,6 +502,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
     borderWidth: 1,
     borderColor: Colors.card.border,
+    minHeight: 44,
   },
   seaCard: {
     borderColor: "rgba(52, 152, 219, 0.2)",
