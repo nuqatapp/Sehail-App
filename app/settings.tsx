@@ -6,6 +6,7 @@ import {
   ScrollView,
   Switch,
   Platform,
+  I18nManager,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -45,7 +46,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <View style={styles.container}>
+    <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -67,6 +68,8 @@ export default function SettingsScreen() {
           <View style={styles.settingRow}>
             <Switch
               value={weatherAlerts}
+              accessibilityLabel="تنبيهات الطقس"
+              accessibilityRole="switch"
               onValueChange={(val) => {
                 setWeatherAlerts(val);
                 saveSettings("weatherAlerts", val);
@@ -84,6 +87,8 @@ export default function SettingsScreen() {
           <View style={styles.settingRow}>
             <Switch
               value={dailyTips}
+              accessibilityLabel="نصيحة اليوم"
+              accessibilityRole="switch"
               onValueChange={(val) => {
                 setDailyTips(val);
                 saveSettings("dailyTips", val);
@@ -182,6 +187,7 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderWidth: 1,
     borderColor: Colors.card.border,
+    minHeight: 44,
   },
   settingTextContainer: {
     flex: 1,

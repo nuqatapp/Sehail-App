@@ -1,8 +1,13 @@
 import React, { Component, ComponentType, PropsWithChildren } from "react";
 import { ErrorFallback, ErrorFallbackProps } from "@/components/ErrorFallback";
 
+/**
+ * Props for the error boundary wrapper.
+ */
 export type ErrorBoundaryProps = PropsWithChildren<{
+  /** Custom fallback component rendered when a child throws. */
   FallbackComponent?: ComponentType<ErrorFallbackProps>;
+  /** Optional error sink for logging and analytics. */
   onError?: (error: Error, stackTrace: string) => void;
 }>;
 
@@ -29,12 +34,18 @@ export class ErrorBoundary extends Component<
     return { error };
   }
 
+  /**
+   * Forward render-time errors to the optional logger.
+   */
   componentDidCatch(error: Error, info: { componentStack: string }): void {
     if (typeof this.props.onError === "function") {
       this.props.onError(error, info.componentStack);
     }
   }
 
+  /**
+   * Clear the current error state and retry rendering children.
+   */
   resetError = (): void => {
     this.setState({ error: null });
   };

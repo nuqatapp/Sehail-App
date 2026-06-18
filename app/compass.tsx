@@ -8,6 +8,7 @@ import {
   Platform,
   Alert,
   Linking,
+  I18nManager,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -21,6 +22,7 @@ import Animated, {
 } from "react-native-reanimated";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "@/constants/colors";
+import PressableSurface from "@/components/PressableSurface";
 
 const SAVED_POINTS_KEY = "sehail_saved_points";
 
@@ -149,12 +151,12 @@ const compassStyles = StyleSheet.create({
   },
   eastMarker: {
     position: "absolute",
-    right: 8,
+    end: 8,
     alignSelf: "center",
   },
   westMarker: {
     position: "absolute",
-    left: 8,
+    start: 8,
     alignSelf: "center",
   },
   cardinalText: {
@@ -193,15 +195,15 @@ const compassStyles = StyleSheet.create({
     width: 4,
     height: 60,
     backgroundColor: Colors.status.danger,
-    borderTopLeftRadius: 4,
-    borderTopRightRadius: 4,
+    borderTopStartRadius: 4,
+    borderTopEndRadius: 4,
   },
   needleSouth: {
     width: 4,
     height: 60,
     backgroundColor: Colors.text.tertiary,
-    borderBottomLeftRadius: 4,
-    borderBottomRightRadius: 4,
+    borderBottomStartRadius: 4,
+    borderBottomEndRadius: 4,
   },
 });
 
@@ -330,7 +332,7 @@ export default function CompassScreen() {
   const isWeb = Platform.OS === "web";
 
   return (
-    <View style={styles.container}>
+    <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -399,12 +401,13 @@ export default function CompassScreen() {
             <Text style={styles.cardTitle}>نقاط الانطلاق</Text>
           </View>
 
-          <Pressable
-            style={({ pressed }) => [
-              styles.saveButton,
-              pressed && { opacity: 0.7 },
-              savingLocation && { opacity: 0.5 },
-            ]}
+          <PressableSurface
+            accessibilityRole="button"
+            accessibilityLabel="حفظ الموقع الحالي"
+            accessibilityState={{ busy: savingLocation, disabled: savingLocation }}
+            hitSlop={10}
+            baseStyle={[styles.saveButton, savingLocation && { opacity: 0.5 }]}
+            pressedStyle={{ opacity: 0.7 }}
             onPress={saveCurrentLocation}
             disabled={savingLocation}
           >
@@ -449,32 +452,31 @@ export default function CompassScreen() {
                     <Text style={styles.pointTime}>{point.time}</Text>
                   </View>
                   <View style={styles.pointActions}>
-                    <Pressable
+                    <PressableSurface
                       onPress={() => openInMaps(point)}
-                      style={({ pressed }) => [
-                        styles.pointActionBtn,
-                        pressed && { opacity: 0.6 },
-                      ]}
+                      baseStyle={styles.pointActionBtn}
+                      pressedStyle={{ opacity: 0.6 }}
                     >
                       <Ionicons
                         name="navigate-outline"
                         size={20}
                         color={Colors.primary.green}
                       />
-                    </Pressable>
-                    <Pressable
+                    </PressableSurface>
+                    <PressableSurface
                       onPress={() => deletePoint(index)}
-                      style={({ pressed }) => [
-                        styles.pointActionBtn,
-                        pressed && { opacity: 0.6 },
-                      ]}
+                      accessibilityRole="button"
+                      accessibilityLabel={`حذف ${point.name}`}
+                      hitSlop={10}
+                      baseStyle={styles.pointActionBtn}
+                      pressedStyle={{ opacity: 0.6 }}
                     >
                       <Ionicons
                         name="trash-outline"
                         size={20}
                         color={Colors.status.danger}
                       />
-                    </Pressable>
+                    </PressableSurface>
                   </View>
                 </Animated.View>
               ))}
@@ -551,6 +553,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     gap: 8,
     marginBottom: 12,
+    minHeight: 44,
   },
   saveButtonText: {
     fontFamily: "Cairo_700Bold",
@@ -611,11 +614,11 @@ const styles = StyleSheet.create({
   pointActions: {
     flexDirection: "row",
     gap: 8,
-    marginRight: 12,
+    marginStart: 12,
   },
   pointActionBtn: {
-    width: 40,
-    height: 40,
+    width: 44,
+    height: 44,
     borderRadius: 10,
     backgroundColor: Colors.card.background,
     alignItems: "center",

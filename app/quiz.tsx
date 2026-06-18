@@ -7,6 +7,7 @@ import {
   Pressable,
   Platform,
   Share,
+  I18nManager,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -15,6 +16,7 @@ import Animated, { FadeInDown, FadeIn, FadeInUp } from "react-native-reanimated"
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
+import PressableSurface from "@/components/PressableSurface";
 
 const SCORES_KEY = "sehail_quiz_scores";
 
@@ -136,7 +138,7 @@ export default function QuizScreen() {
     const isGreat = percentage >= 80;
 
     return (
-      <View style={styles.container}>
+      <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
         <ScrollView
           contentContainerStyle={[
             styles.scrollContent,
@@ -172,28 +174,46 @@ export default function QuizScreen() {
             </View>
 
             <View style={styles.resultButtonsRow}>
-              <Pressable
-                style={({ pressed }) => [styles.resultButton, styles.resultButtonShare, pressed && { opacity: 0.7 }]}
+              <PressableSurface
+                accessibilityRole="button"
+                accessibilityLabel="شارك النتيجة"
+                hitSlop={10}
+                baseStyle={[styles.resultButton, styles.resultButtonShare]}
+                hoverStyle={styles.resultButtonHover}
+                focusStyle={styles.resultButtonFocus}
+                pressedStyle={{ opacity: 0.7 }}
                 onPress={handleShare}
               >
                 <Ionicons name="share-outline" size={20} color={Colors.primary.green} />
                 <Text style={styles.resultButtonTextGreen}>شارك</Text>
-              </Pressable>
-              <Pressable
-                style={({ pressed }) => [styles.resultButton, styles.resultButtonRetry, pressed && { opacity: 0.7 }]}
+              </PressableSurface>
+              <PressableSurface
+                accessibilityRole="button"
+                accessibilityLabel="أعد الاختبار"
+                hitSlop={10}
+                baseStyle={[styles.resultButton, styles.resultButtonRetry]}
+                hoverStyle={styles.resultButtonHover}
+                focusStyle={styles.resultButtonFocus}
+                pressedStyle={{ opacity: 0.7 }}
                 onPress={handleRetry}
               >
                 <Ionicons name="refresh-outline" size={20} color={Colors.primary.gold} />
                 <Text style={styles.resultButtonTextGold}>حاول مرة ثانية</Text>
-              </Pressable>
+              </PressableSurface>
             </View>
 
-            <Pressable
-              style={({ pressed }) => [styles.backToListButton, pressed && { opacity: 0.7 }]}
+            <PressableSurface
+              accessibilityRole="button"
+              accessibilityLabel="رجوع لقائمة الاختبارات"
+              hitSlop={10}
+              baseStyle={styles.backToListButton}
+              hoverStyle={styles.backToListFocus}
+              focusStyle={styles.backToListFocus}
+              pressedStyle={{ opacity: 0.7 }}
               onPress={handleBack}
             >
               <Text style={styles.backToListText}>رجوع للقائمة</Text>
-            </Pressable>
+            </PressableSurface>
           </Animated.View>
         </ScrollView>
       </View>
@@ -207,7 +227,7 @@ export default function QuizScreen() {
     const isCorrect = selectedAnswer === question.correct;
 
     return (
-      <View style={styles.container}>
+      <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
         <ScrollView
           contentContainerStyle={[
             styles.scrollContent,
@@ -250,13 +270,19 @@ export default function QuizScreen() {
 
               return (
                 <Animated.View key={index} entering={FadeInUp.delay(index * 80).duration(300)}>
-                  <Pressable
-                    style={({ pressed }) => [
+                  <PressableSurface
+                    accessibilityRole="button"
+                    accessibilityLabel={`اختر ${option}`}
+                    accessibilityState={{ selected: isAnswered && index === selectedAnswer }}
+                    hitSlop={10}
+                    baseStyle={[
                       styles.optionCard,
                       isAnswered && isThisCorrect && styles.optionCorrect,
                       isThisWrong && styles.optionWrong,
-                      !isAnswered && pressed && { opacity: 0.7, transform: [{ scale: 0.98 }] },
                     ]}
+                    hoverStyle={styles.optionHover}
+                    focusStyle={styles.optionFocus}
+                    pressedStyle={!isAnswered ? { opacity: 0.7, transform: [{ scale: 0.98 }] } : undefined}
                     onPress={() => handleAnswer(index)}
                     disabled={isAnswered}
                   >
@@ -270,7 +296,7 @@ export default function QuizScreen() {
                         isThisWrong && styles.optionTextWrong,
                       ]}>{option}</Text>
                     </View>
-                  </Pressable>
+                  </PressableSurface>
                 </Animated.View>
               );
             })}
@@ -289,15 +315,21 @@ export default function QuizScreen() {
 
           {isAnswered && (
             <Animated.View entering={FadeIn.delay(200).duration(300)}>
-              <Pressable
-                style={({ pressed }) => [styles.nextButton, pressed && { opacity: 0.8 }]}
+              <PressableSurface
+                accessibilityRole="button"
+                accessibilityLabel={currentIndex < total - 1 ? "السؤال التالي" : "عرض النتيجة"}
+                hitSlop={10}
+                baseStyle={styles.nextButton}
+                hoverStyle={styles.nextButtonHover}
+                focusStyle={styles.nextButtonFocus}
+                pressedStyle={{ opacity: 0.8 }}
                 onPress={handleNext}
               >
                 <Text style={styles.nextButtonText}>
                   {currentIndex < total - 1 ? "السؤال التالي" : "النتيجة"}
                 </Text>
                 <Ionicons name="arrow-back" size={18} color="#fff" />
-              </Pressable>
+              </PressableSurface>
             </Animated.View>
           )}
         </ScrollView>
@@ -306,7 +338,7 @@ export default function QuizScreen() {
   }
 
   return (
-    <View style={styles.container}>
+    <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -318,11 +350,16 @@ export default function QuizScreen() {
           const bestScore = scores[section.id];
           return (
             <Animated.View key={section.id} entering={FadeInDown.delay(index * 100).duration(500)}>
-              <Pressable
-                style={({ pressed }) => [
+              <PressableSurface
+                accessibilityRole="button"
+                accessibilityLabel={`ابدأ اختبار ${section.title}`}
+                hitSlop={10}
+                baseStyle={[
                   styles.quizCard,
-                  pressed && { opacity: 0.7, transform: [{ scale: 0.98 }] },
                 ]}
+                hoverStyle={styles.quizCardHover}
+                focusStyle={styles.quizCardFocus}
+                pressedStyle={{ opacity: 0.7, transform: [{ scale: 0.98 }] }}
                 onPress={() => startQuiz(section)}
               >
                 <View style={styles.quizCardInner}>
@@ -345,7 +382,7 @@ export default function QuizScreen() {
                   )}
                 </View>
                 <Ionicons name="chevron-back" size={16} color={Colors.text.tertiary} />
-              </Pressable>
+              </PressableSurface>
             </Animated.View>
           );
         })}
@@ -373,6 +410,17 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
+    minHeight: 44,
+  },
+  quizCardHover: {
+    borderColor: Colors.primary.greenLight,
+  },
+  quizCardFocus: {
+    borderColor: Colors.primary.green,
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.14,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
   },
   quizCardInner: {
     flex: 1,
@@ -380,6 +428,40 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-end",
     gap: 14,
+  },
+  resultButtonHover: {
+    opacity: 0.96,
+  },
+  resultButtonFocus: {
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 0 },
+  },
+  backToListFocus: {
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 0 },
+  },
+  optionHover: {
+    borderColor: Colors.primary.greenLight,
+  },
+  optionFocus: {
+    borderColor: Colors.primary.green,
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.14,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
+  },
+  nextButtonHover: {
+    opacity: 0.96,
+  },
+  nextButtonFocus: {
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 0 },
   },
   quizIconContainer: {
     width: 52,

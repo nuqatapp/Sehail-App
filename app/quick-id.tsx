@@ -6,6 +6,7 @@ import {
   ScrollView,
   Pressable,
   Platform,
+  I18nManager,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -13,6 +14,7 @@ import { useSafeAreaInsets } from "react-native-safe-area-context";
 import * as Haptics from "expo-haptics";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
+import PressableSurface from "@/components/PressableSurface";
 import wisdomData from "@/data/wisdom.json";
 
 const fieldGuide = wisdomData.categories.fieldGuide;
@@ -63,7 +65,7 @@ export default function QuickIdScreen() {
   const webBottomInset = Platform.OS === "web" ? 34 : 0;
 
   return (
-    <View style={styles.container}>
+    <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -83,17 +85,22 @@ export default function QuickIdScreen() {
               entering={FadeInDown.delay(100 + index * 80).duration(400)}
               style={styles.gridItem}
             >
-              <Pressable
-                style={({ pressed }) => [
+              <PressableSurface
+                accessibilityRole="button"
+                accessibilityLabel={`تعرف على ${cat.label}`}
+                hitSlop={10}
+                baseStyle={[
                   styles.categoryButton,
                   { backgroundColor: cat.bgColor, borderColor: cat.borderColor },
-                  pressed && styles.categoryButtonPressed,
                 ]}
+                hoverStyle={styles.categoryButtonHover}
+                focusStyle={styles.categoryButtonFocus}
+                pressedStyle={styles.categoryButtonPressed}
                 onPress={() => navigateToDetail(cat.itemId)}
               >
                 <Text style={styles.emoji}>{cat.emoji}</Text>
                 <Text style={styles.categoryLabel}>{cat.label}</Text>
-              </Pressable>
+              </PressableSurface>
             </Animated.View>
           ))}
         </View>
@@ -151,6 +158,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     gap: 10,
+    minHeight: 44,
+  },
+  categoryButtonHover: {
+    opacity: 0.96,
+  },
+  categoryButtonFocus: {
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.14,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
   },
   categoryButtonPressed: {
     opacity: 0.7,

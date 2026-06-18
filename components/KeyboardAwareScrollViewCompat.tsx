@@ -1,26 +1,43 @@
-// template
+import React from "react";
 import { Platform, ScrollView, ScrollViewProps } from "react-native";
 import {
   KeyboardAwareScrollView,
   KeyboardAwareScrollViewProps,
 } from "react-native-keyboard-controller";
 
-type Props = KeyboardAwareScrollViewProps & ScrollViewProps;
+/**
+ * Props for the keyboard-aware scroll view compatibility wrapper.
+ */
+export interface KeyboardAwareScrollViewCompatProps
+  extends KeyboardAwareScrollViewProps,
+    ScrollViewProps {
+  /** Bidi direction forwarded to web rendering. */
+  dir?: "ltr" | "rtl";
+}
 
+/**
+ * Cross-platform scroll container with consistent keyboard handling.
+ */
 export function KeyboardAwareScrollViewCompat({
   children,
   keyboardShouldPersistTaps = "handled",
+  dir,
   ...props
-}: Props) {
+}: KeyboardAwareScrollViewCompatProps) {
   if (Platform.OS === "web") {
     return (
-      <ScrollView keyboardShouldPersistTaps={keyboardShouldPersistTaps} {...props}>
+      <ScrollView
+        {...(dir ? { dir } : {})}
+        keyboardShouldPersistTaps={keyboardShouldPersistTaps}
+        {...props}
+      >
         {children}
       </ScrollView>
     );
   }
   return (
     <KeyboardAwareScrollView
+      {...(dir ? { dir } : {})}
       keyboardShouldPersistTaps={keyboardShouldPersistTaps}
       {...props}
     >

@@ -6,6 +6,7 @@ import {
   ScrollView,
   Pressable,
   Platform,
+  I18nManager,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { router } from "expo-router";
@@ -17,6 +18,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
 import LogoHeader from "@/components/LogoHeader";
+import PressableSurface from "@/components/PressableSurface";
 
 function getWeatherAlert(): { message: string; icon: string } {
   const hour = new Date().getHours();
@@ -53,16 +55,19 @@ interface SectionCardProps {
   icon: string;
   onPress: () => void;
   delay: number;
+  accessibilityLabel?: string;
 }
 
-function SectionCard({ title, subtitle, icon, onPress, delay }: SectionCardProps) {
+function SectionCard({ title, subtitle, icon, onPress, delay, accessibilityLabel = title }: SectionCardProps) {
   return (
     <Animated.View entering={FadeInDown.delay(delay).duration(500)}>
-      <Pressable
-        style={({ pressed }) => [
-          styles.sectionCard,
-          pressed && styles.sectionCardPressed,
-        ]}
+      <PressableSurface
+        accessibilityLabel={accessibilityLabel}
+        baseStyle={styles.sectionCard}
+        hoverStyle={styles.sectionCardHover}
+        focusStyle={styles.sectionCardFocus}
+        pressedStyle={styles.sectionCardPressed}
+        hitSlop={10}
         onPress={() => {
           if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Light);
           onPress();
@@ -78,7 +83,7 @@ function SectionCard({ title, subtitle, icon, onPress, delay }: SectionCardProps
           </View>
         </View>
         <Ionicons name="chevron-back" size={16} color={Colors.text.tertiary} style={styles.sectionChevron} />
-      </Pressable>
+      </PressableSurface>
     </Animated.View>
   );
 }
@@ -190,7 +195,7 @@ export default function HomeScreen() {
   const historySet = new Set(streakData?.history ?? []);
 
   return (
-    <View style={styles.container}>
+    <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -202,23 +207,26 @@ export default function HomeScreen() {
         showsVerticalScrollIndicator={false}
       >
         <View style={styles.headerRow}>
-          <Pressable
+          <PressableSurface
             onPress={() => router.push("/settings")}
-            style={styles.settingsButton}
+            accessibilityLabel="فتح الإعدادات"
+            accessibilityRole="button"
+            hitSlop={10}
+            baseStyle={styles.settingsButton}
           >
             <Ionicons name="settings-outline" size={22} color={Colors.text.tertiary} />
-          </Pressable>
+          </PressableSurface>
           <LogoHeader />
         </View>
 
         <Animated.View entering={FadeInDown.delay(100).duration(500)} style={styles.adBanner}>
-          <Pressable style={({ pressed }) => [pressed && { opacity: 0.9 }]}>
+          <View accessibilityRole="image" accessibilityLabel="إعلان سهيل">
             <Image
               source={require("@/assets/images/ad-banner.png")}
               style={styles.adImage}
               contentFit="cover"
             />
-          </Pressable>
+          </View>
         </Animated.View>
 
         <Animated.View entering={FadeInDown.delay(200).duration(500)} style={styles.tipCard}>
@@ -235,20 +243,30 @@ export default function HomeScreen() {
             </Animated.View>
           ) : !respondedToday ? (
             <View style={styles.tipButtonsRow}>
-              <Pressable
-                style={({ pressed }) => [styles.tipButton, styles.tipButtonGold, pressed && { opacity: 0.7 }]}
+              <PressableSurface
+                accessibilityLabel="هذه المعلومة جديدة"
+                baseStyle={[styles.tipButton, styles.tipButtonGold]}
+                hoverStyle={styles.tipButtonHover}
+                focusStyle={styles.tipButtonFocus}
+                pressedStyle={styles.tipButtonPressed}
+                hitSlop={10}
                 onPress={() => handleTipResponse("new")}
               >
                 <Ionicons name="bulb-outline" size={16} color={Colors.primary.gold} />
                 <Text style={styles.tipButtonTextGold}>معلومة جديدة!</Text>
-              </Pressable>
-              <Pressable
-                style={({ pressed }) => [styles.tipButton, styles.tipButtonGreen, pressed && { opacity: 0.7 }]}
+              </PressableSurface>
+              <PressableSurface
+                accessibilityLabel="أنا أعرف هذه المعلومة"
+                baseStyle={[styles.tipButton, styles.tipButtonGreen]}
+                hoverStyle={styles.tipButtonHover}
+                focusStyle={styles.tipButtonFocus}
+                pressedStyle={styles.tipButtonPressed}
+                hitSlop={10}
                 onPress={() => handleTipResponse("known")}
               >
                 <Ionicons name="checkmark-circle-outline" size={16} color={Colors.primary.green} />
                 <Text style={styles.tipButtonTextGreen}>أيوا عارفها</Text>
-              </Pressable>
+              </PressableSurface>
             </View>
           ) : null}
         </Animated.View>
@@ -289,6 +307,7 @@ export default function HomeScreen() {
             icon="briefcase-outline"
             onPress={() => router.push("/prep-gear")}
             delay={300}
+            accessibilityLabel="فتح إحتياجات الرحلة"
           />
           <SectionCard
             title="دليل الملاحة"
@@ -296,6 +315,7 @@ export default function HomeScreen() {
             icon="compass-outline"
             onPress={() => router.push("/star-guide")}
             delay={350}
+            accessibilityLabel="فتح دليل الملاحة"
           />
           <SectionCard
             title="معلومات تهمك"
@@ -303,6 +323,7 @@ export default function HomeScreen() {
             icon="warning-outline"
             onPress={() => router.push("/(tabs)/guide")}
             delay={400}
+            accessibilityLabel="فتح معلومات تهمك"
           />
           <SectionCard
             title="سوالف سهيل"
@@ -310,6 +331,7 @@ export default function HomeScreen() {
             icon="flame-outline"
             onPress={() => router.push("/(tabs)/stories")}
             delay={450}
+            accessibilityLabel="فتح سوالف سهيل"
           />
           <SectionCard
             title="البوصلة"
@@ -317,6 +339,7 @@ export default function HomeScreen() {
             icon="compass-outline"
             onPress={() => router.push("/compass")}
             delay={475}
+            accessibilityLabel="فتح البوصلة"
           />
           <SectionCard
             title="المفضلة"
@@ -324,6 +347,7 @@ export default function HomeScreen() {
             icon="star-outline"
             onPress={() => router.push("/favorites")}
             delay={500}
+            accessibilityLabel="فتح المفضلة"
           />
           <SectionCard
             title="اختبر معلوماتك"
@@ -331,6 +355,7 @@ export default function HomeScreen() {
             icon="help-circle-outline"
             onPress={() => router.push("/quiz")}
             delay={525}
+            accessibilityLabel="فتح اختبر معلوماتك"
           />
           <SectionCard
             title="إنجازاتي"
@@ -338,6 +363,7 @@ export default function HomeScreen() {
             icon="trophy-outline"
             onPress={() => router.push("/badges")}
             delay={540}
+            accessibilityLabel="فتح إنجازاتي"
           />
           <SectionCard
             title="أول ٥ دقائق"
@@ -345,6 +371,7 @@ export default function HomeScreen() {
             icon="flash-outline"
             onPress={() => router.push("/first-five")}
             delay={550}
+            accessibilityLabel="فتح أول ٥ دقائق"
           />
           <SectionCard
             title="تعرّف بسرعة"
@@ -352,15 +379,18 @@ export default function HomeScreen() {
             icon="search-outline"
             onPress={() => router.push("/quick-id")}
             delay={600}
+            accessibilityLabel="فتح تعرّف بسرعة"
           />
         </View>
 
         <Animated.View entering={FadeInDown.delay(600).duration(500)}>
-          <Pressable
-            style={({ pressed }) => [
-              styles.emergencyBanner,
-              pressed && { opacity: 0.8 },
-            ]}
+          <PressableSurface
+            accessibilityLabel="فتح فزعة وأرقام الطوارئ"
+            baseStyle={styles.emergencyBanner}
+            hoverStyle={styles.emergencyBannerHover}
+            focusStyle={styles.emergencyBannerFocus}
+            pressedStyle={{ opacity: 0.8 }}
+            hitSlop={10}
             onPress={() => {
               if (Platform.OS !== "web") Haptics.impactAsync(Haptics.ImpactFeedbackStyle.Medium);
               router.push("/(tabs)/emergency");
@@ -369,7 +399,7 @@ export default function HomeScreen() {
             <Ionicons name="shield-checkmark" size={20} color={Colors.status.danger} />
             <Text style={styles.emergencyBannerText}>فزعة - أرقام الطوارئ ومشاركة الموقع</Text>
             <Ionicons name="chevron-forward" size={16} color={Colors.text.tertiary} />
-          </Pressable>
+          </PressableSurface>
         </Animated.View>
       </ScrollView>
     </View>
@@ -492,6 +522,16 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "space-between",
   },
+  sectionCardHover: {
+    borderColor: Colors.primary.greenLight,
+  },
+  sectionCardFocus: {
+    borderColor: Colors.primary.green,
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.16,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
+  },
   sectionCardPressed: {
     opacity: 0.7,
     transform: [{ scale: 0.98 }],
@@ -513,6 +553,8 @@ const styles = StyleSheet.create({
     backgroundColor: "rgba(0, 108, 53, 0.08)",
     alignItems: "center",
     justifyContent: "center",
+    minWidth: 48,
+    minHeight: 48,
   },
   sectionTitle: {
     fontFamily: "Cairo_700Bold",
@@ -530,7 +572,7 @@ const styles = StyleSheet.create({
     marginTop: 2,
   },
   sectionChevron: {
-    marginLeft: 4,
+    marginStart: 4,
   },
   emergencyBanner: {
     backgroundColor: Colors.card.background,
@@ -542,6 +584,15 @@ const styles = StyleSheet.create({
     gap: 10,
     borderWidth: 1,
     borderColor: "rgba(231, 76, 60, 0.15)",
+  },
+  emergencyBannerHover: {
+    borderColor: "rgba(231, 76, 60, 0.28)",
+  },
+  emergencyBannerFocus: {
+    shadowColor: Colors.status.danger,
+    shadowOpacity: 0.16,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
   },
   emergencyBannerText: {
     fontFamily: "Cairo_600SemiBold",
@@ -564,6 +615,19 @@ const styles = StyleSheet.create({
     paddingHorizontal: 14,
     paddingVertical: 8,
     borderRadius: 10,
+    minHeight: 44,
+  },
+  tipButtonHover: {
+    opacity: 0.96,
+  },
+  tipButtonFocus: {
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.15,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 0 },
+  },
+  tipButtonPressed: {
+    opacity: 0.84,
   },
   tipButtonGreen: {
     backgroundColor: "rgba(0, 108, 53, 0.08)",

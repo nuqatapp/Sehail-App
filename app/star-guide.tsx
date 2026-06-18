@@ -6,6 +6,7 @@ import {
   ScrollView,
   Pressable,
   Platform,
+  I18nManager,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -13,6 +14,7 @@ import * as Haptics from "expo-haptics";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
+import PressableSurface from "@/components/PressableSurface";
 import { markAsRead } from "@/lib/read-tracker";
 
 const navGuide = wisdomData.categories.navigationGuide;
@@ -46,7 +48,7 @@ export default function StarGuideScreen() {
   }, [activeSection]);
 
   return (
-    <View style={styles.container}>
+    <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -69,12 +71,19 @@ export default function StarGuideScreen() {
           style={styles.filterContainer}
         >
           {navGuide.sections.map((section) => (
-            <Pressable
+            <PressableSurface
               key={section.id}
-              style={[
+              accessibilityRole="button"
+              accessibilityLabel={`تصفية الدليل حسب ${section.name}`}
+              accessibilityState={{ selected: activeSection === section.id }}
+              hitSlop={10}
+              baseStyle={[
                 styles.filterChip,
                 activeSection === section.id && styles.filterChipActive,
               ]}
+              hoverStyle={styles.filterChipHover}
+              focusStyle={styles.filterChipFocus}
+              pressedStyle={styles.filterChipPressed}
               onPress={() => {
                 if (Platform.OS !== "web") Haptics.selectionAsync();
                 setActiveSection(section.id);
@@ -93,7 +102,7 @@ export default function StarGuideScreen() {
               >
                 {section.name}
               </Text>
-            </Pressable>
+            </PressableSurface>
           ))}
         </ScrollView>
 
@@ -184,8 +193,8 @@ const styles = StyleSheet.create({
     gap: 12,
     borderWidth: 1,
     borderColor: Colors.card.border,
-    borderLeftWidth: 3,
-    borderLeftColor: Colors.primary.green,
+    borderStartWidth: 3,
+    borderStartColor: Colors.primary.green,
   },
   introText: {
     fontFamily: "Cairo_400Regular",
@@ -209,11 +218,12 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 5,
     paddingHorizontal: 12,
-    paddingVertical: 7,
+    paddingVertical: 10,
     borderRadius: 20,
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: Colors.card.border,
+    minHeight: 44,
   },
   filterChipActive: {
     backgroundColor: Colors.primary.green,
@@ -268,7 +278,7 @@ const styles = StyleSheet.create({
   envBadge: {
     position: "absolute" as const,
     top: 8,
-    left: 8,
+    start: 8,
     zIndex: 1,
   },
   starHeader: {

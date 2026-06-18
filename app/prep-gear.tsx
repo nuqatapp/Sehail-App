@@ -7,6 +7,7 @@ import {
   Pressable,
   Platform,
   Share,
+  I18nManager,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
@@ -15,6 +16,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import Animated, { FadeInDown } from "react-native-reanimated";
 import Colors from "@/constants/colors";
 import wisdomData from "@/data/wisdom.json";
+import PressableSurface from "@/components/PressableSurface";
 
 const prepGear = wisdomData.categories.prepGear;
 
@@ -92,7 +94,7 @@ export default function PrepGearScreen() {
   }, [checkedItems, currentTrip, progress, tripsCompleted]);
 
   return (
-    <View style={styles.container}>
+    <View {...(Platform.OS === "web" ? { dir: I18nManager.isRTL ? "rtl" : "ltr" } : {})} style={styles.container}>
       <ScrollView
         contentContainerStyle={[
           styles.scrollContent,
@@ -107,12 +109,19 @@ export default function PrepGearScreen() {
           style={styles.tripTypeContainer}
         >
           {prepGear.tripTypes.map((tripType: any) => (
-            <Pressable
+            <PressableSurface
               key={tripType.id}
-              style={[
+              accessibilityRole="button"
+              accessibilityLabel={`عرض تجهيزات ${tripType.name}`}
+              accessibilityState={{ selected: activeTripType === tripType.id }}
+              hitSlop={10}
+              baseStyle={[
                 styles.tripTypeChip,
                 activeTripType === tripType.id && styles.tripTypeChipActive,
               ]}
+              hoverStyle={styles.tripTypeChipHover}
+              focusStyle={styles.tripTypeChipFocus}
+              pressedStyle={{ opacity: 0.8 }}
               onPress={() => {
                 if (Platform.OS !== "web") Haptics.selectionAsync();
                 setActiveTripType(tripType.id);
@@ -135,15 +144,15 @@ export default function PrepGearScreen() {
               >
                 {tripType.name}
               </Text>
-            </Pressable>
+            </PressableSurface>
           ))}
         </ScrollView>
 
         <View style={styles.progressCard}>
           <View style={styles.progressHeader}>
-            <Pressable onPress={resetChecklist} style={styles.resetButton}>
+            <PressableSurface onPress={resetChecklist} accessibilityRole="button" accessibilityLabel="إعادة ضبط قائمة التجهيز" hitSlop={10} baseStyle={styles.resetButton} hoverStyle={styles.resetButtonHover} focusStyle={styles.resetButtonFocus} pressedStyle={{ opacity: 0.8 }}>
               <Ionicons name="refresh-outline" size={18} color={Colors.text.tertiary} />
-            </Pressable>
+            </PressableSurface>
             <Text style={styles.progressLabel}>
               {checkedCount} من {totalCount}
             </Text>
@@ -174,12 +183,18 @@ export default function PrepGearScreen() {
             key={item.id}
             entering={FadeInDown.delay(index * 50).duration(300)}
           >
-            <Pressable
-              style={({ pressed }) => [
+            <PressableSurface
+              accessibilityRole="checkbox"
+              accessibilityLabel={item.text}
+              accessibilityState={{ checked: !!checkedItems[item.id] }}
+              hitSlop={10}
+              baseStyle={[
                 styles.checkItem,
                 checkedItems[item.id] && styles.checkItemChecked,
-                pressed && { opacity: 0.8 },
               ]}
+              hoverStyle={styles.checkItemHover}
+              focusStyle={styles.checkItemFocus}
+              pressedStyle={{ opacity: 0.8 }}
               onPress={() => toggleItem(item.id)}
             >
               <View style={styles.checkItemContent}>
@@ -207,7 +222,7 @@ export default function PrepGearScreen() {
                   <Ionicons name="checkmark" size={14} color="#FFFFFF" />
                 )}
               </View>
-            </Pressable>
+            </PressableSurface>
           </Animated.View>
         ))}
 
@@ -221,11 +236,16 @@ export default function PrepGearScreen() {
               <Text style={styles.shareSubtitle}>
                 كمّلت {totalCount} من {totalCount} عنصر تجهيز
               </Text>
-              <Pressable
-                style={({ pressed }) => [
+              <PressableSurface
+                accessibilityRole="button"
+                accessibilityLabel="شارك جاهزية الرحلة"
+                hitSlop={10}
+                baseStyle={[
                   styles.shareButton,
-                  pressed && { opacity: 0.85 },
                 ]}
+                hoverStyle={styles.shareButtonHover}
+                focusStyle={styles.shareButtonFocus}
+                pressedStyle={{ opacity: 0.85 }}
                 onPress={async () => {
                   if (Platform.OS !== "web") Haptics.notificationAsync(Haptics.NotificationFeedbackType.Success);
                   const tripName = currentTrip.name;
@@ -237,7 +257,7 @@ export default function PrepGearScreen() {
               >
                 <Ionicons name="share-outline" size={18} color="#FFFFFF" />
                 <Text style={styles.shareButtonText}>شارك في الواتساب</Text>
-              </Pressable>
+              </PressableSurface>
             </View>
           </Animated.View>
         )}
@@ -273,6 +293,17 @@ const styles = StyleSheet.create({
     backgroundColor: "#FFFFFF",
     borderWidth: 1,
     borderColor: Colors.card.border,
+    minHeight: 44,
+  },
+  tripTypeChipHover: {
+    borderColor: Colors.primary.greenLight,
+  },
+  tripTypeChipFocus: {
+    borderColor: Colors.primary.green,
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.14,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
   },
   tripTypeChipActive: {
     backgroundColor: Colors.primary.green,
@@ -310,6 +341,13 @@ const styles = StyleSheet.create({
     height: 36,
     alignItems: "center",
     justifyContent: "center",
+  },
+  resetButtonHover: {
+    opacity: 0.9,
+  },
+  resetButtonFocus: {
+    borderWidth: 1,
+    borderColor: Colors.primary.green,
   },
   progressBarBg: {
     height: 6,
@@ -353,6 +391,17 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     borderWidth: 1,
     borderColor: Colors.card.border,
+    minHeight: 44,
+  },
+  checkItemHover: {
+    borderColor: Colors.primary.greenLight,
+  },
+  checkItemFocus: {
+    borderColor: Colors.primary.green,
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.14,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
   },
   checkItemChecked: {
     backgroundColor: "rgba(39, 174, 96, 0.04)",
@@ -361,7 +410,7 @@ const styles = StyleSheet.create({
   checkItemContent: {
     flex: 1,
     alignItems: "flex-end",
-    marginLeft: 12,
+    marginStart: 12,
   },
   checkItemText: {
     fontFamily: "Cairo_400Regular",
@@ -442,6 +491,16 @@ const styles = StyleSheet.create({
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 14,
+    minHeight: 44,
+  },
+  shareButtonHover: {
+    opacity: 0.96,
+  },
+  shareButtonFocus: {
+    shadowColor: Colors.primary.green,
+    shadowOpacity: 0.16,
+    shadowRadius: 8,
+    shadowOffset: { width: 0, height: 0 },
   },
   shareButtonText: {
     fontFamily: "Cairo_600SemiBold",
