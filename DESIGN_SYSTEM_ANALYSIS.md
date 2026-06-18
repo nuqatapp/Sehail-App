@@ -12,11 +12,12 @@ Important note: there is no dedicated `design-system/` folder in this repo. The 
 
 ### `components/`
 
-- `AppSplash.tsx` - animated splash screen wrapper with logo, title, and tagline.
-- `ErrorBoundary.tsx` - class-based React error boundary.
-- `ErrorFallback.tsx` - fallback error screen with a development-only details modal.
-- `KeyboardAwareScrollViewCompat.tsx` - web/native compatibility wrapper for keyboard-aware scrolling.
-- `LogoHeader.tsx` - branded header block with logo and app name.
+- `AppSplash.tsx` - animated full-screen splash with entrance/exit animations. Props fully typed via `AppSplashProps`.
+- `ErrorBoundary.tsx` - class-based React error boundary. Props typed via `ErrorBoundaryProps`.
+- `ErrorFallback.tsx` - fallback error screen with recovery action and a dev-only diagnostics modal. Props typed via `ErrorFallbackProps`.
+- `KeyboardAwareScrollViewCompat.tsx` - cross-platform keyboard-aware scroll container. Props typed via `KeyboardAwareScrollViewCompatProps`.
+- `LogoHeader.tsx` - branded header lockup with logo, title, and optional subtitle. Props typed via `LogoHeaderProps`.
+- `PressableSurface.tsx` - accessible pressable primitive for cards, chips, and button-like surfaces. Exposes `hover`, `focus`, and `pressed` style slots. Props typed via `PressableSurfaceProps`.
 
 ### Design-system-like behavior elsewhere in the app
 
@@ -30,25 +31,36 @@ This means the project does not yet have a reusable component library for common
 
 ## Tokens and Color Definitions
 
-### Current token surface
+### Current token files
 
-The only explicit token file is `constants/colors.ts`.
+| File | Contents |
+|---|---|
+| `constants/colors.ts` | Legacy color object (primary, text, card, bg, status, light). |
+| `constants/designTokens.ts` | **New comprehensive token system** — see detail below. |
 
-It provides:
+#### `constants/designTokens.ts` — full inventory
 
-- `primary` colors: green, greenLight, greenDark, greenDeep, gold, goldLight, goldDim.
-- `text` colors: primary, secondary, tertiary, gold, dark, white, onGreen.
-- `card` colors: background, border, highlight.
-- `bg` colors: primary, secondary, greenHeader.
-- `status` colors: danger, warning, success, info.
-- `light` theme values: text, background, tint, tabIconDefault, tabIconSelected.
+- **ColorTokens** — brand (green `#1B5E20`, gold `#FFC107`), neutral 0–900 scale, text, surface, border, and semantic status colors with surface tints.
+- **Spacing / Space** — 4-pt base-unit scale (0–96 px) plus named aliases (`xs`, `sm`, `md`, `lg`, `xl`, `xxl`, `xxxl`). Also exports `MinTouchTarget = 44`.
+- **FontFamily** — Cairo Regular, Medium, SemiBold, Bold constants.
+- **FontSize** — modular scale from `xs` (11 px) to `7xl` (42 px).
+- **LineHeightRatio** — multiplier scale (`tight` → `loose`).
+- **ArabicLineHeight** — absolute line-height values tuned for Cairo Arabic at each font size.
+- **TextStyle** — pre-composed text style objects (`displayLg` → `caption`) ready to spread into StyleSheet.
+- **Radius** — corner radius scale `none` → `full`.
+- **Elevation** — cross-platform shadow tokens (`none`, `xs`, `sm`, `md`, `lg`, `xl`).
+- **Duration** — animation durations in ms (`instant` → `slowest`).
+- **Opacity** — interactive opacity levels (hover, pressed, disabled, ghost).
+- **ZIndex** — stacking context scale (`base` → `tooltip`).
+- **IconSize** — standard icon sizes paired to the type scale.
+- **ComponentSize** — height/padding/fontSize presets for `xs`–`xl` component size variants.
+- **Type helpers** — exported union/key types for all token scales (`RadiusKey`, `SpaceKey`, `BidiDir`, etc.).
 
-### Token gaps
+### Remaining token gaps
 
-- There is no spacing scale, typography scale, radius scale, elevation scale, shadow system, or motion/token abstraction.
-- Colors are defined as raw hex/RGBA values with no semantic aliasing beyond the current object shape.
-- There is no dark theme token set, no high-contrast mode set, and no platform-specific token layer.
-- Several screens still use raw hex values inline, such as `#FFFFFF`, `#DDD`, and `rgba(...)`, which bypass the shared token file.
+- `constants/colors.ts` is still referenced in existing components. Migrate call sites to `ColorTokens` from `designTokens.ts` as components are updated.
+- No dark theme token set or high-contrast mode layer yet.
+- Several screens still use raw hex values inline (`#FFFFFF`, `#DDD`, `rgba(...)`), which bypass both token files.
 
 ## Documentation Review
 
@@ -187,10 +199,11 @@ Typical problems:
 
 ### Foundation
 
-- Create a formal `design-system/` directory.
-- Add a token file for spacing, typography, radius, shadow, motion, and semantic colors.
-- Replace raw color usage with named semantic tokens.
-- Document the visual language, RTL rules, and component conventions.
+- ✅ Token file created at `constants/designTokens.ts` (spacing, typography, radius, shadow, motion, semantic colors).
+- ✅ `PressableSurface` primitive added with hover/focus/pressed style slots and accessibility defaults.
+- Migrate existing components from `constants/colors.ts` to `ColorTokens` from `designTokens.ts`.
+- Create a formal `design-system/` directory if the component library grows beyond ~10 primitives.
+- Document visual language, RTL rules, and component conventions in a living guide.
 
 ### Reusable components
 
@@ -223,10 +236,11 @@ Typical problems:
 
 ### P0 - Must fix first
 
-1. Create a reusable token system beyond colors.
-2. Add base interactive primitives with accessibility built in.
-3. Remove the most dangerous `any` usage in shared content models.
-4. Document RTL and text-direction rules.
+1. ✅ Created `constants/designTokens.ts` — comprehensive token system beyond colors.
+2. ✅ Added `PressableSurface` — base interactive primitive with accessibility built in.
+3. Migrate screen-local raw hex values to `ColorTokens` from `designTokens.ts`.
+4. Remove the most dangerous `any` usage in shared content models.
+5. Document RTL and text-direction rules.
 
 ### P1 - High value next
 
